@@ -1,0 +1,2749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Fundamentos da Física - Nando Kissanga</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Satisfy&family=Amatic+SC:wght@700&family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Patrick Hand', cursive, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Partículas de fundo */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255,255,255,0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .deck {
+      width: 100%;
+      max-width: 1100px;
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      animation: slideIn 0.8s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ==================== CAPA ==================== */
+    .cover-slide {
+      background: linear-gradient(135deg, #1a237e 0%, #283593 30%, #3949ab 60%, #1a237e 100%);
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 30px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .cover-slide::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,213,79,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .cover-emoji-top {
+      font-size: 64px;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .cover-title {
+      font-family: 'Gloria Hallelujah', cursive;
+      font-size: 52px;
+      color: #ffd54f;
+      margin-bottom: 16px;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+      animation: titlePulse 2s ease-in-out infinite;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes titlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    .cover-subtitle {
+      font-family: 'Satisfy', cursive;
+      font-size: 28px;
+      color: #b3e5fc;
+      margin-bottom: 30px;
+      opacity: 0.95;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cover-author {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      padding: 20px 40px;
+      border-radius: 20px;
+      border: 2px solid rgba(255,213,79,0.3);
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 2;
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cover-author-name {
+      font-family: 'Satisfy', cursive;
+      font-size: 32px;
+      color: #ffd54f;
+      margin-bottom: 8px;
+    }
+
+    .cover-author-title {
+      color: #b3e5fc;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .cover-contact {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      color: #e3f2fd;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    .cover-contact span {
+      background: rgba(255,255,255,0.1);
+      padding: 6px 14px;
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .cover-contact span:hover {
+      background: rgba(255,213,79,0.2);
+      transform: translateY(-2px);
+    }
+
+    .cover-emojis-orbit {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      pointer-events: none;
+    }
+
+    .orbit-emoji {
+      position: absolute;
+      font-size: 32px;
+      animation: orbit 15s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(180px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(180px) rotate(-360deg); }
+    }
+
+    .cover-start-btn {
+      background: linear-gradient(135deg, #ff6f00, #ffa000);
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 30px;
+      font-size: 18px;
+      font-family: 'Patrick Hand', cursive;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255,111,0,0.4);
+      transition: all 0.3s;
+      position: relative;
+      z-index: 2;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 6px 20px rgba(255,111,0,0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255,111,0,0.6); }
+    }
+
+    .cover-start-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 30px rgba(255,111,0,0.7);
+    }
+
+    /* ==================== TOP BAR ==================== */
+    .top-bar {
+      background: linear-gradient(135deg, #1a237e, #283593);
+      padding: 14px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: white;
+      font-size: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .top-bar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      to { left: 100%; }
+    }
+
+    .author-name {
+      font-family: 'Satisfy', cursive;
+      font-size: 24px;
+      color: #ffd54f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: slideInLeft 0.6s ease-out;
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .contact-info {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: #b3e5fc;
+      font-size: 13px;
+      animation: slideInRight 0.6s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 5px;
+      background: #e0e0e0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6f00, #ffa000, #ff6f00);
+      background-size: 200% 100%;
+      transition: width 0.4s;
+      animation: progressShine 2s linear infinite;
+      position: relative;
+    }
+
+    @keyframes progressShine {
+      to { background-position: -200% 0; }
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 20px; height: 100%;
+      background: rgba(255,255,255,0.4);
+      animation: progressDot 1.5s ease-in-out infinite;
+    }
+
+    @keyframes progressDot {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      padding-bottom: 65%;
+      background: #fafafa;
+      overflow: hidden;
+    }
+
+    .slides-container {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
+      overflow-y: auto;
+      padding: 24px 28px;
+      background: white;
+      transform: scale(0.95) translateX(20px);
+    }
+
+    .slide.active {
+      opacity: 1; visibility: visible; z-index: 2;
+      transform: scale(1) translateX(0);
+      animation: slideFadeIn 0.6s ease-out;
+    }
+
+    @keyframes slideFadeIn {
+      from { opacity: 0; transform: scale(0.95) translateX(20px); }
+      to { opacity: 1; transform: scale(1) translateX(0); }
+    }
+
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+    }
+
+    h1 {
+      font-family: 'Gloria Hallelujah', cursive;
+      font-size: 32px;
+      color: #1a237e;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 4px solid #ffa000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: titleBounce 0.8s ease-out;
+    }
+
+    @keyframes titleBounce {
+      0% { transform: translateY(-20px); opacity: 0; }
+      60% { transform: translateY(5px); }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    h2 {
+      font-family: 'Amatic SC', cursive;
+      font-size: 24px;
+      color: #283593;
+      margin: 14px 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: fadeIn 0.6s ease-out 0.2s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #e8eaf6, #c5cae9);
+      color: #283593;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      animation: badgePop 0.6s ease-out 0.1s both;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    @keyframes badgePop {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin: 14px 0;
+    }
+
+    .grid-3col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .card {
+      background: linear-gradient(135deg, #fafafa, #f5f5f5);
+      border-radius: 12px;
+      padding: 16px;
+      border: 2px solid #e8eaf6;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,160,0,0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px) scale(1.02);
+      border-color: #ffa000;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      background: linear-gradient(135deg, #fffde7, #fff9c4);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-icon { 
+      font-size: 36px; 
+      display: block; 
+      margin-bottom: 8px;
+      animation: iconBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .prefix-card {
+      background: linear-gradient(135deg, #fafafa, #f5f5f5);
+      border-radius: 10px;
+      padding: 10px 8px;
+      border: 2px solid #e8eaf6;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: default;
+      position: relative;
+    }
+
+    .prefix-card:hover {
+      transform: translateY(-3px) scale(1.05);
+      border-color: #ffa000;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+      background: #fffde7;
+    }
+
+    .prefix-card.positive { border-left: 4px solid #4caf50; }
+    .prefix-card.negative { border-left: 4px solid #2196f3; }
+
+    .prefix-symbol {
+      font-family: 'Times New Roman', serif;
+      font-size: 22px;
+      font-weight: bold;
+      color: #1a237e;
+      display: block;
+      animation: symbolPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes symbolPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .prefix-name {
+      font-size: 11px;
+      color: #666;
+      display: block;
+      margin: 3px 0;
+    }
+
+    .prefix-value {
+      font-family: monospace;
+      font-size: 11px;
+      color: #ff6f00;
+      font-weight: bold;
+      display: block;
+    }
+
+    .highlight {
+      background: #fffde7;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin: 12px 0;
+      border-left: 5px solid #ffc107;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+      animation: highlightSlide 0.6s ease-out;
+    }
+
+    @keyframes highlightSlide {
+      from { transform: translateX(-20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .highlight::before {
+      content: '✨';
+      position: absolute;
+      top: 50%; right: 10px;
+      transform: translateY(-50%);
+      font-size: 20px;
+      opacity: 0.3;
+      animation: sparkle 2s ease-in-out infinite;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.3; transform: translateY(-50%) scale(1); }
+      50% { opacity: 0.6; transform: translateY(-50%) scale(1.2); }
+    }
+
+    .highlight-blue { background: #e3f2fd; border-left-color: #2196f3; }
+    .highlight-green { background: #e8f5e9; border-left-color: #4caf50; }
+    .highlight-red { background: #ffebee; border-left-color: #f44336; }
+    .highlight-purple { background: #f3e5f5; border-left-color: #9c27b0; }
+
+    .formula-box {
+      background: linear-gradient(135deg, #f5f5f5, #eeeeee);
+      padding: 16px 18px;
+      border-radius: 12px;
+      margin: 14px 0;
+      font-family: 'Times New Roman', serif;
+      font-size: 20px;
+      border-left: 5px solid #3949ab;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+    }
+
+    .formula-box:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .example-box {
+      background: #e8f5e9;
+      border: 2px solid #81c784;
+      padding: 14px;
+      border-radius: 12px;
+      margin: 12px 0;
+      animation: examplePop 0.6s ease-out;
+    }
+
+    @keyframes examplePop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .exercise-box {
+      background: #fff3e0;
+      border: 2px solid #ffb74d;
+      padding: 14px;
+      border-radius: 12px;
+      margin: 12px 0;
+      transition: all 0.3s;
+    }
+
+    .exercise-box:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .canvas-container {
+      width: 100%;
+      max-width: 480px;
+      height: 260px;
+      margin: 14px auto;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fefefe;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      border: 2px solid #e0e0e0;
+      transition: all 0.3s;
+    }
+
+    .canvas-container:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transform: scale(1.02);
+    }
+
+    .canvas-container.small { height: 200px; max-width: 400px; }
+    .canvas-container.large { height: 300px; }
+    canvas { display: block; width: 100%; height: 100%; }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin: 3px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .tag:hover {
+      transform: scale(1.1);
+    }
+
+    .tag-blue { background: #bbdefb; color: #0d47a1; }
+    .tag-green { background: #c8e6c9; color: #1b5e20; }
+    .tag-red { background: #ffcdd2; color: #b71c1c; }
+    .tag-purple { background: #e1bee7; color: #4a148c; }
+    .tag-orange { background: #ffe0b2; color: #bf360c; }
+
+    .underline {
+      text-decoration: underline;
+      text-decoration-color: #ff6f00;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 3px;
+      transition: all 0.3s;
+    }
+
+    .underline:hover {
+      text-decoration-color: #f44336;
+      text-decoration-thickness: 4px;
+    }
+
+    .text-center { text-align: center; }
+
+    .divider {
+      border: none;
+      border-top: 2px dashed #e0e0e0;
+      margin: 16px 0;
+      position: relative;
+    }
+
+    .divider::before {
+      content: '⚡';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 0 10px;
+      font-size: 20px;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #fafafa, #f5f5f5);
+      border-radius: 12px;
+      border-left: 5px solid #ff6f00;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,160,0,0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .timeline-item:hover::before {
+      left: 100%;
+    }
+
+    .timeline-item:hover {
+      transform: translateX(8px);
+      background: linear-gradient(135deg, #fffde7, #fff9c4);
+      border-left-color: #4caf50;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .timeline-emoji { 
+      font-size: 36px; 
+      flex-shrink: 0;
+      animation: emojiFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes emojiFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+
+    .timeline-content { flex: 1; }
+
+    .timeline-name {
+      font-weight: bold;
+      color: #1a237e;
+      font-size: 16px;
+    }
+
+    .timeline-desc {
+      font-size: 13px;
+      color: #555;
+      margin-top: 3px;
+    }
+
+    .nav-bar {
+      background: #f5f5f5;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      border-top: 1px solid #e0e0e0;
+      flex-wrap: wrap;
+    }
+
+    .nav-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      border-radius: 28px;
+      padding: 6px;
+      border: 2px solid #e0e0e0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .nav-btn {
+      background: white;
+      border: 2px solid #e0e0e0;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Patrick Hand', cursive;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      border-radius: 50%;
+      background: rgba(255,111,0,0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s;
+    }
+
+    .nav-btn:hover::before {
+      width: 100%; height: 100%;
+    }
+
+    .nav-btn:hover {
+      background: #ff6f00;
+      color: white;
+      border-color: transparent;
+      transform: scale(1.15) rotate(10deg);
+      box-shadow: 0 4px 12px rgba(255,111,0,0.4);
+    }
+
+    .nav-btn:active {
+      transform: scale(0.95);
+    }
+
+    .dots { display: flex; gap: 7px; padding: 0 8px; }
+
+    .dot {
+      width: 10px; height: 10px;
+      background: #ccc;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .dot::before {
+      content: '';
+      position: absolute;
+      top: -4px; left: -4px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(255,111,0,0.2);
+      transform: scale(0);
+      transition: transform 0.3s;
+    }
+
+    .dot:hover::before {
+      transform: scale(1);
+    }
+
+    .dot.active {
+      background: #ff6f00;
+      width: 26px;
+      border-radius: 12px;
+      animation: dotActive 0.4s ease-out;
+    }
+
+    @keyframes dotActive {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .counter {
+      font-size: 13px;
+      background: white;
+      padding: 6px 14px;
+      border-radius: 16px;
+      border: 2px solid #e0e0e0;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .iban-box {
+      background: linear-gradient(135deg, #1a237e, #283593);
+      color: white;
+      padding: 18px;
+      border-radius: 12px;
+      margin: 14px 0;
+      text-align: center;
+      font-family: monospace;
+      font-size: 17px;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .iban-box::before {
+      content: '💳';
+      position: absolute;
+      top: 10px; right: 10px;
+      font-size: 24px;
+      opacity: 0.3;
+      animation: cardFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+
+    .contact-final {
+      background: #e8eaf6;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 12px 0;
+      text-align: center;
+      border: 2px solid #c5cae9;
+    }
+
+    .prefix-group-title {
+      background: linear-gradient(90deg, #e8eaf6, transparent);
+      padding: 8px 14px;
+      border-radius: 8px;
+      margin: 12px 0 8px 0;
+      font-weight: bold;
+      color: #1a237e;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: groupSlide 0.6s ease-out;
+    }
+
+    @keyframes groupSlide {
+      from { transform: translateX(-20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .prefix-group-title.positive { border-left: 5px solid #4caf50; }
+    .prefix-group-title.negative { border-left: 5px solid #2196f3; }
+
+    math { font-size: 1.2em; }
+
+    /* ==================== RESPONSIVIDADE ==================== */
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      
+      .deck { border-radius: 18px; }
+      
+      .cover-slide { min-height: 450px; padding: 30px 20px; }
+      .cover-title { font-size: 36px; }
+      .cover-subtitle { font-size: 22px; }
+      .cover-emoji-top { font-size: 52px; }
+      .cover-author { padding: 16px 28px; }
+      .cover-author-name { font-size: 26px; }
+      .cover-contact { font-size: 13px; gap: 12px; }
+      
+      .top-bar { padding: 12px 16px; font-size: 14px; }
+      .author-name { font-size: 20px; }
+      .contact-info { font-size: 12px; gap: 10px; }
+      
+      .slide { padding: 18px 20px; }
+      h1 { font-size: 24px; }
+      h2 { font-size: 20px; }
+      
+      .grid-2col { grid-template-columns: 1fr; gap: 12px; }
+      .grid-3col { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      
+      .canvas-container { height: 220px; max-width: 100%; }
+      .canvas-container.small { height: 180px; }
+      .canvas-container.large { height: 260px; }
+      
+      .prefix-symbol { font-size: 18px; }
+      .prefix-name { font-size: 10px; }
+      .prefix-value { font-size: 10px; }
+      
+      .nav-bar { padding: 12px 16px; gap: 10px; }
+      .nav-btn { width: 38px; height: 38px; font-size: 16px; }
+      .dots { gap: 5px; }
+      .dot { width: 8px; height: 8px; }
+      .dot.active { width: 22px; }
+      .counter { font-size: 12px; padding: 5px 12px; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 6px; }
+      
+      .cover-slide { min-height: 400px; padding: 24px 16px; }
+      .cover-title { font-size: 28px; }
+      .cover-subtitle { font-size: 18px; }
+      .cover-emoji-top { font-size: 44px; }
+      .cover-author { padding: 14px 20px; }
+      .cover-author-name { font-size: 22px; }
+      .cover-contact { flex-direction: column; gap: 8px; }
+      .cover-start-btn { padding: 12px 32px; font-size: 16px; }
+      
+      .top-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .author-name { font-size: 18px; }
+      .contact-info { font-size: 11px; }
+      
+      .slide { padding: 14px 16px; }
+      h1 { font-size: 20px; }
+      h2 { font-size: 18px; }
+      
+      .grid-3col { grid-template-columns: 1fr; }
+      
+      .canvas-container { height: 200px; }
+      .canvas-container.small { height: 160px; }
+      .canvas-container.large { height: 220px; }
+      
+      .card { padding: 12px; }
+      .card-icon { font-size: 28px; }
+      
+      .prefix-symbol { font-size: 16px; }
+      .prefix-name { font-size: 9px; }
+      .prefix-value { font-size: 9px; }
+      
+      .nav-group { padding: 4px; }
+      .nav-btn { width: 36px; height: 36px; font-size: 14px; }
+    }
+
+    @media (min-width: 1200px) {
+      .deck { max-width: 1200px; }
+      .cover-title { font-size: 64px; }
+      .cover-subtitle { font-size: 32px; }
+      .stage { padding-bottom: 60%; }
+    }
+
+    /* Animações de entrada para elementos */
+    .slide.active .card,
+    .slide.active .timeline-item,
+    .slide.active .highlight,
+    .slide.active .example-box,
+    .slide.active .exercise-box {
+      animation: elementFadeIn 0.6s ease-out backwards;
+    }
+
+    .slide.active .card:nth-child(1) { animation-delay: 0.1s; }
+    .slide.active .card:nth-child(2) { animation-delay: 0.2s; }
+    .slide.active .card:nth-child(3) { animation-delay: 0.3s; }
+    .slide.active .card:nth-child(4) { animation-delay: 0.4s; }
+    .slide.active .card:nth-child(5) { animation-delay: 0.5s; }
+    .slide.active .card:nth-child(6) { animation-delay: 0.6s; }
+
+    @keyframes elementFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Scrollbar customizada */
+    .slide::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .slide::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .slide::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #ff6f00, #ffa000);
+      border-radius: 10px;
+    }
+
+    .slide::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #e65100, #ff6f00);
+    }
+  </style>
+</head>
+<body>
+<div class="deck">
+  <!-- ==================== CAPA ==================== -->
+  <div class="cover-slide" id="coverSlide">
+    <div class="cover-emojis-orbit">
+      <span class="orbit-emoji" style="top: 20%; left: 10%; animation-delay: 0s;">⚛️</span>
+      <span class="orbit-emoji" style="top: 30%; right: 15%; animation-delay: 2s;">🔬</span>
+      <span class="orbit-emoji" style="bottom: 25%; left: 20%; animation-delay: 4s;">🌡️</span>
+      <span class="orbit-emoji" style="bottom: 30%; right: 10%; animation-delay: 6s;">⚡</span>
+      <span class="orbit-emoji" style="top: 50%; left: 5%; animation-delay: 8s;">💡</span>
+      <span class="orbit-emoji" style="top: 50%; right: 5%; animation-delay: 10s;">🔭</span>
+    </div>
+    
+    <div class="cover-emoji-top">🌌</div>
+    <h1 class="cover-title">Fundamentos da Física</h1>
+    <p class="cover-subtitle">✨ Uma Jornada pelo Universo ✨</p>
+    
+    <div class="cover-author">
+      <div class="cover-author-name">👨‍🏫 Nando Kissanga</div>
+      <div class="cover-author-title">Professor de Física</div>
+      <div class="cover-contact">
+        <span>📧 nandokissanga@gmail.com</span>
+        <span>📱 WhatsApp: 957511281</span>
+      </div>
+    </div>
+    
+    <button class="cover-start-btn" onclick="startPresentation()">
+      🚀 Iniciar Apresentação
+    </button>
+  </div>
+
+  <header class="top-bar" id="topBar" style="display: none;">
+    <span class="author-name">👨‍🏫 Nando Kissanga</span>
+    <div class="contact-info">
+      <span>📧 nandokissanga@gmail.com</span>
+      <span>📱 WhatsApp: 957511281</span>
+    </div>
+  </header>
+
+  <div class="progress-bar" id="progressBar" style="display: none;">
+    <div class="progress-fill" id="progressFill" style="width: 11.1%;"></div>
+  </div>
+
+  <div class="stage" id="stage" style="display: none;">
+    <div class="slides-container" id="slidesContainer"></div>
+  </div>
+
+  <nav class="nav-bar" id="navBar" style="display: none;">
+    <div class="nav-group">
+      <button class="nav-btn" id="prevBtn">◀</button>
+      <div class="dots" id="dotsContainer"></div>
+      <button class="nav-btn" id="nextBtn">▶</button>
+    </div>
+    <div class="counter" id="counterDisplay">1 / 9</div>
+  </nav>
+</div>
+
+<script>
+  function startPresentation() {
+    const cover = document.getElementById('coverSlide');
+    const topBar = document.getElementById('topBar');
+    const progressBar = document.getElementById('progressBar');
+    const stage = document.getElementById('stage');
+    const navBar = document.getElementById('navBar');
+    
+    cover.style.transition = 'all 0.6s ease-out';
+    cover.style.opacity = '0';
+    cover.style.transform = 'scale(0.9)';
+    
+    setTimeout(() => {
+      cover.style.display = 'none';
+      topBar.style.display = 'flex';
+      progressBar.style.display = 'block';
+      stage.style.display = 'block';
+      navBar.style.display = 'flex';
+      
+      topBar.style.animation = 'slideInLeft 0.6s ease-out';
+      stage.style.animation = 'fadeIn 0.6s ease-out';
+      navBar.style.animation = 'slideInRight 0.6s ease-out';
+      
+      initializePresentation();
+    }, 600);
+  }
+
+  function initializePresentation() {
+    (function() {
+      const slidesData = [
+        {
+          title: "🌌 O que é Física?",
+          badge: "Introdução",
+          content: `
+            <div class="text-center" style="margin: 10px 0;">
+              <h2 style="font-size: 24px; color: #1a237e; margin-bottom: 8px;">🔭 A Ciência que Desvenda o Universo</h2>
+            </div>
+
+            <p style="font-size: 15px;">A <span class="underline">Física</span> (do grego <em>physis</em> = natureza) é a ciência que estuda a <span class="underline">natureza</span> e seus fenômenos, buscando compreender como o <span class="underline">universo funciona</span> — desde as menores partículas até as maiores galáxias.</p>
+
+            <div class="canvas-container">
+              <canvas id="physicsIntroCanvas" width="480" height="260"></canvas>
+            </div>
+
+            <h2>🔬 Ramos da Física</h2>
+            <div class="grid-3col">
+              <div class="card">
+                <span class="card-icon">⚙️</span>
+                <strong>Mecânica</strong>
+                <p style="font-size: 11px; margin-top: 4px;">🚗 Movimento e forças</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">🌡️</span>
+                <strong>Termologia</strong>
+                <p style="font-size: 11px; margin-top: 4px;">🔥 Calor e temperatura</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">⚡</span>
+                <strong>Eletricidade</strong>
+                <p style="font-size: 11px; margin-top: 4px;">💡 Cargas e corrente</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">💡</span>
+                <strong>Óptica</strong>
+                <p style="font-size: 11px; margin-top: 4px;">🌈 Luz e visão</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">🔊</span>
+                <strong>Ondulatória</strong>
+                <p style="font-size: 11px; margin-top: 4px;">🎵 Som e ondas</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">⚛️</span>
+                <strong>Quântica</strong>
+                <p style="font-size: 11px; margin-top: 4px;">🔬 Átomos e partículas</p>
+              </div>
+            </div>
+
+            <h2>📜 Grandes Gênios da Física</h2>
+            <div class="timeline">
+              <div class="timeline-item">
+                <span class="timeline-emoji">🔭</span>
+                <div class="timeline-content">
+                  <div class="timeline-name">Galileu Galilei (1564-1642)</div>
+                  <div class="timeline-desc">✨ "Pai da Ciência Moderna" — pioneiro do método experimental</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-emoji">🍎</span>
+                <div class="timeline-content">
+                  <div class="timeline-name">Isaac Newton (1643-1727)</div>
+                  <div class="timeline-desc">⭐ Leis do Movimento e Lei da Gravitação Universal</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-emoji">🧲</span>
+                <div class="timeline-content">
+                  <div class="timeline-name">Albert Einstein (1879-1955)</div>
+                  <div class="timeline-desc">🌟 Teoria da Relatividade e E=mc²</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="highlight-green">
+              <strong>💡 Por que estudar Física?</strong><br>
+              • 📱 Entender como celulares, computadores e internet funcionam<br>
+              • 🚗 Compreender o movimento dos veículos<br>
+              • 🌦️ Prever o tempo e fenômenos naturais<br>
+              • 🏥 Aplicar em medicina (raio-X, ressonância, laser)
+            </div>
+          `
+        },
+        {
+          title: "📚 Fundamentos da Física",
+          badge: "Grandezas",
+          content: `
+            <div class="text-center" style="margin: 10px 0;">
+              <h2 style="font-size: 26px; color: #1a237e; margin-bottom: 10px;">🎯 Grandezas Físicas e Medidas</h2>
+            </div>
+
+            <div class="canvas-container large">
+              <canvas id="introCanvas" width="480" height="300"></canvas>
+            </div>
+            
+            <div class="highlight-blue">
+              <strong>🎯 Tópicos da Aula:</strong>
+              <ul style="margin-left: 20px; margin-top: 8px;">
+                <li>📏 Grandezas Escalares e Vetoriais</li>
+                <li>🌍 Sistema Internacional de Unidades (SI)</li>
+                <li>📊 Prefixos do SI (múltiplos e submúltiplos)</li>
+                <li>🔢 Notação Científica</li>
+                <li>🔄 Conversões de Unidades</li>
+              </ul>
+            </div>
+
+            <div class="grid-2col">
+              <div class="card">
+                <span class="card-icon">🎯</span>
+                <strong>Objetivo</strong>
+                <p style="font-size: 13px; margin-top: 6px;">Compreender as grandezas físicas e suas medidas</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">📊</span>
+                <strong>Aplicação</strong>
+                <p style="font-size: 13px; margin-top: 6px;">Exemplos práticos do dia a dia</p>
+              </div>
+            </div>
+
+            <div class="highlight">
+              ✨ <strong>Professor:</strong> Nando Kissanga<br>
+              📧 nandokissanga@gmail.com | 📱 957511281
+            </div>
+          `
+        },
+        {
+          title: "📏 Grandezas Escalares e Vetoriais",
+          badge: "Conceitos",
+          content: `
+            <p>Grandeza é tudo que pode ser <span class="underline">medido</span> e unidade <span class="underline">torna ela única</span>.</p>
+            <h2>🔹 Grandezas Escalares</h2>
+            <p>São completamente definidas por um <span class="underline">valor numérico</span> e uma <span class="underline">unidade de medida</span>.</p>
+            
+            <div class="grid-2col">
+              <div class="card">
+                <span class="card-icon">🌡️</span>
+                <strong>Temperatura</strong>
+                <p style="font-size: 12px;">25°C</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">⏱️</span>
+                <strong>Tempo</strong>
+                <p style="font-size: 12px;">10 segundos</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">⚖️</span>
+                <strong>Massa</strong>
+                <p style="font-size: 12px;">5 kg</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">📏</span>
+                <strong>Comprimento</strong>
+                <p style="font-size: 12px;">3 metros</p>
+              </div>
+            </div>
+
+            <h2>🔸 Grandezas Vetoriais</h2>
+            <p>Precisam de <span class="underline">módulo</span> (valor), <span class="underline">direção</span> e <span class="underline">sentido</span> para serem definidas.</p>
+            
+            <div class="canvas-container">
+              <canvas id="vectorCanvas" width="480" height="260"></canvas>
+            </div>
+            
+            <div class="example-box">
+              <strong>🚗 Exemplo Prático:</strong><br>
+              • <strong>Escalar:</strong> Relógio marca 8 h da noite (apenas valor)<br>
+              • <strong>Vetorial:</strong> Carro vai a 80 km/h para o <strong>Norte</strong> (valor + direção + sentido)
+            </div>
+
+            <div class="formula-box">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mrow>
+                  <mover><mi>v</mi><mo stretchy="false">→</mo></mover>
+                  <mo>=</mo>
+                  <mn>80</mn>
+                  <mtext> </mtext>
+                  <mi>km</mi>
+                  <mo>/</mo>
+                  <mi>h</mi>
+                  <mtext> </mtext>
+                  <mtext>Norte</mtext>
+                </mrow>
+              </math>
+            </div>
+          `
+        },
+        {
+          title: "🌍 Sistema Internacional (SI)",
+          badge: "Unidades",
+          content: `
+            <h2>📐 Grandezas Fundamentais do SI</h2>
+            
+            <div class="canvas-container">
+              <canvas id="siCanvas" width="480" height="260"></canvas>
+            </div>
+
+            <div class="grid-2col">
+              <div class="card">
+                <span class="card-icon">📏</span>
+                <strong>Comprimento</strong>
+                <p style="font-size: 12px;">metro (m)</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">⚖️</span>
+                <strong>Massa</strong>
+                <p style="font-size: 12px;">quilograma (kg)</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">⏱️</span>
+                <strong>Tempo</strong>
+                <p style="font-size: 12px;">segundo (s)</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">⚡</span>
+                <strong>Corrente Elétrica</strong>
+                <p style="font-size: 12px;">ampère (A)</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">🌡️</span>
+                <strong>Temperatura</strong>
+                <p style="font-size: 12px;">kelvin (K)</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">💡</span>
+                <strong>Intensidade Luminosa</strong>
+                <p style="font-size: 12px;">candela (cd)</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">🧪</span>
+                <strong>Quantidade de Substância</strong>
+                <p style="font-size: 12px;">mol (mol)</p>
+              </div>
+            </div>
+            
+            <h2>🔢 Grandezas Derivadas</h2>
+            <div class="formula-box">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mrow>
+                  <mi>Velocidade</mi>
+                  <mo>=</mo>
+                  <mfrac>
+                    <mi>Δs</mi>
+                    <mi>Δt</mi>
+                  </mfrac>
+                  <mo>=</mo>
+                  <mi>m</mi>
+                  <mo>/</mo>
+                  <mi>s</mi>
+                </mrow>
+              </math>
+            </div>
+            
+            <div class="formula-box">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mrow>
+                  <mi>Força</mi>
+                  <mo>=</mo>
+                  <mi>massa</mi>
+                  <mo>×</mo>
+                  <mi>aceleração</mi>
+                  <mo>=</mo>
+                  <mi>kg</mi>
+                  <mo>·</mo>
+                  <mi>m</mi>
+                  <mo>/</mo>
+                  <msup><mi>s</mi><mn>2</mn></msup>
+                  <mo>=</mo>
+                  <mi>N</mi>
+                  <mtext> (Newton)</mtext>
+                </mrow>
+              </math>
+            </div>
+            
+            <div class="highlight-green">
+              <strong>💡 Exemplo Real:</strong><br>
+              🏃 Uma pessoa corre 100 metros em 10 segundos<br>
+              Velocidade = 100 m / 10 s = <strong>10 m/s</strong>
+            </div>
+          `
+        },
+        {
+          title: "📊 Prefixos do SI",
+          badge: "Múltiplos",
+          content: `
+            <p style="margin-bottom: 10px;">Os prefixos são usados para formar múltiplos e submúltiplos das unidades, evitando números muito grandes ou muito pequenos.</p>
+
+            <div class="canvas-container">
+              <canvas id="prefixCanvas" width="480" height="260"></canvas>
+            </div>
+
+            <div class="prefix-group-title positive">
+              <span>⬆️</span> Múltiplos (valores maiores que a unidade)
+            </div>
+            <div class="grid-3col">
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">Y</span>
+                <span class="prefix-name">Yotta</span>
+                <span class="prefix-value">10²⁴</span>
+              </div>
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">Z</span>
+                <span class="prefix-name">Zetta</span>
+                <span class="prefix-value">10²¹</span>
+              </div>
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">E</span>
+                <span class="prefix-name">Exa</span>
+                <span class="prefix-value">10¹⁸</span>
+              </div>
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">P</span>
+                <span class="prefix-name">Peta</span>
+                <span class="prefix-value">10¹⁵</span>
+              </div>
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">T</span>
+                <span class="prefix-name">Tera</span>
+                <span class="prefix-value">10¹²</span>
+              </div>
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">G</span>
+                <span class="prefix-name">Giga</span>
+                <span class="prefix-value">10⁹</span>
+              </div>
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">M</span>
+                <span class="prefix-name">Mega</span>
+                <span class="prefix-value">10⁶</span>
+              </div>
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">k</span>
+                <span class="prefix-name">Quilo</span>
+                <span class="prefix-value">10³</span>
+              </div>
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">h</span>
+                <span class="prefix-name">Hecto</span>
+                <span class="prefix-value">10²</span>
+              </div>
+              <div class="prefix-card positive">
+                <span class="prefix-symbol">da</span>
+                <span class="prefix-name">Deca</span>
+                <span class="prefix-value">10¹</span>
+              </div>
+            </div>
+
+            <div class="prefix-group-title negative">
+              <span>⬇️</span> Submúltiplos (valores menores que a unidade)
+            </div>
+            <div class="grid-3col">
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">d</span>
+                <span class="prefix-name">Deci</span>
+                <span class="prefix-value">10⁻¹</span>
+              </div>
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">c</span>
+                <span class="prefix-name">Centi</span>
+                <span class="prefix-value">10⁻²</span>
+              </div>
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">m</span>
+                <span class="prefix-name">Mili</span>
+                <span class="prefix-value">10⁻³</span>
+              </div>
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">μ</span>
+                <span class="prefix-name">Micro</span>
+                <span class="prefix-value">10⁻⁶</span>
+              </div>
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">n</span>
+                <span class="prefix-name">Nano</span>
+                <span class="prefix-value">10⁻⁹</span>
+              </div>
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">p</span>
+                <span class="prefix-name">Pico</span>
+                <span class="prefix-value">10⁻¹²</span>
+              </div>
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">f</span>
+                <span class="prefix-name">Femto</span>
+                <span class="prefix-value">10⁻¹⁵</span>
+              </div>
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">a</span>
+                <span class="prefix-name">Atto</span>
+                <span class="prefix-value">10⁻¹⁸</span>
+              </div>
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">z</span>
+                <span class="prefix-name">Zepto</span>
+                <span class="prefix-value">10⁻²¹</span>
+              </div>
+              <div class="prefix-card negative">
+                <span class="prefix-symbol">y</span>
+                <span class="prefix-name">Yocto</span>
+                <span class="prefix-value">10⁻²⁴</span>
+              </div>
+            </div>
+
+            <div class="highlight">
+              <strong>💡 Exemplos do Dia a Dia:</strong><br>
+              • 📏 <strong>km</strong> (quilômetro) = 10³ m = 1.000 m<br>
+              • 💾 <strong>GB</strong> (gigabyte) = 10⁹ bytes<br>
+              • 📻 <strong>MHz</strong> (megahertz) = 10⁶ Hz<br>
+              • 🔬 <strong>μm</strong> (micrômetro) = 10⁻⁶ m<br>
+              • 💊 <strong>mg</strong> (miligrama) = 10⁻³ g
+            </div>
+          `
+        },
+        {
+          title: "🔬 Notação Científica",
+          badge: "Matemática",
+          content: `
+            <h2>📝 Conceito</h2>
+            <p>Forma de escrever números muito grandes ou muito pequenos usando potências de 10.</p>
+
+            <div class="formula-box">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mrow>
+                  <mi>N</mi>
+                  <mo>=</mo>
+                  <mi>a</mi>
+                  <mo>×</mo>
+                  <msup><mn>10</mn><mi>n</mi></msup>
+                </mrow>
+              </math>
+              <br>
+              <small>onde 1 ≤ a < 10 e n é inteiro</small>
+            </div>
+
+            <h2>📊 Exemplos Práticos</h2>
+            
+            <div class="canvas-container">
+              <canvas id="notationCanvas" width="480" height="260"></canvas>
+            </div>
+
+            <div class="grid-2col">
+              <div class="highlight-blue">
+                <strong>🌌 Número Grande:</strong><br>
+                Distância Terra-Sol:<br>
+                150.000.000.000 m<br>
+                = <strong>1,5 × 10¹¹ m</strong>
+              </div>
+              <div class="highlight-purple">
+                <strong>🔬 Número Pequeno:</strong><br>
+                Tamanho de um átomo:<br>
+                0,0000000001 m<br>
+                = <strong>1 × 10⁻¹⁰ m</strong>
+              </div>
+            </div>
+
+            <div class="example-box">
+              <strong>📱 Exemplos do Dia a Dia:</strong><br>
+              • Capacidade do celular: 128 GB = 1,28 × 10¹¹ bytes<br>
+              • Espessura de um fio de cabelo: 0,00007 m = 7 × 10⁻⁵ m<br>
+              • População mundial: 8.000.000.000 = 8 × 10⁹ pessoas
+            </div>
+
+            <h2>🧮 Como Converter</h2>
+            <div class="highlight">
+              <strong>Regra:</strong> Mova a vírgula até obter um número entre 1 e 10.<br>
+              • Para a <strong>esquerda</strong> → expoente <strong>positivo</strong><br>
+              • Para a <strong>direita</strong> → expoente <strong>negativo</strong>
+            </div>
+          `
+        },
+        {
+          title: "🔄 Conversões de Unidades",
+          badge: "Prática",
+          content: `
+            <h2>📏 Comprimento</h2>
+            <div class="formula-box">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mrow>
+                  <mn>1</mn>
+                  <mtext> km</mtext>
+                  <mo>=</mo>
+                  <mn>1000</mn>
+                  <mtext> m</mtext>
+                  <mo>=</mo>
+                  <mn>100.000</mn>
+                  <mtext> cm</mtext>
+                </mrow>
+              </math>
+            </div>
+
+            <div class="canvas-container">
+              <canvas id="conversionCanvas" width="480" height="260"></canvas>
+            </div>
+
+            <div class="grid-2col">
+              <div class="card">
+                <span class="card-icon">🏃</span>
+                <strong>Exemplo 1</strong>
+                <p style="font-size: 12px;">2,5 km = 2.500 m</p>
+              </div>
+              <div class="card">
+                <span class="card-icon">📐</span>
+                <strong>Exemplo 2</strong>
+                <p style="font-size: 12px;">150 cm = 1,5 m</p>
+              </div>
+            </div>
+
+            <h2>⏱️ Tempo</h2>
+            <div class="formula-box">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mrow>
+                  <mn>1</mn>
+                  <mtext> h</mtext>
+                  <mo>=</mo>
+                  <mn>60</mn>
+                  <mtext> min</mtext>
+                  <mo>=</mo>
+                  <mn>3600</mn>
+                  <mtext> s</mtext>
+                </mrow>
+              </math>
+            </div>
+
+            <h2>⚖️ Massa</h2>
+            <div class="formula-box">
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mrow>
+                  <mn>1</mn>
+                  <mtext> kg</mtext>
+                  <mo>=</mo>
+                  <mn>1000</mn>
+                  <mtext> g</mtext>
+                  <mo>=</mo>
+                  <mn>1.000.000</mn>
+                  <mtext> mg</mtext>
+                </mrow>
+              </math>
+            </div>
+
+            <div class="example-box">
+              <strong>🚗 Problema Resolvido:</strong><br>
+              Um carro viaja a 72 km/h. Qual a velocidade em m/s?<br><br>
+              <math xmlns="http://www.w3.org/1998/Math/MathML">
+                <mrow>
+                  <mn>72</mn>
+                  <mtext> km/h</mtext>
+                  <mo>=</mo>
+                  <mfrac>
+                    <mn>72</mn>
+                    <mn>3,6</mn>
+                  </mfrac>
+                  <mo>=</mo>
+                  <mn>20</mn>
+                  <mtext> m/s</mtext>
+                </mrow>
+              </math>
+            </div>
+          `
+        },
+        {
+          title: "✍️ Exercícios Práticos",
+          badge: "Aplicação",
+          content: `
+            <div class="canvas-container small">
+              <canvas id="exerciseCanvas" width="400" height="200"></canvas>
+            </div>
+
+            <h2>📝 Exercício 1 - Vetores</h2>
+            <div class="exercise-box">
+              <strong>Enunciado:</strong> Um carro percorre 120 km para o Leste em 2 horas.<br>
+              <strong>a)</strong> Classifique a grandeza velocidade.<br>
+              <strong>b)</strong> Calcule a velocidade média.<br><br>
+              <details>
+                <summary style="cursor: pointer; color: #1a237e;"><strong>🔍 Ver Resposta</strong></summary>
+                <p style="margin-top: 10px;">
+                  a) Vetorial (tem direção: Leste)<br>
+                  b) v = Δs/Δt = 120 km / 2 h = <strong>60 km/h para Leste</strong>
+                </p>
+              </details>
+            </div>
+
+            <h2>📝 Exercício 2 - Notação Científica</h2>
+            <div class="exercise-box">
+              <strong>Enunciado:</strong> Escreva em notação científica:<br>
+              a) 0,00045 m<br>
+              b) 3.200.000.000 bytes<br><br>
+              <details>
+                <summary style="cursor: pointer; color: #1a237e;"><strong>🔍 Ver Resposta</strong></summary>
+                <p style="margin-top: 10px;">
+                  a) 4,5 × 10⁻⁴ m<br>
+                  b) 3,2 × 10⁹ bytes
+                </p>
+              </details>
+            </div>
+
+            <h2>📝 Exercício 3 - Prefixos</h2>
+            <div class="exercise-box">
+              <strong>Enunciado:</strong> Converta usando prefixos:<br>
+              a) 3,5 km para metros<br>
+              b) 250 mg para gramas<br>
+              c) 2,4 GHz para Hz<br><br>
+              <details>
+                <summary style="cursor: pointer; color: #1a237e;"><strong>🔍 Ver Resposta</strong></summary>
+                <p style="margin-top: 10px;">
+                  a) 3.500 m (k = 10³)<br>
+                  b) 0,250 g (m = 10⁻³)<br>
+                  c) 2,4 × 10⁹ Hz (G = 10⁹)
+                </p>
+              </details>
+            </div>
+
+            <h2>📝 Exercício 4 - Conversão</h2>
+            <div class="exercise-box">
+              <strong>Enunciado:</strong> Converta:<br>
+              a) 45 minutos para segundos<br>
+              b) 2,5 kg para gramas<br><br>
+              <details>
+                <summary style="cursor: pointer; color: #1a237e;"><strong>🔍 Ver Resposta</strong></summary>
+                <p style="margin-top: 10px;">
+                  a) 2.700 s<br>
+                  b) 2.500 g
+                </p>
+              </details>
+            </div>
+
+            <div class="highlight-purple">
+              <strong>🎯 Desafio Extra:</strong><br>
+              A luz viaja a 300.000.000 m/s. Escreva em notação científica e converta para km/s.
+            </div>
+          `
+        },
+        {
+          title: "✅ Conclusão e Contato",
+          badge: "Final",
+          content: `
+            <div class="canvas-container large">
+              <canvas id="finalCanvas" width="480" height="300"></canvas>
+            </div>
+
+            <div class="highlight-green">
+              <strong>📚 Resumo do Aprendizado:</strong>
+              <ul style="margin-left: 20px; margin-top: 8px;">
+                <li>🌌 O que é Física e seus ramos</li>
+                <li>📏 Diferença entre grandezas escalares e vetoriais</li>
+                <li>🌍 Unidades do Sistema Internacional (SI)</li>
+                <li>📊 Prefixos do SI (Yotta a Yocto)</li>
+                <li>🔢 Como usar notação científica</li>
+                <li>🔄 Técnicas de conversão de unidades</li>
+              </ul>
+            </div>
+
+            <div class="contact-final">
+              <h3 style="color: #1a237e; margin-bottom: 12px;">📞 Qualquer Dúvida? Entre em Contato!</h3>
+              <p style="font-size: 16px; margin: 8px 0;">
+                <strong>Professor:</strong> Nando Kissanga<br>
+                📧 <a href="mailto:nandokissanga@gmail.com" style="color: #1a237e;">nandokissanga@gmail.com</a><br>
+                📱 WhatsApp: <strong>957511281</strong>
+              </p>
+            </div>
+
+            <div class="highlight-blue">
+              <strong>💬 Estou à disposição para:</strong><br>
+              • Esclarecer dúvidas sobre a matéria<br>
+              • Exercícios adicionais<br>
+              • Aulas de reforço
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="text-center" style="margin: 16px 0;">
+              <h3 style="color: #1a237e; margin-bottom: 12px;">💝 Apoie este Trabalho com um Donativo</h3>
+              <p style="margin-bottom: 12px;">Se este conteúdo foi útil, considere contribuir:</p>
+              
+              <div class="iban-box">
+                <strong>IBAN:</strong><br>
+                AO06 0055 0000 61013844101 24<br>
+                <small style="display: block; margin-top: 8px; opacity: 0.9;">
+                  Banco: BMA | Titular: Nando Kissanga
+                </small>
+              </div>
+
+              <div class="highlight" style="margin-top: 12px;">
+                🙏 <strong>Obrigado pelo apoio!</strong><br>
+                Seu contributo ajuda a criar mais conteúdos educativos gratuitos.
+              </div>
+            </div>
+
+            <div class="text-center" style="margin-top: 20px;">
+              <span style="font-size: 32px;">👨‍🏫📚</span>
+              <p style="margin-top: 12px; color: #666; font-size: 14px;">
+                "A educação é a arma mais poderosa que você pode usar para mudar o mundo."<br>
+                <em>- Nelson Mandela</em>
+              </p>
+            </div>
+          `
+        }
+      ];
+
+      const state = {
+        currentIndex: 0,
+        totalSlides: slidesData.length,
+        animationFrame: null
+      };
+
+      const slidesContainer = document.getElementById('slidesContainer');
+      const dotsContainer = document.getElementById('dotsContainer');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const counterDisplay = document.getElementById('counterDisplay');
+      const progressFill = document.getElementById('progressFill');
+
+      function renderAllSlides() {
+        slidesContainer.innerHTML = slidesData.map((slide, idx) => `
+          <div class="slide ${idx === state.currentIndex ? 'active' : ''}" data-index="${idx}">
+            <div class="content">
+              <span class="badge">${slide.badge}</span>
+              <h1>${slide.title}</h1>
+              ${slide.content}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderDots() {
+        dotsContainer.innerHTML = slidesData.map((_, idx) => `
+          <span class="dot ${idx === state.currentIndex ? 'active' : ''}" data-index="${idx}"></span>
+        `).join('');
+
+        document.querySelectorAll('.dot').forEach(dot => {
+          dot.addEventListener('click', (e) => {
+            const index = parseInt(e.currentTarget.dataset.index);
+            if (index !== state.currentIndex) goToSlide(index);
+          });
+        });
+      }
+
+      function updateActiveSlide() {
+        document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('active', i === state.currentIndex));
+        document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === state.currentIndex));
+        counterDisplay.textContent = `${state.currentIndex + 1} / ${state.totalSlides}`;
+        progressFill.style.width = `${((state.currentIndex + 1) / state.totalSlides) * 100}%`;
+
+        destroyCanvasAnimation();
+        setTimeout(() => {
+          const canvas = document.querySelector('.slide.active canvas');
+          if (canvas) {
+            if (canvas.id === 'physicsIntroCanvas') initPhysicsIntroAnimation(canvas);
+            else if (canvas.id === 'introCanvas') initIntroAnimation(canvas);
+            else if (canvas.id === 'vectorCanvas') initVectorAnimation(canvas);
+            else if (canvas.id === 'siCanvas') initSIAnimation(canvas);
+            else if (canvas.id === 'prefixCanvas') initPrefixAnimation(canvas);
+            else if (canvas.id === 'notationCanvas') initNotationAnimation(canvas);
+            else if (canvas.id === 'conversionCanvas') initConversionAnimation(canvas);
+            else if (canvas.id === 'exerciseCanvas') initExerciseAnimation(canvas);
+            else if (canvas.id === 'finalCanvas') initFinalAnimation(canvas);
+          }
+        }, 50);
+      }
+
+      function goToSlide(index) {
+        if (index < 0 || index >= state.totalSlides || index === state.currentIndex) return;
+        state.currentIndex = index;
+        updateActiveSlide();
+      }
+
+      function nextSlide() {
+        if (state.currentIndex < state.totalSlides - 1) goToSlide(state.currentIndex + 1);
+      }
+
+      function prevSlide() {
+        if (state.currentIndex > 0) goToSlide(state.currentIndex - 1);
+      }
+
+      function initPhysicsIntroAnimation(canvas) {
+        const ctx = canvas.getContext('2d');
+        let phase = 0;
+        const w = canvas.width, h = canvas.height;
+
+        const branches = [
+          { emoji: '⚙️', name: 'Mecânica', color: '#f44336', angle: 0 },
+          { emoji: '🌡️', name: 'Termologia', color: '#ff9800', angle: Math.PI * 2 / 7 },
+          { emoji: '⚡', name: 'Eletricidade', color: '#ffc107', angle: Math.PI * 4 / 7 },
+          { emoji: '💡', name: 'Óptica', color: '#4caf50', angle: Math.PI * 6 / 7 },
+          { emoji: '🔊', name: 'Ondulatória', color: '#2196f3', angle: Math.PI * 8 / 7 },
+          { emoji: '⚛️', name: 'Quântica', color: '#9c27b0', angle: Math.PI * 10 / 7 },
+          { emoji: '🌌', name: 'Astrofísica', color: '#3f51b5', angle: Math.PI * 12 / 7 }
+        ];
+
+        const stars = [];
+        for (let i = 30; i < 0; i--) {
+          stars.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            size: Math.random() * 2 + 0.5,
+            speed: Math.random() * 0.02 + 0.01
+          });
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          
+          const grad = ctx.createRadialGradient(w/2, h/2, 30, w/2, h/2, 300);
+          grad.addColorStop(0, '#1a237e');
+          grad.addColorStop(0.5, '#283593');
+          grad.addColorStop(1, '#0d1137');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          stars.forEach((star, i) => {
+            const alpha = 0.3 + Math.sin(phase * star.speed * 2 + i) * 0.4;
+            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fill();
+          });
+
+          const centerX = w / 2;
+          const centerY = h / 2;
+          const radius = 95;
+
+          ctx.strokeStyle = 'rgba(255, 213, 79, 0.3)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 5]);
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          const pulse = 1 + Math.sin(phase * 0.05) * 0.08;
+          ctx.save();
+          ctx.translate(centerX, centerY);
+          ctx.scale(pulse, pulse);
+
+          const haloGrad = ctx.createRadialGradient(0, 0, 20, 0, 0, 50);
+          haloGrad.addColorStop(0, 'rgba(255, 213, 79, 0.6)');
+          haloGrad.addColorStop(1, 'rgba(255, 213, 79, 0)');
+          ctx.fillStyle = haloGrad;
+          ctx.beginPath();
+          ctx.arc(0, 0, 50, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#ffd54f';
+          ctx.strokeStyle = '#ff6f00';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(0, 0, 35, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 16px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('FÍSICA', 0, 0);
+          ctx.restore();
+
+          branches.forEach((branch, i) => {
+            const currentAngle = branch.angle + phase * 0.008;
+            const x = centerX + Math.cos(currentAngle) * radius;
+            const y = centerY + Math.sin(currentAngle) * radius;
+
+            ctx.strokeStyle = `rgba(255, 213, 79, 0.2)`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+
+            const branchPulse = 1 + Math.sin(phase * 0.04 + i) * 0.1;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.strokeStyle = branch.color;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(x, y, 24 * branchPulse, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(branch.emoji, x, y);
+
+            const labelRadius = radius + 35;
+            const labelX = centerX + Math.cos(currentAngle) * labelRadius;
+            const labelY = centerY + Math.sin(currentAngle) * labelRadius;
+            ctx.fillStyle = '#ffd54f';
+            ctx.font = 'bold 11px "Patrick Hand"';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(branch.name, labelX, labelY);
+          });
+
+          phase += 0.5;
+          state.animationFrame = requestAnimationFrame(draw);
+        }
+
+        if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+        draw();
+      }
+
+      function initIntroAnimation(canvas) {
+        const ctx = canvas.getContext('2d');
+        let phase = 0;
+        const w = canvas.width, h = canvas.height;
+
+        const items = [
+          { emoji: '⚛️', x: 70, y: 70, size: 40 },
+          { emoji: '🔬', x: 220, y: 50, size: 38 },
+          { emoji: '📐', x: 380, y: 80, size: 36 },
+          { emoji: '🌡️', x: 90, y: 180, size: 34 },
+          { emoji: '⚖️', x: 240, y: 200, size: 38 },
+          { emoji: '⏱️', x: 380, y: 190, size: 34 },
+          { emoji: '🚀', x: 160, y: 260, size: 36 },
+          { emoji: '💡', x: 320, y: 270, size: 34 }
+        ];
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          
+          const grad = ctx.createLinearGradient(0, 0, w, h);
+          grad.addColorStop(0, '#e3f2fd');
+          grad.addColorStop(0.5, '#f3e5f5');
+          grad.addColorStop(1, '#fff9c4');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          for (let i = 0; i < 20; i++) {
+            const px = (i * 47 + phase * 0.5) % w;
+            const py = (i * 31 + Math.sin(phase * 0.02 + i) * 10) % h;
+            ctx.fillStyle = `rgba(255, 111, 0, ${0.1 + Math.sin(phase * 0.03 + i) * 0.05})`;
+            ctx.beginPath();
+            ctx.arc(px, py, 2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.strokeStyle = 'rgba(26, 35, 126, 0.15)';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([4, 4]);
+          for (let i = 0; i < items.length; i++) {
+            for (let j = i + 1; j < items.length; j++) {
+              if ((i + j) % 2 === 0) {
+                ctx.beginPath();
+                ctx.moveTo(items[i].x, items[i].y);
+                ctx.lineTo(items[j].x, items[j].y);
+                ctx.stroke();
+              }
+            }
+          }
+          ctx.setLineDash([]);
+
+          items.forEach((item, i) => {
+            const offsetY = Math.sin(phase * 0.04 + i) * 10;
+            const scale = 1 + Math.sin(phase * 0.05 + i * 0.7) * 0.1;
+            ctx.save();
+            ctx.translate(item.x, item.y + offsetY);
+            ctx.scale(scale, scale);
+            ctx.font = `${item.size}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(item.emoji, 0, 0);
+            ctx.restore();
+          });
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.fillRect(w/2 - 120, h/2 - 25, 240, 50);
+          ctx.strokeStyle = '#ff6f00';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(w/2 - 120, h/2 - 25, 240, 50);
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 20px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.fillText('🌟 Física em Ação 🌟', w/2, h/2 + 7);
+
+          phase += 0.5;
+          state.animationFrame = requestAnimationFrame(draw);
+        }
+
+        if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+        draw();
+      }
+
+      function initVectorAnimation(canvas) {
+        const ctx = canvas.getContext('2d');
+        let phase = 0;
+        const w = canvas.width, h = canvas.height;
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          
+          const grad = ctx.createLinearGradient(0, 0, w, h);
+          grad.addColorStop(0, '#fafafa');
+          grad.addColorStop(1, '#e8eaf6');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+          
+          ctx.strokeStyle = '#e0e0e0';
+          ctx.lineWidth = 1;
+          for (let i = 0; i < w; i += 40) {
+            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, h); ctx.stroke();
+          }
+          for (let i = 0; i < h; i += 40) {
+            ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(w, i); ctx.stroke();
+          }
+
+          ctx.strokeStyle = '#90a4ae';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(50, h/2); ctx.lineTo(w-30, h/2);
+          ctx.moveTo(w/2, h-50); ctx.lineTo(w/2, 30);
+          ctx.stroke();
+
+          ctx.fillStyle = '#90a4ae';
+          ctx.beginPath(); ctx.moveTo(w-30, h/2-8); ctx.lineTo(w-30, h/2+8); ctx.lineTo(w-22, h/2); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(w/2-8, 30); ctx.lineTo(w/2+8, 30); ctx.lineTo(w/2, 38); ctx.fill();
+
+          ctx.font = '14px "Patrick Hand"';
+          ctx.fillStyle = '#90a4ae';
+          ctx.fillText('Leste', w-55, h/2 - 15);
+          ctx.fillText('Norte', w/2 + 12, 45);
+
+          const angle = Math.PI / 6 + Math.sin(phase * 0.02) * 0.2;
+          const length = 120 + Math.sin(phase * 0.03) * 15;
+          const endX = w/2 + length * Math.cos(angle);
+          const endY = h/2 - length * Math.sin(angle);
+
+          ctx.strokeStyle = 'rgba(255, 111, 0, 0.2)';
+          ctx.lineWidth = 10;
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(w/2, h/2);
+          ctx.lineTo(endX, endY);
+          ctx.stroke();
+
+          ctx.strokeStyle = '#ff6f00';
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.moveTo(w/2, h/2);
+          ctx.lineTo(endX, endY);
+          ctx.stroke();
+
+          const arrowSize = 16;
+          ctx.fillStyle = '#ff6f00';
+          ctx.beginPath();
+          ctx.moveTo(endX, endY);
+          ctx.lineTo(endX - arrowSize * Math.cos(angle - Math.PI/6), endY + arrowSize * Math.sin(angle - Math.PI/6));
+          ctx.lineTo(endX - arrowSize * Math.cos(angle + Math.PI/6), endY + arrowSize * Math.sin(angle + Math.PI/6));
+          ctx.fill();
+
+          ctx.save();
+          ctx.translate(endX, endY);
+          ctx.rotate(-angle);
+          ctx.font = '32px Arial';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('🚗', 22, 0);
+          ctx.restore();
+
+          ctx.fillStyle = '#1a237e';
+          ctx.beginPath();
+          ctx.arc(w/2, h/2, 6, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 18px "Patrick Hand"';
+          ctx.textAlign = 'left';
+          ctx.fillText('v⃗ = 80 km/h', w/2 + 15, h/2 - 25);
+          ctx.font = '14px "Patrick Hand"';
+          ctx.fillText('Norte', endX + 15, endY - 5);
+
+          phase += 0.5;
+          state.animationFrame = requestAnimationFrame(draw);
+        }
+
+        if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+        draw();
+      }
+
+      function initSIAnimation(canvas) {
+        const ctx = canvas.getContext('2d');
+        let phase = 0;
+        const w = canvas.width, h = canvas.height;
+
+        const units = [
+          { emoji: '📏', name: 'm', label: 'metro' },
+          { emoji: '⚖️', name: 'kg', label: 'quilograma' },
+          { emoji: '⏱️', name: 's', label: 'segundo' },
+          { emoji: '⚡', name: 'A', label: 'ampère' },
+          { emoji: '🌡️', name: 'K', label: 'kelvin' },
+          { emoji: '💡', name: 'cd', label: 'candela' },
+          { emoji: '🧪', name: 'mol', label: 'mol' }
+        ];
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          
+          const grad = ctx.createRadialGradient(w/2, h/2, 50, w/2, h/2, 280);
+          grad.addColorStop(0, '#e8eaf6');
+          grad.addColorStop(1, '#f3e5f5');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+          ctx.beginPath();
+          ctx.arc(w/2, h/2, 45, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#ff6f00';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          ctx.font = 'bold 16px "Patrick Hand"';
+          ctx.fillStyle = '#1a237e';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('SI', w/2, h/2 - 10);
+          ctx.font = '11px "Patrick Hand"';
+          ctx.fillText('Sistema', w/2, h/2 + 6);
+          ctx.fillText('Internacional', w/2, h/2 + 20);
+
+          const radius = 100;
+          units.forEach((u, i) => {
+            const angle = (i / units.length) * Math.PI * 2 - Math.PI/2 + phase * 0.005;
+            const x = w/2 + Math.cos(angle) * radius;
+            const y = h/2 + Math.sin(angle) * radius;
+
+            ctx.strokeStyle = `rgba(255, 111, 0, ${0.3 + Math.sin(phase * 0.03 + i) * 0.2})`;
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([3, 3]);
+            ctx.beginPath();
+            ctx.moveTo(w/2, h/2);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            const pulse = 1 + Math.sin(phase * 0.05 + i) * 0.1;
+            ctx.fillStyle = '#fff';
+            ctx.strokeStyle = '#ff6f00';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(x, y, 25 * pulse, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.font = '26px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(u.emoji, x, y);
+
+            ctx.fillStyle = '#1a237e';
+            ctx.font = 'bold 12px "Patrick Hand"';
+            const labelX = w/2 + Math.cos(angle) * (radius + 40);
+            const labelY = h/2 + Math.sin(angle) * (radius + 40);
+            ctx.fillText(u.name, labelX, labelY);
+          });
+
+          phase += 0.5;
+          state.animationFrame = requestAnimationFrame(draw);
+        }
+
+        if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+        draw();
+      }
+
+      function initPrefixAnimation(canvas) {
+        const ctx = canvas.getContext('2d');
+        let phase = 0;
+        const w = canvas.width, h = canvas.height;
+
+        const prefixes = [
+          { emoji: '🔬', name: 'nano', val: '10⁻⁹', x: 0.08, size: 16 },
+          { emoji: '🦠', name: 'micro', val: '10⁻⁶', x: 0.2, size: 20 },
+          { emoji: '💊', name: 'mili', val: '10⁻³', x: 0.32, size: 24 },
+          { emoji: '📏', name: 'unidade', val: '10⁰', x: 0.48, size: 32 },
+          { emoji: '🏃', name: 'quilo', val: '10³', x: 0.62, size: 36 },
+          { emoji: '💾', name: 'mega', val: '10⁶', x: 0.75, size: 40 },
+          { emoji: '🌍', name: 'giga', val: '10⁹', x: 0.88, size: 44 }
+        ];
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          
+          const grad = ctx.createLinearGradient(0, 0, w, 0);
+          grad.addColorStop(0, '#e3f2fd');
+          grad.addColorStop(0.5, '#fff9c4');
+          grad.addColorStop(1, '#ffebee');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          const baseY = h * 0.65;
+          ctx.strokeStyle = '#1a237e';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(30, baseY);
+          ctx.lineTo(w - 30, baseY);
+          ctx.stroke();
+
+          ctx.fillStyle = '#1a237e';
+          ctx.beginPath();
+          ctx.moveTo(w - 30, baseY - 6);
+          ctx.lineTo(w - 20, baseY);
+          ctx.lineTo(w - 30, baseY + 6);
+          ctx.fill();
+
+          ctx.font = 'bold 12px "Patrick Hand"';
+          ctx.fillStyle = '#1a237e';
+          ctx.textAlign = 'left';
+          ctx.fillText('← Pequeno', 35, baseY + 22);
+          ctx.textAlign = 'right';
+          ctx.fillText('Grande →', w - 35, baseY + 22);
+
+          ctx.textAlign = 'center';
+          ctx.font = 'bold 18px "Patrick Hand"';
+          ctx.fillStyle = '#1a237e';
+          ctx.fillText('📊 Escala dos Prefixos do SI', w/2, 28);
+
+          prefixes.forEach((p, i) => {
+            const x = p.x * w;
+            const bounce = Math.sin(phase * 0.05 + i * 0.8) * 10;
+            const y = baseY - 35 + bounce;
+
+            ctx.strokeStyle = `rgba(255, 111, 0, ${0.4 + Math.sin(phase * 0.03 + i) * 0.2})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, baseY);
+            ctx.lineTo(x, y + 18);
+            ctx.stroke();
+
+            ctx.fillStyle = '#ff6f00';
+            ctx.beginPath();
+            ctx.arc(x, baseY, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.font = `${p.size}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(p.emoji, x, y);
+
+            ctx.fillStyle = '#1a237e';
+            ctx.font = 'bold 11px "Patrick Hand"';
+            ctx.fillText(p.name, x, baseY + 38);
+            ctx.fillStyle = '#ff6f00';
+            ctx.font = 'bold 12px monospace';
+            ctx.fillText(p.val, x, baseY + 54);
+          });
+
+          phase += 0.5;
+          state.animationFrame = requestAnimationFrame(draw);
+        }
+
+        if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+        draw();
+      }
+
+      function initNotationAnimation(canvas) {
+        const ctx = canvas.getContext('2d');
+        let phase = 0;
+        const w = canvas.width, h = canvas.height;
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          
+          const gradient = ctx.createLinearGradient(0, 0, w, h);
+          gradient.addColorStop(0, '#e3f2fd');
+          gradient.addColorStop(1, '#f3e5f5');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, w, h);
+
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 18px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.fillText('🔭 Escala do Universo em Notação Científica', w/2, 28);
+
+          ctx.strokeStyle = '#1a237e';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(40, h-50);
+          ctx.lineTo(w-40, h-50);
+          ctx.stroke();
+
+          const marks = [
+            {val: '10⁻¹⁰', x: 70, label: 'Átomo', emoji: '⚛️'},
+            {val: '10⁻⁵', x: 150, label: 'Cabelo', emoji: '💇'},
+            {val: '10⁻²', x: 220, label: 'Formiga', emoji: '🐜'},
+            {val: '10⁰', x: 280, label: '1 metro', emoji: '📏'},
+            {val: '10³', x: 340, label: '1 km', emoji: '🏃'},
+            {val: '10⁷', x: 390, label: 'Terra', emoji: '🌍'},
+            {val: '10¹¹', x: 430, label: 'Sol', emoji: '☀️'}
+          ];
+
+          ctx.strokeStyle = 'rgba(255, 111, 0, 0.5)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          marks.forEach((mark, i) => {
+            const y = h - 50 - 70 - Math.sin(phase * 0.03 + i * 0.6) * 18;
+            if (i === 0) ctx.moveTo(mark.x, y);
+            else ctx.lineTo(mark.x, y);
+          });
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          marks.forEach((mark, i) => {
+            const bounce = Math.sin(phase * 0.03 + i * 0.6) * 18;
+            const y = h - 50 - 70 - bounce;
+            
+            ctx.fillStyle = '#fff';
+            ctx.strokeStyle = '#ff6f00';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(mark.x, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.font = '22px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(mark.emoji, mark.x, y);
+
+            ctx.fillStyle = '#ff6f00';
+            ctx.font = 'bold 12px monospace';
+            ctx.fillText(mark.val, mark.x, y - 32);
+            
+            ctx.fillStyle = '#1a237e';
+            ctx.font = '11px "Patrick Hand"';
+            ctx.fillText(mark.label, mark.x, h - 35);
+          });
+
+          phase += 0.5;
+          state.animationFrame = requestAnimationFrame(draw);
+        }
+
+        if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+        draw();
+      }
+
+      function initConversionAnimation(canvas) {
+        const ctx = canvas.getContext('2d');
+        let phase = 0;
+        const w = canvas.width, h = canvas.height;
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+
+          const grad = ctx.createLinearGradient(0, 0, w, h);
+          grad.addColorStop(0, '#e8f5e9');
+          grad.addColorStop(1, '#fff9c4');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 18px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.fillText('🔄 Conversão: km → m', w/2, 28);
+
+          ctx.fillStyle = '#424242';
+          ctx.fillRect(40, 70, w - 80, 45);
+          
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([15, 15]);
+          const dashOffset = (phase * 2) % 30;
+          ctx.lineDashOffset = -dashOffset;
+          ctx.beginPath();
+          ctx.moveTo(40, 92);
+          ctx.lineTo(w - 40, 92);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.lineDashOffset = 0;
+
+          ctx.fillStyle = '#4caf50';
+          ctx.fillRect(50, 55, 70, 20);
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 13px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.fillText('0 km', 85, 69);
+
+          ctx.fillStyle = '#f44336';
+          ctx.fillRect(w - 120, 55, 70, 20);
+          ctx.fillStyle = '#fff';
+          ctx.fillText('2,5 km', w - 85, 69);
+
+          const carProgress = (Math.sin(phase * 0.03) * 0.5 + 0.5);
+          const carX = 60 + carProgress * (w - 160);
+          ctx.font = '36px Arial';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('🚗', carX, 92);
+
+          const formulaY = 155 + Math.sin(phase * 0.04) * 4;
+          ctx.fillStyle = '#fff';
+          ctx.strokeStyle = '#4caf50';
+          ctx.lineWidth = 2;
+          ctx.fillRect(50, formulaY - 22, w - 100, 44);
+          ctx.strokeRect(50, formulaY - 22, w - 100, 44);
+
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 18px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.fillText('2,5 km × 1000 = 2.500 m', w/2, formulaY + 6);
+
+          ctx.strokeStyle = '#ff6f00';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(70, 215);
+          ctx.lineTo(w - 70, 215);
+          ctx.stroke();
+
+          ctx.fillStyle = '#ff6f00';
+          ctx.beginPath();
+          ctx.moveTo(w - 70, 210);
+          ctx.lineTo(w - 60, 215);
+          ctx.lineTo(w - 70, 220);
+          ctx.fill();
+
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 15px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.fillText('× 1000', w/2, 210);
+
+          ctx.font = '28px Arial';
+          ctx.textAlign = 'center';
+          ctx.fillText('🛣️', 50, 240);
+          ctx.fillText('📏', w - 50, 240);
+
+          phase += 0.5;
+          state.animationFrame = requestAnimationFrame(draw);
+        }
+
+        if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+        draw();
+      }
+
+      function initExerciseAnimation(canvas) {
+        const ctx = canvas.getContext('2d');
+        let phase = 0;
+        const w = canvas.width, h = canvas.height;
+
+        const items = [
+          { emoji: '📝', x: 60, y: 60 },
+          { emoji: '🧮', x: 200, y: 50 },
+          { emoji: '💡', x: 340, y: 65 },
+          { emoji: '✅', x: 100, y: 150 },
+          { emoji: '🎯', x: 300, y: 150 }
+        ];
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          
+          const grad = ctx.createLinearGradient(0, 0, w, h);
+          grad.addColorStop(0, '#fff3e0');
+          grad.addColorStop(1, '#ffe0b2');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 20px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.fillText('🎓 Hora de Praticar!', w/2, 35);
+
+          items.forEach((item, i) => {
+            const bounce = Math.sin(phase * 0.05 + i) * 12;
+            const scale = 1 + Math.sin(phase * 0.04 + i * 0.7) * 0.15;
+            ctx.save();
+            ctx.translate(item.x, item.y + bounce);
+            ctx.scale(scale, scale);
+            ctx.font = '40px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(item.emoji, 0, 0);
+            ctx.restore();
+          });
+
+          const pulse = 1 + Math.sin(phase * 0.04) * 0.02;
+          ctx.save();
+          ctx.translate(w/2, h/2 + 15);
+          ctx.scale(pulse, pulse);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+          ctx.strokeStyle = '#ff6f00';
+          ctx.lineWidth = 3;
+          ctx.fillRect(-110, -28, 220, 56);
+          ctx.strokeRect(-110, -28, 220, 56);
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 18px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('4 exercícios te esperam!', 0, 0);
+          ctx.restore();
+
+          phase += 0.5;
+          state.animationFrame = requestAnimationFrame(draw);
+        }
+
+        if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+        draw();
+      }
+
+      function initFinalAnimation(canvas) {
+        const ctx = canvas.getContext('2d');
+        let phase = 0;
+        const w = canvas.width, h = canvas.height;
+
+        const particles = [];
+        for (let i = 0; i < 50; i++) {
+          particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: Math.random() * 1 + 0.5,
+            size: Math.random() * 4 + 2,
+            color: ['#ff6f00', '#ffa000', '#4caf50', '#2196f3', '#9c27b0', '#f44336'][Math.floor(Math.random() * 6)],
+            rot: Math.random() * Math.PI * 2
+          });
+        }
+
+        const emojis = ['🎓', '🎉', '⭐', '🏆', '📚', '✨'];
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          
+          const grad = ctx.createRadialGradient(w/2, h/2, 50, w/2, h/2, 320);
+          grad.addColorStop(0, '#fff9c4');
+          grad.addColorStop(0.5, '#e8eaf6');
+          grad.addColorStop(1, '#f3e5f5');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+
+          particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rot += 0.1;
+            if (p.y > h) { p.y = -10; p.x = Math.random() * w; }
+            if (p.x < 0) p.x = w;
+            if (p.x > w) p.x = 0;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size * 1.5);
+            ctx.restore();
+          });
+
+          emojis.forEach((emoji, i) => {
+            const angle = (i / emojis.length) * Math.PI * 2 + phase * 0.01;
+            const radius = 90 + Math.sin(phase * 0.02 + i) * 12;
+            const x = w/2 + Math.cos(angle) * radius;
+            const y = h/2 + Math.sin(angle) * radius;
+            
+            ctx.font = '36px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(emoji, x, y);
+          });
+
+          const pulse = 1 + Math.sin(phase * 0.05) * 0.1;
+          ctx.save();
+          ctx.translate(w/2, h/2);
+          ctx.scale(pulse, pulse);
+          
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          ctx.strokeStyle = '#ff6f00';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(0, 0, 55, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 26px Arial';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('🎓', 0, -12);
+          ctx.font = 'bold 16px "Patrick Hand"';
+          ctx.fillText('PARABÉNS!', 0, 18);
+          ctx.restore();
+
+          ctx.fillStyle = '#1a237e';
+          ctx.font = 'bold 20px "Patrick Hand"';
+          ctx.textAlign = 'center';
+          ctx.fillText('🌟 Você concluiu a aula! 🌟', w/2, h - 35);
+
+          phase += 0.5;
+          state.animationFrame = requestAnimationFrame(draw);
+        }
+
+        if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+        draw();
+      }
+
+      function destroyCanvasAnimation() {
+        if (state.animationFrame) { cancelAnimationFrame(state.animationFrame); state.animationFrame = null; }
+      }
+
+      prevBtn.addEventListener('click', prevSlide);
+      nextBtn.addEventListener('click', nextSlide);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevSlide();
+        if (e.key === 'ArrowRight') nextSlide();
+      });
+
+      renderAllSlides();
+      renderDots();
+      updateActiveSlide();
+
+      window.addEventListener('beforeunload', destroyCanvasAnimation);
+    })();
+  }
+</script>
+</body>
+</html>
