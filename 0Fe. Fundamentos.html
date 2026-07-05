@@ -44,7 +44,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Barra de Progresso */
     .progress-container {
       background: #e2e8f0;
       border-radius: 20px;
@@ -73,7 +72,6 @@
       text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
 
-    /* Formulário de Contato */
     .contact-form {
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       padding: 25px;
@@ -132,7 +130,6 @@
       transform: translateY(-2px);
     }
 
-    /* Cheat Sheet em Lista Ordenada */
     .cheat-section {
       margin-bottom: 40px;
     }
@@ -195,7 +192,6 @@
       font-size: 1.1em;
     }
 
-    /* Lista de Exercícios com numeração automática */
     .exercise-list {
       counter-reset: exercise-item;
       list-style: none;
@@ -228,7 +224,6 @@
       background: #48bb78;
     }
 
-    /* Canvas Animations */
     .canvas-container {
       background: #1a1a2e;
       border-radius: 15px;
@@ -249,7 +244,6 @@
       font-style: italic;
     }
 
-    /* Exercícios */
     .exercise-container {
       background: #fff5f5;
       border: 2px solid #fc8181;
@@ -314,7 +308,6 @@
       font-size: 1em;
     }
 
-    /* Botões de Envio */
     .send-section {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       padding: 30px;
@@ -392,6 +385,21 @@
       color: #744210;
     }
 
+    .contact-saved {
+      background: #f0fff4;
+      color: #276749;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+      border: 2px solid #48bb78;
+      display: none;
+      animation: fadeInDown 0.3s ease;
+    }
+
+    .contact-saved.show {
+      display: block;
+    }
+
     @media (max-width: 600px) {
       .container { padding: 20px; }
       h1 { font-size: 1.8em; }
@@ -418,7 +426,7 @@
         <input type="text" id="userContact" placeholder="Ex: 957511281 ou email@exemplo.com">
       </div>
       <button class="btn-primary" onclick="saveContact()">💾 Salvar Contato</button>
-      <p id="contactStatus" style="margin-top: 10px; color: #667eea; font-weight: bold;"></p>
+      <div class="contact-saved" id="contactStatus"></div>
     </div>
 
     <!-- Canvas Animation: Movimento -->
@@ -445,7 +453,7 @@
         </li>
         <li>
           <strong>🔢 Notação Científica</strong>
-          Forma: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>a</mi><mo>×</mo><msup><mn>10</mn><mi>n</mi></msup></mrow></math> onde 1 ≤ a < 10. Ex: 300.000 = <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3</mn><mo>×</mo><msup><mn>10</mn><mn>5</mn></msup></mrow></math>
+          Forma: a × 10ⁿ onde 1 ≤ a < 10. Ex: 300.000 = 3 × 10⁵
         </li>
         <li>
           <strong>🔄 Conversões de Tempo</strong>
@@ -457,7 +465,7 @@
         </li>
         <li>
           <strong>💪 Segunda Lei de Newton</strong>
-          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>F</mi><mo>=</mo><mi>m</mi><mo>⋅</mo><mi>a</mi></mrow></math>
+          F = m · a<br>
           Força = massa × aceleração
         </li>
         <li>
@@ -474,11 +482,11 @@
         </li>
         <li>
           <strong>🏃 Velocidade Média</strong>
-          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>v</mi><mo>=</mo><mfrac><mrow><mi>Δ</mi><mi>s</mi></mrow><mrow><mi>Δ</mi><mi>t</mi></mrow></mfrac></mrow></math>
+          v = Δs / Δt
         </li>
         <li>
           <strong>🚀 Aceleração Média</strong>
-          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>a</mi><mo>=</mo><mfrac><mrow><mi>Δ</mi><mi>v</mi></mrow><mrow><mi>Δ</mi><mi>t</mi></mrow></mfrac></mrow></math>
+          a = Δv / Δt
         </li>
       </ol>
     </div>
@@ -557,15 +565,15 @@
           <div class="choices">
             <div class="choice">
               <input type="radio" name="q3" id="q3a" value="A" onchange="markAnswered(this)">
-              <label for="q3a">A) <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>4,5</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>4</mn></mrow></msup></mrow></math></label>
+              <label for="q3a">A) 4,5 × 10⁻⁴</label>
             </div>
             <div class="choice">
               <input type="radio" name="q3" id="q3b" value="B" onchange="markAnswered(this)">
-              <label for="q3b">B) <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>45</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>5</mn></mrow></msup></mrow></math></label>
+              <label for="q3b">B) 45 × 10⁻⁵</label>
             </div>
             <div class="choice">
               <input type="radio" name="q3" id="q3c" value="C" onchange="markAnswered(this)">
-              <label for="q3c">C) <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0,45</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>3</mn></mrow></msup></mrow></math></label>
+              <label for="q3c">C) 0,45 × 10⁻³</label>
             </div>
           </div>
         </li>
@@ -717,15 +725,15 @@
           <div class="choices">
             <div class="choice">
               <input type="radio" name="q11" id="q11a" value="A" onchange="markAnswered(this)">
-              <label for="q11a">A) <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3</mn><mo>×</mo><msup><mn>10</mn><mn>5</mn></msup></mrow></math></label>
+              <label for="q11a">A) 3 × 10⁵</label>
             </div>
             <div class="choice">
               <input type="radio" name="q11" id="q11b" value="B" onchange="markAnswered(this)">
-              <label for="q11b">B) <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>30</mn><mo>×</mo><msup><mn>10</mn><mn>4</mn></msup></mrow></math></label>
+              <label for="q11b">B) 30 × 10⁴</label>
             </div>
             <div class="choice">
               <input type="radio" name="q11" id="q11c" value="C" onchange="markAnswered(this)">
-              <label for="q11c">C) <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>0,3</mn><mo>×</mo><msup><mn>10</mn><mn>6</mn></msup></mrow></math></label>
+              <label for="q11c">C) 0,3 × 10⁶</label>
             </div>
           </div>
         </li>
@@ -857,22 +865,22 @@
           <div class="choices">
             <div class="choice">
               <input type="radio" name="q18" id="q18a" value="A" onchange="markAnswered(this)">
-              <label for="q18a">A) <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mn>10</mn><mn>5</mn></msup></mrow></math></label>
+              <label for="q18a">A) 10⁵</label>
             </div>
             <div class="choice">
               <input type="radio" name="q18" id="q18b" value="B" onchange="markAnswered(this)">
-              <label for="q18b">B) <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mn>10</mn><mn>7</mn></msup></mrow></math></label>
+              <label for="q18b">B) 10⁷</label>
             </div>
             <div class="choice">
               <input type="radio" name="q18" id="q18c" value="C" onchange="markAnswered(this)">
-              <label for="q18c">C) <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mn>10</mn><mn>9</mn></msup></mrow></math></label>
+              <label for="q18c">C) 10⁹</label>
             </div>
           </div>
         </li>
 
         <li class="exercise-container" data-exercise="19">
           <div class="exercise-question">
-            Qual o prefixo métrico que representa <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mn>10</mn><mn>6</mn></msup></mrow></math>?
+            Qual o prefixo métrico que representa 10⁶?
           </div>
           <div class="choices">
             <div class="choice">
@@ -935,25 +943,36 @@
     function saveContact() {
       const contact = document.getElementById('userContact').value.trim();
       const name = document.getElementById('userName').value.trim();
+      const statusEl = document.getElementById('contactStatus');
       
       if (!contact) {
-        alert('⚠️ Por favor, preencha seu WhatsApp ou Email!');
+        statusEl.textContent = '⚠️ Por favor, preencha seu WhatsApp ou Email!';
+        statusEl.style.background = '#fff5f5';
+        statusEl.style.color = '#c53030';
+        statusEl.style.borderColor = '#fc8181';
+        statusEl.classList.add('show');
+        setTimeout(() => statusEl.classList.remove('show'), 3000);
         return;
       }
       
       userContact = contact;
       userName = name || 'Anônimo';
-      document.getElementById('contactStatus').textContent = '✅ Contato salvo: ' + contact;
+      
+      statusEl.textContent = '✅ Contato salvo com sucesso! Você já pode enviar suas respostas.';
+      statusEl.style.background = '#f0fff4';
+      statusEl.style.color = '#276749';
+      statusEl.style.borderColor = '#48bb78';
+      statusEl.classList.add('show');
+      
       setTimeout(() => {
-        document.getElementById('contactStatus').textContent = '';
-      }, 3000);
+        statusEl.classList.remove('show');
+      }, 4000);
     }
 
     function markAnswered(radio) {
       const container = radio.closest('.exercise-container');
       container.classList.add('answered');
       
-      // Marcar visualmente a escolha selecionada
       const choices = container.querySelectorAll('.choice');
       choices.forEach(c => c.classList.remove('selected'));
       radio.closest('.choice').classList.add('selected');
@@ -1000,19 +1019,26 @@
       return message;
     }
 
-    function sendWhatsApp(e) {
-      e.preventDefault();
+    function validateBeforeSend() {
       if (!userContact) {
-        alert('⚠️ Por favor, preencha seu contato primeiro!');
-        return;
+        alert('⚠️ Por favor, preencha seu contato no topo da página primeiro!');
+        document.getElementById('contactForm').scrollIntoView({ behavior: 'smooth' });
+        return false;
       }
       
       const answeredCount = Object.values(getAnswers()).filter(a => a !== '—').length;
       if (answeredCount < totalQuestions) {
-        if (!confirm(`Você respondeu apenas ${answeredCount} de ${totalQuestions} questões. Deseja enviar mesmo assim?`)) {
-          return;
+        if (!confirm(`Você respondeu apenas ${answeredCount} de ${totalQuestions} questões.\n\nDeseja enviar mesmo assim?`)) {
+          return false;
         }
       }
+      
+      return true;
+    }
+
+    function sendWhatsApp(e) {
+      e.preventDefault();
+      if (!validateBeforeSend()) return;
       
       const message = encodeURIComponent(formatMessage());
       const whatsappNumber = '244957511281';
@@ -1021,17 +1047,7 @@
 
     function sendEmail(e) {
       e.preventDefault();
-      if (!userContact) {
-        alert('⚠️ Por favor, preencha seu contato primeiro!');
-        return;
-      }
-      
-      const answeredCount = Object.values(getAnswers()).filter(a => a !== '—').length;
-      if (answeredCount < totalQuestions) {
-        if (!confirm(`Você respondeu apenas ${answeredCount} de ${totalQuestions} questões. Deseja enviar mesmo assim?`)) {
-          return;
-        }
-      }
+      if (!validateBeforeSend()) return;
       
       const subject = encodeURIComponent('Respostas - Exercícios de Física - ' + userName);
       const body = encodeURIComponent(formatMessage());
@@ -1048,7 +1064,6 @@
       motionCtx.fillStyle = '#16213e';
       motionCtx.fillRect(0, 0, motionCanvas.width, motionCanvas.height);
       
-      // Estrada
       motionCtx.fillStyle = '#4a5568';
       motionCtx.fillRect(0, 150, motionCanvas.width, 50);
       
@@ -1060,7 +1075,6 @@
       motionCtx.stroke();
       motionCtx.setLineDash([]);
       
-      // Carro
       motionCtx.fillStyle = '#667eea';
       motionCtx.fillRect(carX, 130, 60, 40);
       motionCtx.fillStyle = '#fff';
@@ -1116,7 +1130,6 @@
       vectorCtx.lineTo(centerX, 220);
       vectorCtx.stroke();
       
-      // Vetor 1
       vectorCtx.strokeStyle = '#4299e1';
       vectorCtx.lineWidth = 4;
       vectorCtx.beginPath();
@@ -1127,7 +1140,6 @@
       vectorCtx.stroke();
       drawArrowhead(vectorCtx, x1, y1, angle, '#4299e1');
       
-      // Vetor 2
       vectorCtx.strokeStyle = '#f56565';
       vectorCtx.beginPath();
       vectorCtx.moveTo(centerX, centerY);
@@ -1137,7 +1149,6 @@
       vectorCtx.stroke();
       drawArrowhead(vectorCtx, x2, y2, angle + Math.PI/3, '#f56565');
       
-      // Resultante
       vectorCtx.strokeStyle = '#48bb78';
       vectorCtx.setLineDash([5, 5]);
       vectorCtx.lineWidth = 3;
@@ -1173,15 +1184,12 @@
       fallCtx.fillStyle = '#16213e';
       fallCtx.fillRect(0, 0, fallCanvas.width, fallCanvas.height);
       
-      // Chão
       fallCtx.fillStyle = '#4a5568';
       fallCtx.fillRect(0, 220, fallCanvas.width, 30);
       
-      // Bola (🍎)
       fallCtx.font = '40px Arial';
       fallCtx.fillText('🍎', 100, ballY);
       
-      // Fórmulas
       fallCtx.fillStyle = '#68d391';
       fallCtx.font = '14px Arial';
       fallCtx.fillText('v = g·t', 450, 50);
@@ -1200,225 +1208,9 @@
       requestAnimationFrame(animateFall);
     }
 
-    // Iniciar animações
     animateMotion();
     animateVectors();
     animateFall();
   </script>
-</body>
-</html>        </li>
-
-        <li>
-          <div class="q">Qual a relação entre graus Celsius e Kelvin?</div>
-          <span class="r">K = °C + 273,15.</span>
-        </li>
-
-        <li>
-          <div class="q">Se um carro vai de 0 a 60 km/h em 5 segundos, qual é sua aceleração média?</div>
-          <span class="r">60 km/h = 16,67 m/s → a = 16,67 ÷ 5 ≈ 3,33 m/s².</span>
-        </li>
-        
-        
-        
-        <li>
-          <div class="q">Efetue as seguintes conversões de comprimento:<br>
-          a) 1 m em cm<br>
-          b) 1 cm em m<br>
-          c) 1 m em mm<br>
-          d) 1 km em m<br>
-          e) 1 mm em m<br>
-          f) 1 cm em mm</div>
-          <span class="r">a) 100 cm | b) 0,01 m | c) 1000 mm | d) 1000 m | e) 0,001 m | f) 10 mm</span>
-        </li>
-
-        <li>
-          <div class="q">Efetue as seguintes conversões de tempo:<br>
-          a) 1 h em min<br>
-          b) 1 min em s<br>
-          c) 1 h em s<br>
-          d) 1 dia em s</div>
-          <span class="r">a) 60 min | b) 60 s | c) 3600 s | d) 86400 s</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha) Num campo de futebol não oficial, as traves verticais do gol distam entre si 8,15 m. Considerando que 1 jarda vale 3 pés e que 1 pé mede 30,48 cm, a largura mais aproximada desse gol, em jardas, é:<br>
-          a) 6,3 &nbsp; b) 8,9 &nbsp; c) 10,2 &nbsp; d) 12,5 &nbsp; e) 14,0</div>
-          <span class="r">[B] 8,9 jardas</span>
-        </li>
-
-        <li>
-          <div class="q">Um espetáculo musical tem início exatamente às 21 h 15 min 25 s e termina às 23 h 38 min 15 s. Determine a duração desse espetáculo.</div>
-          <span class="r">2 h 22 min 50 s</span>
-        </li>
-
-        <li>
-          <div class="q">Uma corrida de automóveis tem início às 10 h 20 min 45 s e termina às 12 h 15 min 35 s. Determine o intervalo de tempo de duração da corrida.</div>
-          <span class="r">1 h 54 min 50 s</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha) Um intervalo de tempo igual a 25.972,5 segundos corresponde a:<br>
-          a) 7 h 12 min 52,5 s &nbsp; b) 7 h 772 min 0,5 s &nbsp; c) 7 h 21 min 145 s &nbsp; d) 432 h 52,5 min &nbsp; e) 432,875 h</div>
-          <span class="r">[A] 7 h 12 min 52,5 s</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha) As aulas num dado colégio de Florianópolis têm início às 7 h 30 min todos os dias. Em determinado dia, por mau funcionamento do relógio sinaleiro, o sinal de término das aulas soou às 13 h 15 min 20 s. A duração das aulas nesse dia no colégio foi de:<br>
-          a) 6 h 15 min 20 s &nbsp; b) 5 h 45 min 20 s &nbsp; c) exatamente 6 h &nbsp; d) 5 h 45 min 40 s &nbsp; e) 6 h 45 min 20 s</div>
-          <span class="r">[B] 5 h 45 min 20 s</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha - Fuvest-SP) No estádio do Morumbi 120.000 torcedores assistem a um jogo. Através de cada uma das 6 saídas disponíveis podem passar 1.000 pessoas por minuto. Qual é o tempo mínimo necessário para se esvaziar o estádio?<br>
-          a) uma hora &nbsp; b) meia hora &nbsp; c) 1/4 de hora &nbsp; d) 1/3 de hora &nbsp; e) 3/4 de hora</div>
-          <span class="r">[D] 1/3 de hora (20 minutos)</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha - UFRJ) Numa fila de banco há 300 pessoas. O guarda autoriza a entrar no banco, durante 10 segundos, 30 pessoas. Para nova autorização há a espera de 20 minutos. Levando-se em consideração serem sempre constantes os intervalos mencionados, as 300 pessoas da fila serão atendidas, aproximadamente, em:<br>
-          a) 201 min &nbsp; b) 191 min &nbsp; c) 181 min &nbsp; d) 171 min &nbsp; e) 161 min</div>
-          <span class="r">[C] 181 min</span>
-        </li>
-
-        <li>
-          <div class="q">O intervalo de tempo de um ano corresponde a quantos segundos? Dê sua resposta em notação científica e com dois algarismos significativos.</div>
-          <span class="r">3,2 × 10⁷ s</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha) O número de algarismos significativos de 0,00000000008065 cm é:<br>
-          a) 3 &nbsp; b) 4 &nbsp; c) 11 &nbsp; d) 14 &nbsp; e) 15</div>
-          <span class="r">[B] 4 algarismos significativos</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha - Cefet-PE) A medição do comprimento de um lápis foi realizada por um aluno usando uma régua graduada em mm. Das alternativas apresentadas, aquela que expressa corretamente a medida obtida é:<br>
-          a) 15 cm &nbsp; b) 150 mm &nbsp; c) 15,00 cm &nbsp; d) 15,0 cm &nbsp; e) 150,00 mm</div>
-          <span class="r">[D] 15,0 cm</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha) Enrico Fermi observou que a duração padrão de um discurso é de aproximadamente um "microsséculo" (um milionésimo de século). Considerando todos os anos com 365 dias, a duração de um microsséculo, em minutos, é:<br>
-          a) 24,25 &nbsp; b) 87,60 &nbsp; c) 36,50 &nbsp; d) 120,00 &nbsp; e) 52,56</div>
-          <span class="r">[E] 52,56 minutos</span>
-        </li>
-
-        <li>
-          <div class="q">O sino de uma igreja bate uma vez a cada meia hora, todos os dias. Qual é a ordem de grandeza do número de vezes que o sino bate em um ano?</div>
-          <span class="r">10⁴ (aproximadamente 17.520 vezes)</span>
-        </li>
-
-        <li>
-          <div class="q">Qual é a ordem de grandeza do número de batimentos cardíacos de um aluno do ensino médio, desde o seu nascimento?</div>
-          <span class="r">10⁹ batimentos</span>
-        </li>
-
-        <li>
-          <div class="q">Sabendo-se que em 1 cm³ cabem aproximadamente 20 gotas de água, determine a ordem de grandeza do número de gotas de água necessárias para encher a banheira de um apartamento.</div>
-          <span class="r">10⁷ gotas</span>
-        </li>
-
-        <li>
-          <div class="q">Uma partida normal de futebol é disputada em 90 minutos. O estádio do Morumbi já recebeu cerca de 30 milhões de torcedores desde 1960. A média de torcedores por partida é de aproximadamente 28.000. Qual é a ordem de grandeza do total de minutos de futebol já jogados no Morumbi?</div>
-          <span class="r">10⁵ minutos</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha - FEI-SP) O diâmetro de um fio de cabelo é 10⁻⁴ m. Sabendo-se que o diâmetro de um átomo é 10⁻¹⁰ m, quantos átomos colocados lado a lado seriam necessários para fazer uma linha que divida o fio de cabelo ao meio exatamente no seu diâmetro?<br>
-          a) 10⁴ &nbsp; b) 10⁵ &nbsp; c) 10⁶ &nbsp; d) 10⁷ &nbsp; e) 10⁸</div>
-          <span class="r">[C] 10⁶ átomos</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha - UFJF-MG) Supondo-se que um grão de feijão ocupe o espaço equivalente a um paralelepípedo de arestas 0,5 cm x 0,5 cm x 1,0 cm, qual das alternativas abaixo melhor estima a ordem de grandeza do número de feijões contido no volume de um litro?<br>
-          a) 10¹ &nbsp; b) 10² &nbsp; c) 10³ &nbsp; d) 10⁴ &nbsp; e) 10⁵</div>
-          <span class="r">[D] 10⁴ feijões</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha - Fuvest-SP) Qual é a ordem de grandeza do número de voltas dadas pela roda de um automóvel ao percorrer uma estrada de 200 km?<br>
-          a) 10² &nbsp; b) 10³ &nbsp; c) 10⁵ &nbsp; d) 10⁷ &nbsp; e) 10⁹</div>
-          <span class="r">[C] 10⁵ voltas</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha) Alguns experimentos realizados por virologistas demonstram que um bacteriófago é capaz de formar 100 novos vírus em apenas 30 minutos. Se introduzirmos 1.000 bacteriófagos em uma colônia suficientemente grande de bactérias, qual será a ordem de grandeza do número de vírus existentes após 2 horas?<br>
-          a) 10⁷ &nbsp; b) 10⁸ &nbsp; c) 10⁹ &nbsp; d) 10¹⁰ &nbsp; e) 10¹¹</div>
-          <span class="r">[E] 10¹¹ vírus</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha - UEL-PR) Um recipiente cúbico tem 3,00 m de aresta. n é o número máximo de cubos de 3,00 mm de aresta que cabem no recipiente. A ordem de grandeza de n é:<br>
-          a) 10⁶ &nbsp; b) 10⁷ &nbsp; c) 10⁸ &nbsp; d) 10⁹ &nbsp; e) 10¹⁰</div>
-          <span class="r">[D] 10⁹ cubos</span>
-        </li>
-
-        <li>
-          <div class="q">(Múltipla Escolha - UFG-GO) "Pois há menos peixinhos a nadar no mar / Do que os beijinhos que eu darei na sua boca" - Vinicius de Moraes. Supondo que o volume total de água nos oceanos seja de cerca de 10⁹ km³ e que haja em média um peixe em cada cubo de água de 100 m de aresta, o número de beijos que o poeta teria que dar seria da ordem de:<br>
-          a) 10¹⁰ &nbsp; b) 10¹² &nbsp; c) 10¹⁴ &nbsp; d) 10¹⁶ &nbsp; e) 10¹⁸</div>
-          <span class="r">[B] 10¹² beijos</span>
-        </li>
-      </ol>
-
-      <div class="highlight-box">
-        <span class="highlight-label">Parabéns</span>
-        <p>Ao completar estes exercícios, você consolidou os fundamentos essenciais. Continue praticando!</p>
-      </div>
-    </section>
-
-    <!-- ========== 06. AGRADECIMENTO ========== -->
-    <section class="section" id="agradecimento">
-      <div class="section-header">
-        <span class="section-number">06.</span>
-        <div class="section-title-wrap">
-          <span class="section-eyebrow">Mensagem Final</span>
-          <h2 class="section-title">Agradecimento e Apoio</h2>
-        </div>
-      </div>
-
-      <p class="cheat-intro">O conhecimento só tem valor quando compartilhado. Obrigado por dedicar seu tempo a esta obra.</p>
-
-      <div class="highlight-box">
-        <span class="highlight-label">Contato</span>
-        <p>Qualquer dúvida, sugestão ou comentário — não hesite em entrar em contato. Estou à disposição para ajudar!</p>
-      </div>
-
-      <div class="cheat-grid" style="grid-template-columns: 1fr;">
-        <div class="cheat-card gold" style="text-align: center;">
-          <div class="cheat-card-title" style="justify-content: center;"><span class="emoji">📧</span> E-mail</div>
-          <p><strong>nandokissanga@gmail.com</strong></p>
-        </div>
-
-        <div class="cheat-card gold" style="text-align: center;">
-          <div class="cheat-card-title" style="justify-content: center;"><span class="emoji">📱</span> WhatsApp</div>
-          <p><strong>+244 957 511 281</strong></p>
-        </div>
-      </div>
-
-      <div class="donation-box">
-        <h3>💝 Apoie Este Trabalho</h3>
-        <p style="margin-bottom: 20px;">Se este material foi útil, seu donativo ajuda a manter este projeto vivo e a produzir mais conteúdo educativo.</p>
-
-        <p style="font-size: 0.9em; color: var(--text-soft); margin-bottom: 10px; letter-spacing: 0.1em; text-transform: uppercase;">Transferência via IBAN</p>
-        <div class="iban">AO06 0055 0000 61013844101 24</div>
-        <p style="font-size: 0.9em; color: var(--text-soft); margin-top: 10px;">Banco: <strong>BMA</strong> &nbsp;•&nbsp; Titular: <strong>Nando Kissanga</strong></p>
-
-        <p style="margin-top: 25px; font-family: 'Playfair Display', serif; font-style: italic; color: var(--text-soft); font-size: 1.05em;">"A educação é a arma mais poderosa que você pode usar para mudar o mundo." — Nelson Mandela</p>
-      </div>
-
-      <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--divider);">
-        <p style="font-family: 'Playfair Display', serif; font-size: 1.15em; color: var(--text-soft); font-style: italic;">❦ Obrigado por ler! ❦</p>
-        <p style="font-size: 0.85em; color: var(--text-muted); margin-top: 10px;">© 2026 Nando Kissanga — Todos os direitos reservados</p>
-      </div>
-    </section>
-
-    <!-- ========== RODAPÉ ========== -->
-    <footer>
-      <span class="ornament">❦</span>
-      © 2026 Nando Kissanga <span class="ornament">•</span> Fundamentos da Física <span class="ornament">•</span> Quick Reference
-      <span class="ornament">❦</span>
-    </footer>
-
-  </div>
 </body>
 </html>
