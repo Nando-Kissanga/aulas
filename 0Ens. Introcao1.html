@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Introdução ao Inglês - Academia Nova Geração</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Satisfy&family=Amatic+SC:wght@700&family=Gloria+Hallelujah&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Comic Neue', 'Patrick Hand', cursive, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #4facfe);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .deck {
+      width: 100%;
+      max-width: 900px;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 5px solid #2d3436;
+    }
+    .top-bar {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: white;
+      font-size: 16px;
+      border-bottom: 4px solid #2d3436;
+    }
+    .author-name {
+      font-family: 'Gloria Hallelujah', cursive;
+      font-size: 22px;
+      color: #ffeaa7;
+      text-shadow: 2px 2px 0px #2d3436;
+    }
+    .contact-info {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: #dfe6e9;
+      font-size: 15px;
+      font-weight: bold;
+    }
+    .watermark {
+      position: absolute;
+      font-family: 'Amatic SC', cursive;
+      font-size: 200px;
+      font-weight: bold;
+      color: rgba(102, 126, 234, 0.08);
+      pointer-events: none;
+      z-index: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+    }
+    .stage {
+      position: relative;
+      width: 100%;
+      padding-bottom: 68%;
+      background: linear-gradient(135deg, #fff5e6, #ffe6f0);
+      overflow: hidden;
+    }
+    .slides-container {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
+      overflow-y: auto;
+      padding: 28px 32px;
+      background: white;
+      transform: scale(0.95) rotateY(10deg);
+    }
+    .slide.active {
+      opacity: 1; visibility: visible; z-index: 2;
+      transform: scale(1) rotateY(0deg);
+    }
+    .content {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    h1 {
+      font-family: 'Gloria Hallelujah', cursive;
+      font-size: 32px;
+      color: #667eea;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 4px dashed #f093fb;
+      text-shadow: 2px 2px 0px #dfe6e9;
+    }
+    h2 {
+      font-family: 'Amatic SC', cursive;
+      font-size: 28px;
+      color: #e17055;
+      margin-bottom: 14px;
+      text-shadow: 1px 1px 0px #dfe6e9;
+    }
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      border: 3px solid #2d3436;
+      box-shadow: 3px 3px 0px #2d3436;
+    }
+    .grid-2col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .grid-3col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .card {
+      background: linear-gradient(135deg, #fff, #f8f9fa);
+      border-radius: 15px;
+      padding: 16px;
+      border: 3px solid #2d3436;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: default;
+      box-shadow: 4px 4px 0px #2d3436;
+    }
+    .card:hover {
+      transform: translateY(-5px) rotate(2deg);
+      border-color: #667eea;
+      box-shadow: 6px 6px 0px #667eea;
+      background: linear-gradient(135deg, #fff5e6, #ffe6f0);
+    }
+    .card-icon { font-size: 38px; display: block; margin-bottom: 8px; animation: bounce 2s infinite; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .highlight {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin: 14px 0;
+      border-left: 6px solid #fdcb6e;
+      font-weight: 600;
+      border: 2px solid #2d3436;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+    }
+    .highlight-blue { background: linear-gradient(135deg, #dfe6e9, #74b9ff); border-left-color: #0984e3; }
+    .highlight-green { background: linear-gradient(135deg, #dfe6e9, #55efc4); border-left-color: #00b894; }
+    .highlight-red { background: linear-gradient(135deg, #ffeaa7, #ff7675); border-left-color: #d63031; }
+    .highlight-purple { background: linear-gradient(135deg, #dfe6e9, #a29bfe); border-left-color: #6c5ce7; }
+    .highlight-gradient {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-left: 6px solid #2d3436;
+    }
+    .alert-box {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      border: 3px solid #fdcb6e;
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin: 14px 0;
+      text-align: center;
+      font-weight: 600;
+      box-shadow: 3px 3px 0px #2d3436;
+    }
+    .success-box {
+      background: linear-gradient(135deg, #dfe6e9, #55efc4);
+      border: 3px solid #00b894;
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin: 14px 0;
+      text-align: center;
+      font-weight: 600;
+      box-shadow: 3px 3px 0px #2d3436;
+    }
+    .quote-box {
+      background: linear-gradient(135deg, #f8f9fa, #dfe6e9);
+      border-left: 6px solid #636e72;
+      padding: 14px 18px;
+      border-radius: 0 12px 12px 0;
+      margin: 14px 0;
+      font-family: 'Satisfy', cursive;
+      font-size: 19px;
+      border: 2px solid #2d3436;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin: 3px;
+      font-weight: 600;
+      border: 2px solid #2d3436;
+      box-shadow: 2px 2px 0px #2d3436;
+    }
+    .tag-blue { background: #74b9ff; color: #0984e3; }
+    .tag-green { background: #55efc4; color: #00b894; }
+    .tag-red { background: #ff7675; color: #d63031; }
+    .tag-purple { background: #a29bfe; color: #6c5ce7; }
+    .tag-orange { background: #fdcb6e; color: #e17055; }
+    .tag-gradient {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+    .underline {
+      text-decoration: underline;
+      text-decoration-color: #e17055;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 3px;
+    }
+    .text-center { text-align: center; }
+    .divider {
+      border: none;
+      border-top: 3px dashed #b2bec3;
+      margin: 18px 0;
+    }
+    .formula-box {
+      background: linear-gradient(135deg, #f8f9fa, #dfe6e9);
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin: 12px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 17px;
+      border-left: 5px solid #667eea;
+      border: 2px solid #2d3436;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+    }
+    .step-list { display: flex; flex-direction: column; gap: 12px; }
+    .step-item {
+      background: white;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border-left: 5px solid #667eea;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 2px solid #2d3436;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+    }
+    .step-item:hover {
+      border-left-color: #e17055;
+      transform: translateX(6px);
+      background: linear-gradient(135deg, #fff5e6, #ffe6f0);
+    }
+    .step-number {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+      border: 2px solid #2d3436;
+      box-shadow: 2px 2px 0px #2d3436;
+    }
+    
+    /* NAVIGATION BUTTONS */
+    .nav-bar {
+      background: linear-gradient(135deg, #2d3436, #636e72);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-top: 4px solid #2d3436;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: 2px solid white;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: 'Comic Neue', cursive;
+      font-weight: 700;
+      transition: all 0.3s;
+      box-shadow: 0 4px 0px #2d3436, 0 5px 12px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .nav-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0px #2d3436, 0 8px 15px rgba(0,0,0,0.4);
+      background: linear-gradient(135deg, #764ba2, #f093fb);
+    }
+    .nav-btn:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0px #2d3436, 0 3px 6px rgba(0,0,0,0.3);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+    }
+    .nav-btn-icon {
+      font-size: 16px;
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+    .nav-btn:hover:not(:disabled) .nav-btn-icon {
+      transform: translateX(-2px);
+    }
+    .nav-btn:hover:not(:disabled) .nav-btn-icon-next {
+      transform: translateX(2px);
+    }
+    .nav-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      min-width: 180px;
+    }
+    .dots { display: flex; gap: 6px; padding: 0 6px; flex-wrap: wrap; justify-content: center; }
+    .dot {
+      width: 10px; height: 10px;
+      background: #636e72;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 2px solid white;
+    }
+    .dot:hover {
+      transform: scale(1.3);
+      background: #667eea;
+    }
+    .dot.active {
+      background: #667eea;
+      width: 24px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(102, 126, 234, 0.8);
+    }
+    .counter {
+      font-size: 12px;
+      background: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      border: 2px solid #2d3436;
+      font-weight: 700;
+      color: #2d3436;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #dfe6e9;
+      border-bottom: 2px solid #2d3436;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+      transition: width 0.5s;
+      box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+    }
+    
+    /* ANIMAÇÕES CSS */
+    .anim-float { animation: float 3s ease-in-out infinite; display: inline-block; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .anim-pulse { animation: pulse 1.5s ease-in-out infinite; display: inline-block; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    .anim-rotate { animation: rotate 4s linear infinite; display: inline-block; }
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .anim-shake { animation: shake 0.8s ease-in-out infinite; display: inline-block; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px) rotate(-5deg); }
+      75% { transform: translateX(5px) rotate(5deg); }
+    }
+    .anim-wave { animation: wave 2s ease-in-out infinite; display: inline-block; }
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(15deg); }
+      75% { transform: rotate(-15deg); }
+    }
+    .anim-bounce-big { animation: bounceBig 2s ease-in-out infinite; display: inline-block; }
+    @keyframes bounceBig {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-20px) scale(1.1); }
+    }
+    .anim-spin-slow { animation: spinSlow 8s linear infinite; display: inline-block; }
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .level-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      margin: 4px;
+      border: 2px solid #2d3436;
+      box-shadow: 2px 2px 0px #2d3436;
+    }
+    .level-a1 { background: #55efc4; color: #00b894; }
+    .level-a2 { background: #74b9ff; color: #0984e3; }
+    .level-b1 { background: #fdcb6e; color: #e17055; }
+    .level-b2 { background: #ff7675; color: #d63031; }
+    .level-c1 { background: #a29bfe; color: #6c5ce7; }
+    .level-c2 { background: #667eea; color: white; }
+    
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .slide { padding: 20px; }
+      h1 { font-size: 24px; }
+      h2 { font-size: 22px; }
+      .grid-2col { grid-template-columns: 1fr; }
+      .grid-3col { grid-template-columns: repeat(2, 1fr); }
+      .watermark { font-size: 120px; }
+      .nav-btn { padding: 6px 14px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+<div class="deck">
+  <header class="top-bar">
+    <span class="author-name">🆖 Academia Nova Geração / New Generation</span>
+    <div class="contact-info">
+      <span>📱 WhatsApp: 934644260</span>
+    </div>
+  </header>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 11.1%;"></div></div>
+
+  <div class="stage">
+    <div class="slides-container" id="slidesContainer"></div>
+  </div>
+
+  <nav class="nav-bar">
+    <button class="nav-btn" id="prevBtn">
+      <span class="nav-btn-icon">◀</span>
+    </button>
+    <div class="nav-center">
+      <div class="dots" id="dotsContainer"></div>
+      <div class="counter" id="counterDisplay">1 / 9</div>
+    </div>
+    <button class="nav-btn" id="nextBtn">
+      <span class="nav-btn-icon nav-btn-icon-next">▶</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+  (function() {
+    const slidesData = [
+      {
+        title: "Introdução ao Inglês",
+        badge: "🌍 Bem-vindo",
+        content: `
+          <div style="text-align: center; margin: 20px 0;">
+            <span class="anim-bounce-big" style="font-size: 80px; display: block; margin-bottom: 16px;">️</span>
+            <h2 style="color: #667eea; font-size: 36px; margin: 20px 0;">Seu passaporte para a comunicação global</h2>
+            <div class="text-center" style="margin: 30px 0;">
+              <span class="anim-float" style="font-size: 60px; display: inline-block; margin: 0 15px;">🌐</span>
+              <span class="anim-pulse" style="font-size: 60px; display: inline-block; margin: 0 15px; animation-delay: 0.3s;">️</span>
+              <span class="anim-wave" style="font-size: 60px; display: inline-block; margin: 0 15px; animation-delay: 0.6s;"></span>
+            </div>
+            <div class="highlight-gradient" style="display: inline-block; margin: 10px 0; font-size: 18px;">
+              🆖 Academia Nova Geração / New Generation
+            </div>
+          </div>
+          <div class="text-center">
+            <span class="tag tag-gradient anim-wave">🇧 Inglês</span>
+            <span class="tag tag-green anim-wave" style="animation-delay: 0.2s;">🚀 Carreira</span>
+            <span class="tag tag-purple anim-wave" style="animation-delay: 0.4s;">🌍 Global</span>
+            <span class="tag tag-orange anim-wave" style="animation-delay: 0.6s;">✨ Futuro</span>
+          </div>
+        `
+      },
+      {
+        title: "O que é a Língua Inglesa?",
+        badge: " Origem",
+        content: `
+          <div class="step-list">
+            <div class="step-item">
+              <span class="step-number">🏰</span>
+              <span>Nasceu na <strong>Inglaterra medieval</strong></span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">🌳</span>
+              <span>Família <strong>germânica ocidental</strong></span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">👥</span>
+              <span><strong>+1,5 bilhão</strong> de falantes no mundo <span class="tag tag-red">1º Lugar</span></span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">🌐</span>
+              <span>Mais falantes <strong>não nativos</strong> que nativos</span>
+            </div>
+            <div class="step-item">
+              <span class="step-number">🔬</span>
+              <span>Língua global da <strong>ciência, tecnologia e negócios</strong></span>
+            </div>
+          </div>
+          <div class="highlight" style="margin-top: 16px; text-align: center;">
+            <span class="anim-pulse">📊</span> A língua mais importante do mundo moderno!
+          </div>
+        `
+      },
+      {
+        title: "Por que é importante?",
+        badge: " Importância",
+        content: `
+          <div class="grid-2col">
+            <div class="card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+              <span class="card-icon anim-float">🌍</span>
+              <h3>Comunicação Global</h3>
+              <p style="font-size: 13px;">Conecte-se com pessoas do mundo todo</p>
+            </div>
+            <div class="card" style="background: linear-gradient(135deg, #f093fb, #4facfe); color: white;">
+              <span class="card-icon anim-pulse">💼</span>
+              <h3>Oportunidades de Trabalho</h3>
+              <p style="font-size: 13px;">Melhores empregos e salários</p>
+            </div>
+            <div class="card" style="background: linear-gradient(135deg, #55efc4, #00b894); color: white;">
+              <span class="card-icon anim-wave">✈️</span>
+              <h3>Viagens mais Fáceis</h3>
+              <p style="font-size: 13px;">Viaje sem barreiras</p>
+            </div>
+            <div class="card" style="background: linear-gradient(135deg, #fdcb6e, #e17055); color: white;">
+              <span class="card-icon anim-shake">💻</span>
+              <h3>Acesso à Tecnologia</h3>
+              <p style="font-size: 13px;">Ciência e inovação</p>
+            </div>
+          </div>
+          <div class="highlight-blue" style="text-align: center; margin-top: 16px;">
+            <span class="anim-bounce-big"></span> Chave para entretenimento sem barreiras
+          </div>
+        `
+      },
+      {
+        title: "Por que aprender inglês?",
+        badge: "🚀 Motivos",
+        content: `
+          <div class="step-list">
+            <div class="step-item" style="background: linear-gradient(135deg, #fff, #ffeaa7);">
+              <span class="step-number" style="background: linear-gradient(135deg, #fdcb6e, #e17055);">🚀</span>
+              <div>
+                <strong>Carreira</strong><br>
+                <span style="font-size: 14px;">Língua universal dos negócios</span>
+              </div>
+            </div>
+            <div class="step-item" style="background: linear-gradient(135deg, #fff, #dfe6e9);">
+              <span class="step-number" style="background: linear-gradient(135deg, #74b9ff, #0984e3);">📚</span>
+              <div>
+                <strong>Conhecimento</strong><br>
+                <span style="font-size: 14px;">Acesso a pesquisas e internet</span>
+              </div>
+            </div>
+            <div class="step-item" style="background: linear-gradient(135deg, #fff, #55efc4);">
+              <span class="step-number" style="background: linear-gradient(135deg, #55efc4, #00b894);">✈️</span>
+              <div>
+                <strong>Viagens</strong><br>
+                <span style="font-size: 14px;">Comunique-se em qualquer lugar</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-center" style="margin-top: 20px;">
+            <span class="anim-float" style="font-size: 50px; margin: 0 10px;"></span>
+            <span class="anim-float" style="font-size: 50px; margin: 0 10px; animation-delay: 0.3s;"></span>
+            <span class="anim-float" style="font-size: 50px; margin: 0 10px; animation-delay: 0.6s;"></span>
+          </div>
+        `
+      },
+      {
+        title: "O que você aprende aqui",
+        badge: " Conteúdo",
+        content: `
+          <div class="grid-2col">
+            <div class="card">
+              <span class="card-icon anim-pulse">📖</span>
+              <h3>Leitura e Escrita</h3>
+              <p style="font-size: 13px;">Desenvolva habilidades completas</p>
+            </div>
+            <div class="card">
+              <span class="card-icon anim-wave">👋</span>
+              <h3>Como se Apresentar</h3>
+              <p style="font-size: 13px;">Conversação desde o início</p>
+            </div>
+            <div class="card">
+              <span class="card-icon anim-shake"></span>
+              <h3>Vocabulário do Dia a Dia</h3>
+              <p style="font-size: 13px;">Palavras úteis e práticas</p>
+            </div>
+            <div class="card">
+              <span class="card-icon anim-float"></span>
+              <h3>Estruturas Básicas</h3>
+              <p style="font-size: 13px;">Forme suas próprias frases</p>
+            </div>
+          </div>
+          <div class="success-box" style="margin-top: 16px;">
+            <span class="anim-pulse">✅</span> Aprendizado prático e aplicado desde a primeira aula!
+          </div>
+        `
+      },
+      {
+        title: "Como estudar com sucesso",
+        badge: "🎯 Métodos",
+        content: `
+          <div class="step-list">
+            <div class="step-item">
+              <span class="step-number" style="background: linear-gradient(135deg, #667eea, #764ba2);">🎧</span>
+              <div>
+                <strong>Audio-Visual</strong><br>
+                <span style="font-size: 14px;">Filmes e música para imersão</span>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-number" style="background: linear-gradient(135deg, #f093fb, #4facfe);">📖</span>
+              <div>
+                <strong>Leitura</strong><br>
+                <span style="font-size: 14px;">Textos simples, livros infantis e acadêmicos</span>
+              </div>
+            </div>
+            <div class="step-item">
+              <span class="step-number" style="background: linear-gradient(135deg, #55efc4, #00b894);">👨‍🏫</span>
+              <div>
+                <strong>Aulas com Professores</strong><br>
+                <span style="font-size: 14px;">Academia Nova Geração / New Generation 🆖</span>
+              </div>
+            </div>
+          </div>
+          <div class="highlight-purple" style="text-align: center; margin-top: 16px;">
+            <span class="anim-rotate">💡</span> Combine diferentes métodos para aprender mais rápido!
+          </div>
+        `
+      },
+      {
+        title: "Sobre Nós",
+        badge: "🏫 Instituição",
+        content: `
+          <div class="text-center" style="margin-bottom: 16px;">
+            <span class="anim-bounce-big" style="font-size: 60px; display: block; margin-bottom: 10px;"></span>
+            <h2 style="color: #667eea;">Academia Nova Geração / New Generation</h2>
+            <p style="font-size: 16px; color: #636e72;">
+              <em>New Generation 🆖</em> - comumente conhecido<br>
+              <em>Academia Nova Geração</em> - como somos
+            </p>
+          </div>
+          <div class="highlight" style="margin-bottom: 12px;">
+            ✅ <strong>Reconhecidos pelo INEFOP / MAPTSS</strong>, com professores habilitados
+          </div>
+          <div class="grid-3col" style="margin: 12px 0;">
+            <div class="tag tag-blue">🇧 Inglês</div>
+            <div class="tag tag-purple">🇷 Francês</div>
+            <div class="tag tag-green">💻 Informática</div>
+            <div class="tag tag-orange">📹 CCTV</div>
+            <div class="tag tag-red">📊 Excel</div>
+            <div class="tag tag-gradient"> RH</div>
+            <div class="tag tag-blue">📈 Contabilidade</div>
+            <div class="tag tag-green">📚 Reforço Escolar</div>
+          </div>
+          <div class="quote-box" style="text-align: center; font-size: 16px; margin-top: 14px;">
+            <strong>"Together we stand, divided we fall"</strong><br>
+            <span style="font-size: 14px;">Juntos somos mais fortes, separados não temos importância</span>
+          </div>
+        `
+      },
+      {
+        title: "Nosso Curso de Inglês",
+        badge: "📊 Níveis",
+        content: `
+          <div class="highlight" style="text-align: center; margin-bottom: 12px;">
+            ✅ Níveis <strong>A1 ao C2</strong> - Padrão Internacional
+          </div>
+          <div class="step-list" style="margin-bottom: 14px;">
+            <div class="step-item">
+              <span class="level-badge level-a1">A1</span>
+              <div><strong>Beginner (Iniciante)</strong> - 80% Inglês / 20% Português</div>
+            </div>
+            <div class="step-item">
+              <span class="level-badge level-a2">A2</span>
+              <div><strong>Elementary (Elementar)</strong> - 85% Inglês / 15% Português</div>
+            </div>
+            <div class="step-item">
+              <span class="level-badge level-b1">B1</span>
+              <div><strong>Intermediate (Intermediário)</strong> - 90% Inglês / 10% Português</div>
+            </div>
+            <div class="step-item">
+              <span class="level-badge level-b2">B2</span>
+              <div><strong>Upper Intermediate</strong> - 95% Inglês / 5% Português</div>
+            </div>
+            <div class="step-item">
+              <span class="level-badge level-c1">C1</span>
+              <div><strong>Advanced (Avançado)</strong> - 100% Inglês</div>
+            </div>
+            <div class="step-item">
+              <span class="level-badge level-c2">C2</span>
+              <div><strong>Proficient (Proficiência Total)</strong> - 100% Inglês</div>
+            </div>
+          </div>
+          <div class="grid-2col">
+            <div class="card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+              <span class="card-icon">✅</span>
+              <p style="font-size: 13px;">Aulas para trabalho, provas, viagens ou hobby</p>
+            </div>
+            <div class="card" style="background: linear-gradient(135deg, #f093fb, #4facfe); color: white;">
+              <span class="card-icon">📱</span>
+              <p style="font-size: 13px;">Presencial, online ao vivo ou gravado</p>
+            </div>
+          </div>
+          <div class="highlight-purple" style="margin-top: 12px;">
+            📚 Material exclusivo: e-books, slides, flashcards
+          </div>
+        `
+      },
+      {
+        title: "Conclusão",
+        badge: "🎓 Conclusão",
+        content: `
+          <div class="text-center" style="margin-bottom: 20px;">
+            <span class="anim-bounce-big" style="font-size: 80px; display: block; margin-bottom: 16px;">🌟</span>
+            <h2 style="color: #667eea; font-size: 28px; margin-bottom: 16px;">
+              O inglês transforma vidas, abre portas e conecta você ao mundo
+            </h2>
+            <div class="text-center" style="margin: 20px 0;">
+              <span class="anim-float" style="font-size: 50px; margin: 0 10px;">🚪</span>
+              <span class="anim-float" style="font-size: 50px; margin: 0 10px; animation-delay: 0.2s;">🌍</span>
+              <span class="anim-float" style="font-size: 50px; margin: 0 10px; animation-delay: 0.4s;">✈️</span>
+              <span class="anim-float" style="font-size: 50px; margin: 0 10px; animation-delay: 0.6s;">💼</span>
+            </div>
+          </div>
+          <div class="highlight-gradient" style="text-align: center; font-size: 20px; margin: 20px 0;">
+            Junte-se à Academia Nova Geração<br>e torne-se um cidadão global!
+          </div>
+          <div class="text-center" style="margin-top: 20px;">
+            <h2 style="color: #e17055; margin-bottom: 14px;">
+              <span class="anim-wave" style="display: inline-block;">📱</span>
+              WhatsApp: 934644260
+              <span class="anim-wave" style="display: inline-block; animation-delay: 0.3s;"></span>
+            </h2>
+            <div class="highlight" style="display: inline-block; margin: 10px 0;">
+              🆖 <strong>Academia Nova Geração / New Generation</strong>
+            </div>
+            <div style="margin-top: 14px;">
+              <span class="anim-float" style="font-size: 30px; margin: 0 6px;">🎓</span>
+              <span class="anim-float" style="font-size: 30px; margin: 0 6px; animation-delay: 0.2s;">🌍</span>
+              <span class="anim-float" style="font-size: 30px; margin: 0 6px; animation-delay: 0.4s;">✨</span>
+              <span class="anim-float" style="font-size: 30px; margin: 0 6px; animation-delay: 0.6s;">🚀</span>
+              <span class="anim-float" style="font-size: 30px; margin: 0 6px; animation-delay: 0.8s;">💖</span>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    const state = {
+      currentIndex: 0,
+      totalSlides: slidesData.length
+    };
+
+    const slidesContainer = document.getElementById('slidesContainer');
+    const dotsContainer = document.getElementById('dotsContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counterDisplay = document.getElementById('counterDisplay');
+    const progressFill = document.getElementById('progressFill');
+
+    function renderAllSlides() {
+      slidesContainer.innerHTML = slidesData.map((slide, idx) => `
+        <div class="slide ${idx === state.currentIndex ? 'active' : ''}" data-index="${idx}">
+          <div class="watermark">🆖</div>
+          <div class="content">
+            <span class="badge">${slide.badge}</span>
+            <h1>${slide.title}</h1>
+            ${slide.content}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderDots() {
+      dotsContainer.innerHTML = slidesData.map((_, idx) => `
+        <span class="dot ${idx === state.currentIndex ? 'active' : ''}" data-index="${idx}"></span>
+      `).join('');
+
+      document.querySelectorAll('.dot').forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          const index = parseInt(e.currentTarget.dataset.index);
+          if (index !== state.currentIndex) goToSlide(index);
+        });
+      });
+    }
+
+    function updateButtons() {
+      prevBtn.disabled = state.currentIndex === 0;
+      nextBtn.disabled = state.currentIndex === state.totalSlides - 1;
+    }
+
+    function updateActiveSlide() {
+      document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('active', i === state.currentIndex));
+      document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === state.currentIndex));
+      counterDisplay.textContent = `${state.currentIndex + 1} / ${state.totalSlides}`;
+      progressFill.style.width = `${((state.currentIndex + 1) / state.totalSlides) * 100}%`;
+      updateButtons();
+    }
+
+    function goToSlide(index) {
+      if (index < 0 || index >= state.totalSlides || index === state.currentIndex) return;
+      state.currentIndex = index;
+      updateActiveSlide();
+    }
+
+    function nextSlide() {
+      if (state.currentIndex < state.totalSlides - 1) goToSlide(state.currentIndex + 1);
+    }
+
+    function prevSlide() {
+      if (state.currentIndex > 0) goToSlide(state.currentIndex - 1);
+    }
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    renderAllSlides();
+    renderDots();
+    updateActiveSlide();
+  })();
+</script>
+</body>
+</html>
