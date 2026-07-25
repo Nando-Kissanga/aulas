@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Álgebra Linear · Geometria Analítica — Curso Completo</title>
+  <!-- MathJax para renderização profissional -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #F1F5F9;
+      color: #0F172A;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .header {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      padding: 0 24px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .header-logo { font-size: 1.15rem; font-weight: 800; color: #4F46E5; display: flex; align-items: center; gap: 10px; }
+    .menu-toggle { display: none; background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: #4F46E5; }
+    .container { display: flex; min-height: 100vh; padding-top: 64px; }
+    .sidebar {
+      width: 340px;
+      background: white;
+      border-right: 1px solid #E2E8F0;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      height: calc(100vh - 64px);
+      overflow-y: auto;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+    .sidebar-header { padding: 20px; background: white; border-bottom: 2px solid #4F46E5; position: sticky; top: 0; z-index: 10; }
+    .sidebar-header h3 { font-size: 0.95rem; color: #4F46E5; text-transform: uppercase; letter-spacing: 1px; }
+    .chapter-section { margin: 8px 12px; border-radius: 12px; overflow: hidden; border: 1px solid #E2E8F0; }
+    .chapter-header {
+      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+      color: white;
+      padding: 14px 18px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .chapter-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: #F8FAFC; }
+    .chapter-content.show { max-height: 3000px; }
+    .nav-item {
+      padding: 12px 18px;
+      margin: 2px 4px;
+      background: white;
+      cursor: pointer;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 8px;
+      color: #475569;
+      transition: 0.3s;
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover { background: #EEF2FF; color: #4F46E5; border-left-color: #4F46E5; }
+    .nav-item.active { background: #4F46E5; color: white; font-weight: 600; border-left-color: #7C3AED; }
+    .main-content {
+      margin-left: 340px;
+      flex: 1;
+      padding: 40px;
+      background: #F1F5F9;
+      max-width: 100%;
+    }
+    .main-content h2 {
+      color: #4F46E5;
+      font-size: 1.8rem;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid #4F46E5;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    /* lição com conceito + exemplo + exercício */
+    .lesson-box {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin: 24px 0;
+      overflow: hidden;
+      border: 1px solid #E2E8F0;
+    }
+    .lesson-header {
+      background: #F8FAFC;
+      padding: 16px 24px;
+      border-bottom: 1px solid #E2E8F0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #4338CA;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lesson-content { padding: 24px; }
+    .concept-subbox {
+      background: #EFF6FF;
+      border-left: 4px solid #4F46E5;
+      padding: 20px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 24px;
+    }
+    .concept-subbox h4 { color: #4F46E5; margin-bottom: 10px; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .example-subbox {
+      background: #ECFDF5;
+      border-left: 4px solid #059669;
+      padding: 20px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 24px;
+    }
+    .example-subbox h4 { color: #059669; margin-bottom: 10px; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .exercise-subbox {
+      background: #FFFBEB;
+      border-left: 4px solid #D97706;
+      padding: 20px;
+      border-radius: 0 8px 8px 0;
+    }
+    .exercise-subbox h4 { color: #D97706; margin-bottom: 10px; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .formula-inline {
+      text-align: center;
+      margin: 15px 0;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #E0E7FF;
+    }
+    .solution {
+      display: none;
+      background: #D1FAE5;
+      padding: 20px;
+      margin-top: 16px;
+      border-radius: 8px;
+      border: 1px solid #059669;
+      animation: fadeIn 0.3s ease-out;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    button {
+      background: #4F46E5;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+    button:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .show-solution { background: #059669; }
+    canvas { border: 1px solid #E2E8F0; border-radius: 12px; margin: 20px auto; display: block; background: white; max-width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .mjx-chtml { font-size: 110% !important; }
+    @media (max-width: 968px) {
+      .menu-toggle { display: block; }
+      .sidebar { transform: translateX(-100%); width: 300px; }
+      .sidebar.show { transform: translateX(0); }
+      .main-content { margin-left: 0; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="header-logo"><span>📐</span><span>Álgebra Linear & Geometria Analítica</span></div>
+  </header>
+  <div class="container">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header"><h3>📖 Conteúdo Programático</h3></div>
+      <div id="navList"></div>
+    </nav>
+    <main class="main-content" id="mainContent"></main>
+  </div>
+
+<script>
+// -------------------------------------------------------------
+// ESTRUTURA: CADA LIÇÃO POSSUI CONCEITO + EXEMPLO + EXERCÍCIO
+// -------------------------------------------------------------
+const allChapters = [
+  {
+    id: 1, emoji: "🎯", title: "Vetores: Conceitos Fundamentais",
+    sections: [
+      {
+        type: "lesson",
+        title: "📐 Operações com Vetores",
+        content: `<p>Sejam \\(\\vec{u} = (u_1, u_2, u_3)\\) e \\(\\vec{v} = (v_1, v_2, v_3)\\). A soma é feita componente a componente. O produto por escalar \\(k\\) multiplica todas as componentes.</p>`,
+        formula: `\\vec{u} + \\vec{v} = (u_1+v_1, u_2+v_2, u_3+v_3) \\quad \\text{e} \\quad k\\vec{u} = (ku_1, ku_2, ku_3)`,
+        example: `<p>Dados \\(\\vec{u} = (1, -2, 3)\\) e \\(\\vec{v} = (4, 0, -1)\\):</p><p>\\(\\vec{u} + \\vec{v} = (1+4, -2+0, 3-1) = (5, -2, 2)\\)</p><p>\\(2\\vec{u} - \\vec{v} = (2, -4, 6) - (4, 0, -1) = (-2, -4, 7)\\)</p>`,
+        exercise: "Dados \\(\\vec{a} = (3, 1, -2)\\) e \\(\\vec{b} = (-1, 4, 5)\\), calcule \\(3\\vec{a} + 2\\vec{b}\\).",
+        solution: `3(3, 1, -2) + 2(-1, 4, 5) = (9, 3, -6) + (-2, 8, 10) = (7, 11, 4)`
+      },
+      {
+        type: "lesson",
+        title: "📏 Módulo e Versor",
+        content: `<p>O <strong>módulo</strong> é o comprimento do vetor. O <strong>versor</strong> é o vetor unitário (módulo 1) que possui a mesma direção e sentido do vetor original.</p>`,
+        formula: `\\|\\vec{v}\\| = \\sqrt{x^2 + y^2 + z^2} \\quad \\text{e} \\quad \\hat{u} = \\frac{\\vec{v}}{\\|\\vec{v}\\|}`,
+        example: `<p>Para \\(\\vec{v} = (3, 4, 0)\\):</p><p>\\(\\|\\vec{v}\\| = \\sqrt{3^2 + 4^2 + 0^2} = \\sqrt{25} = 5\\)</p><p>Versor: \\(\\hat{u} = \\left(\\frac{3}{5}, \\frac{4}{5}, 0\\right)\\)</p>`,
+        exercise: "Determine o versor do vetor \\(\\vec{w} = (1, 2, 2)\\).",
+        solution: `\\|\\vec{w}\\| = \\sqrt{1^2 + 2^2 + 2^2} = \\sqrt{9} = 3. \\text{ Versor: } \\left(\\frac{1}{3}, \\frac{2}{3}, \\frac{2}{3}\\right)`
+      },
+      {
+        type: "lesson",
+        title: "📍 Ponto Médio e Baricentro",
+        content: `<p>O ponto médio divide um segmento em duas partes iguais. O baricentro de um triângulo é o ponto de encontro de suas medianas.</p>`,
+        formula: `M = \\left( \\frac{x_A+x_B}{2}, \\frac{y_A+y_B}{2}, \\frac{z_A+z_B}{2} \\right) \\quad G = \\left( \\frac{x_A+x_B+x_C}{3}, \\frac{y_A+y_B+y_C}{3}, \\frac{z_A+z_B+z_C}{3} \\right)`,
+        example: `<p>Para A(1, 2, 3) e B(5, 6, 1):</p><p>\\(M = \\left(\\frac{1+5}{2}, \\frac{2+6}{2}, \\frac{3+1}{2}\\right) = (3, 4, 2)\\)</p>`,
+        exercise: "Calcule o baricentro do triângulo com vértices A(0,0,0), B(3,0,0) e C(0,3,0).",
+        solution: `G = \\left( \\frac{0+3+0}{3}, \\frac{0+0+3}{3}, \\frac{0+0+0}{3} \\right) = (1, 1, 0)`
+      }
+    ]
+  },
+  {
+    id: 2, emoji: "🔗", title: "Dependência Linear",
+    sections: [
+      {
+        type: "lesson",
+        title: "🔗 Combinação Linear (CL)",
+        content: `<p>Um vetor \\(\\vec{w}\\) é combinação linear de \\(\\vec{v}_1, \\vec{v}_2\\) se puder ser escrito como soma de múltiplos escalares desses vetores.</p>`,
+        formula: `\\vec{w} = \\alpha\\vec{v}_1 + \\beta\\vec{v}_2`,
+        example: `<p>\\(\\vec{w} = (7, 5)\\) é CL de \\(\\vec{v}_1=(1,0)\\) e \\(\\vec{v}_2=(0,1)\\)?</p><p>Sim, pois \\(7(1,0) + 5(0,1) = (7, 5)\\). Logo, \\(\\alpha=7, \\beta=5\\).</p>`,
+        exercise: "Verifique se \\(\\vec{u} = (5, 7)\\) é CL de \\(\\vec{v}_1 = (1, 2)\\) e \\(\\vec{v}_2 = (2, 1)\\).",
+        solution: `\\text{Sim. Resolvendo o sistema: } \\alpha + 2\\beta = 5 \\text{ e } 2\\alpha + \\beta = 7. \\text{ Solução: } \\alpha = 3, \\beta = 1.`
+      },
+      {
+        type: "lesson",
+        title: "⚖️ LI e LD (Independência/Dependência)",
+        content: `<p>Vetores são <strong>LD</strong> se um for múltiplo do outro (2 vetores) ou coplanares (3 vetores). Caso contrário, são <strong>LI</strong>.</p>`,
+        formula: `\\alpha_1\\vec{v}_1 + \\alpha_2\\vec{v}_2 + \\dots + \\alpha_n\\vec{v}_n = \\vec{0} \\implies \\text{Se } \\alpha_i = 0 \\ \\forall i, \\text{ então são LI.}`,
+        example: `<p>\\(\\vec{u}=(1,2)\\) e \\(\\vec{v}=(2,4)\\) são LD, pois \\(\\vec{v} = 2\\vec{u}\\).</p><p>\\(\\vec{i}=(1,0,0)\\), \\(\\vec{j}=(0,1,0)\\), \\(\\vec{k}=(0,0,1)\\) são LI.</p>`,
+        exercise: "Os vetores \\(\\vec{a}=(1, 1, 1)\\), \\(\\vec{b}=(1, 2, 3)\\) e \\(\\vec{c}=(2, 3, 4)\\) são LI ou LD?",
+        solution: `\\text{São LD, pois } \\vec{c} = \\vec{a} + \\vec{b} \\text{ (1+1=2, 1+2=3, 1+3=4).}`
+      }
+    ]
+  },
+  {
+    id: 3, emoji: "✖️", title: "Produtos de Vetores",
+    sections: [
+      {
+        type: "lesson",
+        title: "📉 Produto Escalar",
+        content: `<p>Resultado é um <strong>escalar</strong>. Mede a projeção de um vetor no outro e é fundamental para verificar ortogonalidade.</p>`,
+        formula: `\\vec{u} \\cdot \\vec{v} = u_1v_1 + u_2v_2 + u_3v_3 = |\\vec{u}| |\\vec{v}| \\cos\\theta`,
+        example: `<p>\\(\\vec{u}=(1, 2, 3)\\) e \\(\\vec{v}=(4, -5, 2)\\):</p><p>\\(\\vec{u} \\cdot \\vec{v} = (1)(4) + (2)(-5) + (3)(2) = 4 - 10 + 6 = 0\\)</p><p>Como o resultado é 0, os vetores são <strong>ortogonais</strong>.</p>`,
+        exercise: "Calcule \\(\\vec{u} \\cdot \\vec{v}\\) para \\(\\vec{u}=(2, -1, 4)\\) e \\(\\vec{v}=(3, 2, -1)\\).",
+        solution: `(2)(3) + (-1)(2) + (4)(-1) = 6 - 2 - 4 = 0. \\text{ São ortogonais.}`
+      },
+      {
+        type: "lesson",
+        title: "🔄 Produto Vetorial",
+        content: `<p>Resultado é um <strong>vetor</strong> perpendicular ao plano formado por \\(\\vec{u}\\) e \\(\\vec{v}\\) (Regra da Mão Direita). O módulo representa a área do paralelogramo.</p>`,
+        formula: `\\vec{u} \\times \\vec{v} = \\begin{vmatrix} \\vec{i} & \\vec{j} & \\vec{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix}`,
+        example: `<p>\\(\\vec{u}=(1,0,0)\\) e \\(\\vec{v}=(0,1,0)\\):</p><p>\\(\\vec{u} \\times \\vec{v} = (0\\cdot0 - 0\\cdot1)\\vec{i} - (1\\cdot0 - 0\\cdot0)\\vec{j} + (1\\cdot1 - 0\\cdot0)\\vec{k} = (0, 0, 1) = \\vec{k}\\)</p>`,
+        exercise: "Calcule \\(\\vec{u} \\times \\vec{v}\\) para \\(\\vec{u}=(1, 2, 3)\\) e \\(\\vec{v}=(1, 1, 1)\\).",
+        solution: `\\begin{vmatrix} \\vec{i} & \\vec{j} & \\vec{k} \\\\ 1 & 2 & 3 \\\\ 1 & 1 & 1 \\end{vmatrix} = (2-3)\\vec{i} - (1-3)\\vec{j} + (1-2)\\vec{k} = (-1, 2, -1)`
+      },
+      {
+        type: "lesson",
+        title: "📦 Produto Misto",
+        content: `<p>Combina os dois produtos anteriores. O valor absoluto do resultado é o <strong>volume do paralelepípedo</strong> formado pelos três vetores.</p>`,
+        formula: `[\\vec{u}, \\vec{v}, \\vec{w}] = (\\vec{u} \\times \\vec{v}) \\cdot \\vec{w} = \\begin{vmatrix} u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\\\ w_1 & w_2 & w_3 \\end{vmatrix}`,
+        example: `<p>Volume com \\(\\vec{i}, \\vec{j}, \\vec{k}\\):</p><p>\\(\\begin{vmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{vmatrix} = 1\\). Volume = 1 u.v.</p>`,
+        exercise: "Verifique se os vetores (1,0,1), (0,1,1) e (1,1,2) são coplanares.",
+        solution: `\\text{Calculando o determinante: } 1(2-1) - 0 + 1(0-1) = 1 - 1 = 0. \\text{ Como é 0, o volume é nulo, logo são coplanares (LD).}`
+      }
+    ]
+  },
+  {
+    id: 4, emoji: "📐", title: "Ângulos, Distâncias e Projeções",
+    sections: [
+      {
+        type: "lesson",
+        title: "📏 Ângulo entre Vetores",
+        content: `<p>Derivado diretamente da definição geométrica do produto escalar.</p>`,
+        formula: `\\theta = \\arccos\\left( \\frac{\\vec{u} \\cdot \\vec{v}}{\\|\\vec{u}\\| \\|\\vec{v}\\|} \\right)`,
+        example: `<p>\\(\\vec{u}=(1,0)\\) e \\(\\vec{v}=(1,1)\\):</p><p>\\(\\cos\\theta = \\frac{1\\cdot1 + 0\\cdot1}{1 \\cdot \\sqrt{2}} = \\frac{1}{\\sqrt{2}} \\implies \\theta = 45^\\circ\\)</p>`,
+        exercise: "Qual o ângulo entre \\(\\vec{u}=(1, 1, 0)\\) e \\(\\vec{v}=(0, 1, 1)\\)?",
+        solution: `\\vec{u}\\cdot\\vec{v} = 1. \\|\\vec{u}\\|=\\sqrt{2}, \\|\\vec{v}\\|=\\sqrt{2}. \\cos\\theta = \\frac{1}{2} \\implies \\theta = 60^\\circ.`
+      },
+      {
+        type: "lesson",
+        title: "📉 Projeção Ortogonal",
+        content: `<p>A "sombra" do vetor \\(\\vec{u}\\) sobre o vetor \\(\\vec{v}\\). O resultado é um vetor paralelo a \\(\\vec{v}\\).</p>`,
+        formula: `\\text{proj}_{\\vec{v}}\\vec{u} = \\left( \\frac{\\vec{u} \\cdot \\vec{v}}{\\|\\vec{v}\\|^2} \\right) \\vec{v}`,
+        example: `<p>Projetar \\(\\vec{u}=(3,4)\\) sobre \\(\\vec{v}=(1,0)\\):</p><p>\\(\\text{proj} = \\left( \\frac{3\\cdot1 + 4\\cdot0}{1^2} \\right) (1,0) = 3(1,0) = (3,0)\\)</p>`,
+        exercise: "Calcule a projeção de \\(\\vec{u}=(2, 3)\\) sobre \\(\\vec{v}=(1, 1)\\).",
+        solution: `\\frac{2\\cdot1 + 3\\cdot1}{1^2 + 1^2} (1,1) = \\frac{5}{2}(1,1) = (2.5, 2.5)`
+      }
+    ]
+  },
+  {
+    id: 5, emoji: "📊", title: "Matrizes e Determinantes",
+    sections: [
+      {
+        type: "lesson",
+        title: "🔢 Multiplicação de Matrizes",
+        content: `<p>O elemento \\(c_{ij}\\) da matriz produto é o produto escalar da linha \\(i\\) de A pela coluna \\(j\\) de B. O número de colunas de A deve ser igual ao número de linhas de B.</p>`,
+        formula: `C_{m \\times p} = A_{m \\times n} \\cdot B_{n \\times p}`,
+        example: `<p>\\(\\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix} \\begin{pmatrix} 2 \\\\ 1 \\end{pmatrix} = \\begin{pmatrix} 1(2)+2(1) \\\\ 3(2)+4(1) \\end{pmatrix} = \\begin{pmatrix} 4 \\\\ 10 \\end{pmatrix}\\)</p>`,
+        exercise: "Calcule \\(\\begin{pmatrix} 1 & -1 \\\\ 0 & 2 \\end{pmatrix} \\begin{pmatrix} 3 & 1 \\\\ 2 & 4 \\end{pmatrix}\\).",
+        solution: `\\begin{pmatrix} 1(3)+(-1)(2) & 1(1)+(-1)(4) \\\\ 0(3)+2(2) & 0(1)+2(4) \\end{pmatrix} = \\begin{pmatrix} 1 & -3 \\\\ 4 & 8 \\end{pmatrix}`
+      },
+      {
+        type: "lesson",
+        title: "📐 Determinante (Regra de Sarrus)",
+        content: `<p>Usada para matrizes 3x3. Repete-se as duas primeiras colunas ao lado e soma-se as diagonais principais, subtraindo as secundárias.</p>`,
+        formula: `\\det(A) = a_{11}a_{22}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32} - a_{13}a_{22}a_{31} - a_{11}a_{23}a_{32} - a_{12}a_{21}a_{33}`,
+        example: `<p>\\(\\begin{vmatrix} 1 & 2 & 3 \\\\ 0 & 1 & 4 \\\\ 5 & 6 & 0 \\end{vmatrix} = (0 + 40 + 0) - (0 + 24 + 0) = 40 - 24 = 16\\)</p>`,
+        exercise: "Calcule o determinante de \\(\\begin{pmatrix} 2 & 1 \\\\ 3 & 4 \\end{pmatrix}\\).",
+        solution: `\\det = (2)(4) - (1)(3) = 8 - 3 = 5.`
+      }
+    ]
+  },
+  {
+    id: 6, emoji: "⚙️", title: "Sistemas Lineares",
+    sections: [
+      {
+        type: "lesson",
+        title: "⚖️ Classificação de Sistemas",
+        content: `<p>Baseada no Teorema de Rouché-Capelli, comparando o posto da matriz dos coeficientes (A) com a matriz ampliada (A|B).</p>`,
+        formula: `\\begin{aligned} &\\text{SPD: } \\text{posto}(A) = \\text{posto}(A|B) = n \\text{ (incógnitas)} \\\\ &\\text{SPI: } \\text{posto}(A) = \\text{posto}(A|B) < n \\\\ &\\text{SI: } \\text{posto}(A) \\neq \\text{posto}(A|B) \\end{aligned}`,
+        example: `<p>\\(\\begin{cases} x+y=2 \\\\ 2x+2y=4 \\end{cases}\\): A segunda é múltipla da primeira. Posto(A)=1, Posto(A|B)=1, n=2. Logo, SPI.</p>`,
+        exercise: "Classifique: \\(\\begin{cases} x+y=3 \\\\ x+y=5 \\end{cases}\\)",
+        solution: `\\text{Subtraindo as equações: } 0 = 2 \\text{ (Absurdo). Posto}(A)=1, \\text{Posto}(A|B)=2. \\text{Sistema Impossível (SI).}`
+      },
+      {
+        type: "lesson",
+        title: "🏆 Regra de Cramer",
+        content: `<p>Aplicável apenas a sistemas quadrados (n equações, n incógnitas) com determinante da matriz dos coeficientes diferente de zero.</p>`,
+        formula: `x = \\frac{\\det(A_x)}{\\det(A)}, \\quad y = \\frac{\\det(A_y)}{\\det(A)}`,
+        example: `<p>\\(\\begin{cases} 2x+y=5 \\\\ x-3y=-1 \\end{cases}\\). \\(\\det(A) = -6-1 = -7\\).</p><p>\\(\\det(A_x) = \\begin{vmatrix} 5 & 1 \\\\ -1 & -3 \\end{vmatrix} = -15 - (-1) = -14 \\implies x = \\frac{-14}{-7} = 2\\)</p>`,
+        exercise: "Use Cramer para achar y em: \\(\\begin{cases} x+2y=7 \\\\ 3x-y=7 \\end{cases}\\)",
+        solution: `\\det(A) = -1 - 6 = -7. \\det(A_y) = \\begin{vmatrix} 1 & 7 \\\\ 3 & 7 \\end{vmatrix} = 7 - 21 = -14. \\quad y = \\frac{-14}{-7} = 2.`
+      }
+    ]
+  },
+  {
+    id: 7, emoji: "📈", title: "A Reta no Espaço",
+    sections: [
+      {
+        type: "lesson",
+        title: "📝 Equações da Reta",
+        content: `<p>Definida por um ponto \\(A(x_0, y_0, z_0)\\) e um vetor diretor \\(\\vec{v}=(a,b,c)\\) paralelo a ela.</p>`,
+        formula: `\\text{Paramétricas: } \\begin{cases} x = x_0 + at \\\\ y = y_0 + bt \\\\ z = z_0 + ct \\end{cases} \\quad \\text{Simétricas: } \\frac{x-x_0}{a} = \\frac{y-y_0}{b} = \\frac{z-z_0}{c}`,
+        example: `<p>Reta por A(1, 2, 3) com direção \\(\\vec{v}=(2, -1, 4)\\):</p><p>Paramétricas: \\(x=1+2t, y=2-t, z=3+4t\\)</p>`,
+        exercise: "Determine as equações simétricas da reta que passa por (0, 1, 2) e tem direção (3, 0, 4).",
+        solution: `\\frac{x-0}{3} = \\frac{z-2}{4}, \\quad y = 1 \\text{ (pois } b=0 \\text{, a coordenada y é constante).}`
+      },
+      {
+        type: "lesson",
+        title: "🔄 Posições Relativas de Duas Retas",
+        content: `<p>Compara-se os vetores diretores \\(\\vec{v}_1\\) e \\(\\vec{v}_2\\) e verifica-se a coplanaridade.</p>`,
+        formula: `\\begin{aligned} &\\text{Paralelas: } \\vec{v}_1 = k\\vec{v}_2 \\\\ &\\text{Perpendiculares: } \\vec{v}_1 \\cdot \\vec{v}_2 = 0 \\\\ &\\text{Reversas: } \\vec{v}_1 \\times \\vec{v}_2 \\neq \\vec{0} \\text{ e } [\\vec{v}_1, \\vec{v}_2, \\vec{AB}] \\neq 0 \\end{aligned}`,
+        example: `<p>\\(\\vec{v}_1=(1,1,1)\\) e \\(\\vec{v}_2=(2,2,2)\\) são paralelos, pois \\(\\vec{v}_2 = 2\\vec{v}_1\\).</p>`,
+        exercise: "As retas com direções \\(\\vec{v}_1=(1,2,3)\\) e \\(\\vec{v}_2=(2,-1,0)\\) são perpendiculares?",
+        solution: `\\vec{v}_1 \\cdot \\vec{v}_2 = (1)(2) + (2)(-1) + (3)(0) = 2 - 2 + 0 = 0. \\text{ Sim, são perpendiculares.}`
+      }
+    ]
+  },
+  {
+    id: 8, emoji: "🔲", title: "O Plano no Espaço",
+    sections: [
+      {
+        type: "lesson",
+        title: "📝 Equação Geral do Plano",
+        content: `<p>Definido por um ponto e um vetor normal \\(\\vec{n}=(a,b,c)\\) (perpendicular ao plano). O vetor normal é crucial para todas as propriedades do plano.</p>`,
+        formula: `a(x-x_0) + b(y-y_0) + c(z-z_0) = 0 \\iff ax + by + cz + d = 0`,
+        example: `<p>Plano com \\(\\vec{n}=(1, -2, 3)\\) passando por P(1, 0, 1):</p><p>\\(1(x-1) - 2(y-0) + 3(z-1) = 0 \\implies x - 2y + 3z - 4 = 0\\)</p>`,
+        exercise: "Ache a equação geral do plano com normal \\(\\vec{n}=(2, 1, -1)\\) que passa pela origem (0,0,0).",
+        solution: `2(x-0) + 1(y-0) - 1(z-0) = 0 \\implies 2x + y - z = 0.`
+      },
+      {
+        type: "lesson",
+        title: "📏 Distância de Ponto a Plano",
+        content: `<p>A menor distância entre um ponto \\(P_0\\) e um plano \\(\\pi\\) é medida ao longo da direção do vetor normal do plano.</p>`,
+        formula: `d(P_0, \\pi) = \\frac{|ax_0 + by_0 + cz_0 + d|}{\\sqrt{a^2 + b^2 + c^2}}`,
+        example: `<p>Distância de P(1, 1, 1) ao plano \\(x + y + z - 6 = 0\\):</p><p>\\(d = \\frac{|1(1) + 1(1) + 1(1) - 6|}{\\sqrt{1^2+1^2+1^2}} = \\frac{|-3|}{\\sqrt{3}} = \\sqrt{3}\\)</p>`,
+        exercise: "Calcule a distância da origem (0,0,0) ao plano \\(2x - y + 2z - 9 = 0\\).",
+        solution: `d = \\frac{|2(0) - 1(0) + 2(0) - 9|}{\\sqrt{2^2 + (-1)^2 + 2^2}} = \\frac{|-9|}{\\sqrt{9}} = \\frac{9}{3} = 3.`
+      }
+    ]
+  },
+  {
+    id: 9, emoji: "🌌", title: "Espaços Vetoriais",
+    sections: [
+      {
+        type: "lesson",
+        title: "🏛️ Subespaço Vetorial",
+        content: `<p>Um subconjunto \\(W\\) de \\(V\\) é subespaço se contiver o vetor nulo e for fechado para soma e multiplicação por escalar.</p>`,
+        formula: `1) \\vec{0} \\in W \\quad 2) \\vec{u}, \\vec{v} \\in W \\implies \\vec{u}+\\vec{v} \\in W \\quad 3) k \\in \\mathbb{R}, \\vec{u} \\in W \\implies k\\vec{u} \\in W`,
+        example: `<p>\\(W = \\{(x,y) \\in \\mathbb{R}^2 \\mid y = 2x\\}\\) é subespaço? Sim. (0,0) satisfaz. Soma: \\((x_1, 2x_1) + (x_2, 2x_2) = (x_1+x_2, 2(x_1+x_2))\\), que está em W.</p>`,
+        exercise: "O conjunto \\(W = \\{(x,y) \\mid x \\ge 0\\}\\) é subespaço de \\(\\mathbb{R}^2\\)?",
+        solution: `\\text{Não. Falha na multiplicação por escalar: se } (1,0) \\in W, \\text{ então } -1(1,0) = (-1,0) \\notin W \\text{ pois } -1 \\not\\ge 0.`
+      },
+      {
+        type: "lesson",
+        title: "🏗️ Base e Dimensão",
+        content: `<p>Uma <strong>base</strong> é um conjunto de vetores que é simultaneamente LI e gera o espaço. A <strong>dimensão</strong> é o número de vetores em qualquer base.</p>`,
+        formula: `\\dim(\\mathbb{R}^n) = n \\quad \\text{e} \\quad \\dim(W_1 + W_2) = \\dim(W_1) + \\dim(W_2) - \\dim(W_1 \\cap W_2)`,
+        example: `<p>A base canônica de \\(\\mathbb{R}^3\\) é \\(\\{(1,0,0), (0,1,0), (0,0,1)\\}\\). Dimensão = 3.</p>`,
+        exercise: "Qual a dimensão do subespaço \\(W = \\{(x,y,z) \\mid x+y+z=0\\}\\) em \\(\\mathbb{R}^3\\)?",
+        solution: `\\text{A equação impõe 1 restrição a 3 variáveis. Dimensão = 3 - 1 = 2. (É um plano passando pela origem).}`
+      }
+    ]
+  },
+  {
+    id: 10, emoji: "🔄", title: "Transformações Lineares",
+    sections: [
+      {
+        type: "lesson",
+        title: "🔄 Definição e Matriz Associada",
+        content: `<p>\\(T: V \\to W\\) é linear se preserva soma e produto por escalar. Toda TL entre espaços de dimensão finita pode ser representada por uma matriz.</p>`,
+        formula: `T(\\vec{u} + \\vec{v}) = T(\\vec{u}) + T(\\vec{v}) \\quad \\text{e} \\quad T(k\\vec{u}) = kT(\\vec{u})`,
+        example: `<p>\\(T(x,y) = (2x, x+y)\\) é linear? Sim. \\(T(1,0) = (2,1)\\) e \\(T(0,1) = (0,1)\\). Matriz: \\(\\begin{pmatrix} 2 & 0 \\\\ 1 & 1 \\end{pmatrix}\\).</p>`,
+        exercise: "Verifique se \\(T(x,y) = (x+1, y)\\) é linear.",
+        solution: `\\text{Não. } T(0,0) = (1,0) \\neq (0,0). \\text{ Uma TL deve sempre levar o vetor nulo no vetor nulo.}`
+      },
+      {
+        type: "lesson",
+        title: "🎯 Autovalores e Autovetores",
+        content: `<p>Um <strong>autovetor</strong> é um vetor que não muda de direção sob a transformação, apenas é escalado pelo <strong>autovalor</strong> \\(\\lambda\\).</p>`,
+        formula: `T(\\vec{v}) = \\lambda\\vec{v} \\iff (A - \\lambda I)\\vec{v} = \\vec{0} \\iff \\det(A - \\lambda I) = 0`,
+        example: `<p>Para \\(A = \\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}\\), os autovalores são os elementos da diagonal: \\(\\lambda_1 = 2, \\lambda_2 = 3\\).</p>`,
+        exercise: "Ache os autovalores de \\(A = \\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}\\).",
+        solution: `\\det\\begin{pmatrix} 4-\\lambda & 1 \\\\ 2 & 3-\\lambda \\end{pmatrix} = (4-\\lambda)(3-\\lambda) - 2 = \\lambda^2 - 7\\lambda + 10 = 0. \\text{ Raízes: } \\lambda_1 = 2, \\lambda_2 = 5.`
+      }
+    ]
+  },
+  {
+    id: 11, emoji: "🔵", title: "Cônicas e Quádricas",
+    sections: [
+      {
+        type: "lesson",
+        title: "🔵 Elipse",
+        content: `<p>Lugar geométrico dos pontos cuja soma das distâncias a dois pontos fixos (focos) é constante.</p>`,
+        formula: `\\frac{(x-h)^2}{a^2} + \\frac{(y-k)^2}{b^2} = 1 \\quad (\\text{Centro em } (h,k))`,
+        example: `<p>\\(\\frac{x^2}{9} + \\frac{y^2}{4} = 1\\) é uma elipse centrada na origem, com semi-eixo maior \\(a=3\\) (no eixo x) e semi-eixo menor \\(b=2\\) (no eixo y).</p>`,
+        exercise: "Identifique o centro e os eixos de \\(\\frac{(x-1)^2}{16} + \\frac{(y+2)^2}{25} = 1\\).",
+        solution: `\\text{Centro: } (1, -2). \\text{ Semi-eixo maior } a=5 \\text{ (vertical, pois 25 > 16)}, \\text{ semi-eixo menor } b=4 \\text{ (horizontal).}`
+      },
+      {
+        type: "lesson",
+        title: "🔴 Hipérbole",
+        content: `<p>Lugar geométrico dos pontos cuja diferença das distâncias a dois focos é constante. Possui assíntotas.</p>`,
+        formula: `\\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1 \\quad (\\text{Abre horizontalmente})`,
+        example: `<p>\\(\\frac{x^2}{4} - \\frac{y^2}{9} = 1\\). Vértices em \\((\\pm 2, 0)\\). Assíntotas: \\(y = \\pm \\frac{3}{2}x\\).</p>`,
+        exercise: "Qual a equação das assíntotas da hipérbole \\(\\frac{y^2}{16} - \\frac{x^2}{9} = 1\\)?",
+        solution: `\\text{Como o termo positivo é } y^2 \\text{, abre verticalmente. Assíntotas: } y = \\pm \\frac{a}{b}x = \\pm \\frac{4}{3}x.`
+      }
+    ]
+  },
+  {
+    id: 12, emoji: "🌐", title: "Coordenadas Curvilíneas",
+    sections: [
+      {
+        type: "lesson",
+        title: "🔄 Coordenadas Polares (2D)",
+        content: `<p>Alternativa ao sistema cartesiano, usando distância à origem (\\(r\\)) e ângulo com o eixo x positivo (\\(\\theta\\)).</p>`,
+        formula: `x = r \\cos\\theta, \\quad y = r \\sin\\theta \\quad \\text{e} \\quad r^2 = x^2 + y^2, \\quad \\tan\\theta = \\frac{y}{x}`,
+        example: `<p>Converter \\((x,y) = (\\sqrt{3}, 1)\\) para polar:</p><p>\\(r = \\sqrt{3+1} = 2\\). \\(\\tan\\theta = 1/\\sqrt{3} \\implies \\theta = 30^\\circ\\) ou \\(\\pi/6\\). Ponto: \\((2, \\pi/6)\\).</p>`,
+        exercise: "Converta o ponto polar \\((4, 120^\\circ)\\) para cartesiano.",
+        solution: `x = 4 \\cos(120^\\circ) = 4(-1/2) = -2. \\quad y = 4 \\sin(120^\\circ) = 4(\\sqrt{3}/2) = 2\\sqrt{3}. \\text{ Ponto: } (-2, 2\\sqrt{3}).`
+      },
+      {
+        type: "lesson",
+        title: "🗼 Coordenadas Cilíndricas (3D)",
+        content: `<p>Extensão das polares para 3D, adicionando a altura \\(z\\). Ideal para problemas com simetria axial (cilindros).</p>`,
+        formula: `x = r \\cos\\theta, \\quad y = r \\sin\\theta, \\quad z = z`,
+        example: `<p>O ponto cartesiano \\((0, 2, 5)\\) em cilíndricas:</p><p>\\(r = \\sqrt{0^2+2^2}=2\\). \\(\\theta = 90^\\circ\\) (eixo y positivo). \\(z=5\\). Ponto: \\((2, \\pi/2, 5)\\).</p>`,
+        exercise: "Qual a equação cilíndrica da superfície \\(x^2 + y^2 = 9\\)?",
+        solution: `\\text{Substituindo } x^2+y^2=r^2 \\text{, temos } r^2 = 9 \\implies r = 3. \\text{ É um cilindro circular de raio 3 centrado no eixo z.}`
+      }
+    ]
+  }
+];
+
+// -------------------------------------------------------------
+// RENDER
+// -------------------------------------------------------------
+function renderNavigation() {
+  const navList = document.getElementById('navList');
+  navList.innerHTML = allChapters.map((ch, i) => `
+    <div class="chapter-section">
+      <div class="chapter-header ${i===0?'active':''}" onclick="toggleChapter(${ch.id})">
+        <span>${ch.emoji} ${ch.title}</span>
+        <span style="transition:transform 0.3s" id="arrow-${ch.id}">▼</span>
+      </div>
+      <div class="chapter-content ${i===0?'show':''}" id="content-${ch.id}">
+        ${ch.sections.map((sec,j) => `
+          <div class="nav-item ${i===0&&j===0?'active':''}" onclick="showSection(${ch.id},${j},this)">
+            <span>📚</span> ${sec.title.replace(/[📐📏📉🔄📦🔢🏛️🏗️🎯🔵🔴🗼]/g,'').trim()}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleChapter(id) {
+  const content = document.getElementById(`content-${id}`);
+  const header = content.previousElementSibling;
+  const arrow = document.getElementById(`arrow-${id}`);
+  document.querySelectorAll('.chapter-content').forEach(c => { if(c.id!==`content-${id}`) c.classList.remove('show'); });
+  document.querySelectorAll('.chapter-header').forEach(h => { if(h!==header) h.classList.remove('active'); });
+  document.querySelectorAll('[id^="arrow-"]').forEach(a => { if(a.id!==`arrow-${id}`) a.style.transform='rotate(0deg)'; });
+  content.classList.toggle('show');
+  header.classList.toggle('active');
+  arrow.style.transform = content.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+function showSection(chapterId, sectionIndex, element) {
+  if(element) { document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active')); element.classList.add('active'); }
+  const chapter = allChapters.find(c=>c.id===chapterId);
+  if(!chapter) return;
+  renderChapter(chapter);
+  if(window.innerWidth<=968) document.getElementById('sidebar').classList.remove('show');
+}
+
+function renderChapter(chapter) {
+  let html = `<h2>${chapter.emoji} ${chapter.title}</h2>`;
+  chapter.sections.forEach((section, idx) => {
+    const sid = `${chapter.id}_${idx}`;
+    if(section.type==='lesson') {
+      html += `
+        <div class="lesson-box">
+          <div class="lesson-header">${section.title}</div>
+          <div class="lesson-content">
+            <div class="concept-subbox"><h4>📖 Conceito</h4>${section.content}${section.formula?`<div class="formula-inline">$$ ${section.formula} $$</div>`:''}</div>
+            <div class="example-subbox"><h4>💡 Exemplo Resolvido</h4>${section.example}</div>
+            <div class="exercise-subbox"><h4>✏️ Exercício Proposto</h4><p>${section.exercise}</p><button class="show-solution" onclick="toggleSolution('sol_${sid}')">🔓 Ver Solução Detalhada</button><div id="sol_${sid}" class="solution">$$ ${section.solution} $$</div></div>
+          </div>
+        </div>
+      `;
+    }
+  });
+  document.getElementById('mainContent').innerHTML = html;
+  if(window.MathJax) MathJax.typesetPromise().catch(e=>console.log(e));
+}
+
+function toggleSolution(id) {
+  const sol = document.getElementById(id);
+  sol.style.display = sol.style.display==='block' ? 'none' : 'block';
+  if(sol.style.display==='block' && window.MathJax) MathJax.typesetPromise([sol]);
+}
+
+function toggleMenu() { document.getElementById('sidebar').classList.toggle('show'); }
+
+window.onload = function() { renderNavigation(); showSection(1,0); };
+</script>
+</body>
+</html>

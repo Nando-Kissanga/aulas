@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo I - Equações Diferenciais e Séries</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Menu Hamburger */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+
+        .menu-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #667eea;
+            margin: 5px 0;
+            transition: all 0.3s;
+            border-radius: 3px;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Sidebar Menu */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+            transition: left 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
+            padding: 80px 20px 20px;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar h3 {
+            color: #764ba2;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 998;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Conteúdo Principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 100px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #764ba2;
+            font-size: 1.2em;
+        }
+
+        .chapter {
+            background: rgba(255, 255, 255, 0.98);
+            margin-bottom: 30px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .chapter.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chapter h2 {
+            color: #764ba2;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f0e6ff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #667eea;
+        }
+
+        .example-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .exercise-box {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin: 0 5px;
+        }
+
+        .animation-container {
+            margin: 20px 0;
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        canvas, svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            font-size: 1.2em;
+            border: 1px solid #dee2e6;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffeaa7 0%, #ffeaa7 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 88%;
+            padding: 0 5px;
+            font-weight: bold;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .tip {
+            background: #e7f3ff;
+            border-left: 5px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            margin: 15px 0;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .chapter {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            .sidebar {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu Hamburger -->
+    <button class="menu-toggle" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h3> Conteúdo</h3>
+        <ul id="menuList"></ul>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <!-- Container Principal -->
+    <div class="container" id="mainContent"></div>
+
+    <footer id="footer"></footer>
+
+    <script>
+        // Dados do Conteúdo
+        const courseContent = {
+            header: {
+                title: "📐 Cálculo I",
+                subtitle: "Equações Diferenciais e Séries Numéricas",
+                reference: "Baseado em: FINNEY et alii - Cálculo de G. B. Thomas & James Stewart"
+            },
+            chapters: [
+                {
+                    id: "cap1",
+                    title: "1. Conceitos Básicos de EDOs",
+                    sections: [
+                        {
+                            title: "📖 Conceito Fundamental",
+                            type: "concept",
+                            content: `
+                                <p>Uma <strong>Equação Diferencial (ED)</strong> é uma equação que envolve uma função desconhecida e suas derivadas.</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+                                        <mo>=</mo>
+                                        <mn>2</mn><mi>x</mi>
+                                    </math>
+                                </div>
+                                <p>Onde:</p>
+                                <ul>
+                                    <li><span class="emoji">🎯</span> <strong>y</strong> é a função desconhecida (variável dependente)</li>
+                                    <li><span class="emoji">📏</span> <strong>x</strong> é a variável independente</li>
+                                    <li><span class="emoji">⚡</span> <strong>dy/dx</strong> é a derivada de y em relação a x</li>
+                                </ul>
+                            `,
+                            animation: "canvas1"
+                        },
+                        {
+                            title: "📊 Classificação das Equações Diferenciais",
+                            type: "content",
+                            content: `
+                                <h4>1. Quanto ao Tipo:</h4>
+                                <ul>
+                                    <li><strong>EDO (Equação Diferencial Ordinária)</strong>: <span class="emoji">📐</span>
+                                        <div class="formula">
+                                            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                                <mfrac><mrow><msup><mi>d</mi><mn>2</mn></msup><mi>y</mi></mrow><mrow><mi>d</mi><msup><mi>x</mi><mn>2</mn></msup></mrow></mfrac>
+                                                <mo>+</mo>
+                                                <mn>3</mn><mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+                                                <mo>+</mo>
+                                                <mi>y</mi>
+                                                <mo>=</mo>
+                                                <mn>0</mn>
+                                            </math>
+                                        </div>
+                                        Apenas uma variável independente
+                                    </li>
+                                    <li><strong>EDP (Equação Diferencial Parcial)</strong>: <span class="emoji"></span>
+                                        <div class="formula">
+                                            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                                <mfrac><mrow><msup><mi>∂</mi><mn>2</mn></msup><mi>u</mi></mrow><mrow><mi>∂</mi><msup><mi>t</mi><mn>2</mn></msup></mrow></mfrac>
+                                                <mo>=</mo>
+                                                <msup><mi>c</mi><mn>2</mn></msup>
+                                                <mfrac><mrow><msup><mi>∂</mi><mn>2</mn></msup><mi>u</mi></mrow><mrow><mi>∂</mi><msup><mi>x</mi><mn>2</mn></msup></mrow></mfrac>
+                                            </math>
+                                        </div>
+                                        Duas ou mais variáveis independentes
+                                    </li>
+                                </ul>
+
+                                <h4>2. Quanto à Ordem:</h4>
+                                <div class="concept-box">
+                                    <p>A <strong>ordem</strong> de uma equação diferencial é a ordem da derivada de maior ordem presente na equação.</p>
+                                    <ul>
+                                        <li><strong>1ª ordem:</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mi>x</mi><mo>+</mo><mi>y</mi></math> <span class="emoji">🥇</span></li>
+                                        <li><strong>2ª ordem:</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><msup><mi>d</mi><mn>2</mn></msup><mi>y</mi></mrow><mrow><mi>d</mi><msup><mi>x</mi><mn>2</mn></msup></mrow></mfrac><mo>+</mo><mi>y</mi><mo>=</mo><mn>0</mn></math> <span class="emoji">🥈</span></li>
+                                        <li><strong>n-ésima ordem:</strong> <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>y</mi><mrow><mo>(</mo><mi>n</mi><mo>)</mo></mrow></msup><mo>+</mo><mi>y</mi><mo>=</mo><mn>0</mn></math> <span class="emoji">🎖️</span></li>
+                                    </ul>
+                                </div>
+
+                                <h4>3. Quanto à Linearidade:</h4>
+                                <ul>
+                                    <li><strong>Linear:</strong> A função e suas derivadas aparecem apenas em primeiro grau
+                                        <div class="formula">
+                                            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                                <msup><mi>a</mi><mn>2</mn></msup><mo>(</mo><mi>x</mi><mo>)</mo>
+                                                <mfrac><mrow><msup><mi>d</mi><mn>2</mn></msup><mi>y</mi></mrow><mrow><mi>d</mi><msup><mi>x</mi><mn>2</mn></msup></mrow></mfrac>
+                                                <mo>+</mo>
+                                                <msup><mi>a</mi><mn>1</mn></msup><mo>(</mo><mi>x</mi><mo>)</mo>
+                                                <mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+                                                <mo>+</mo>
+                                                <msup><mi>a</mi><mn>0</mn></msup><mo>(</mo><mi>x</mi><mo>)</mo><mi>y</mi>
+                                                <mo>=</mo>
+                                                <mi>g</mi><mo>(</mo><mi>x</mi><mo>)</mo>
+                                            </math>
+                                        </div>
+                                    </li>
+                                    <li><strong>Não-linear:</strong> <span class="emoji">🌀</span>
+                                        <div class="formula">
+                                            <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                                <mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+                                                <mo>+</mo>
+                                                <msup><mi>y</mi><mn>2</mn></msup>
+                                                <mo>=</mo>
+                                                <mi>x</mi>
+                                            </math>
+                                        </div>
+                                    </li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: "💡 Exemplos Práticos",
+                            type: "example",
+                            content: `
+                                <p><strong>Exemplo 1:</strong> Classifique a equação:</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        <mi>x</mi><mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+                                        <mo>+</mo>
+                                        <msup><mi>y</mi><mn>2</mn></msup>
+                                        <mo>=</mo>
+                                        <mi>cos</mi><mo>(</mo><mi>x</mi><mo>)</mo>
+                                    </math>
+                                </div>
+                                <p><strong>Solução:</strong></p>
+                                <ul>
+                                    <li>Tipo: EDO (uma variável independente: x)</li>
+                                    <li>Ordem: 1ª ordem (maior derivada: dy/dx)</li>
+                                    <li>Linearidade: Não-linear (termo y²)</li>
+                                </ul>
+
+                                <p><strong>Exemplo 2:</strong> Verifique se y = e²ˣ é solução de:</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        <mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+                                        <mo>-</mo>
+                                        <mn>2</mn><mi>y</mi>
+                                        <mo>=</mo>
+                                        <mn>0</mn>
+                                    </math>
+                                </div>
+                                <p><strong>Solução:</strong> Se y = e²ˣ, então dy/dx = 2e²ˣ. Substituindo: 2e²ˣ - 2(e²ˣ) = 0 ✓</p>
+                            `
+                        },
+                        {
+                            title: " Exercícios Propostos",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Classifique as seguintes equações quanto ao tipo, ordem e linearidade:
+                                        <ul>
+                                            <li><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>d</mi><mn>3</mn></msup><mi>y</mi><mo>/</mo><mi>d</mi><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mi>x</mi><mi>y</mi><mo>=</mo><mn>0</mn></math></li>
+                                            <li><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>(</mo><mi>d</mi><mi>y</mi><mo>/</mo><mi>d</mi><mi>x</mi><msup><mo>)</mo><mn>2</mn></msup><mo>+</mo><mi>y</mi><mo>=</mo><mi>x</mi></math></li>
+                                        </ul>
+                                    </li>
+                                    <li>Verifique se y = sen(x) é solução de d²y/dx² + y = 0</li>
+                                    <li>Determine a ordem da equação: y'''' + 3y'' - y = eˣ</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap2",
+                    title: "2. Solução Geral e Particular",
+                    sections: [
+                        {
+                            title: "📖 Definições Fundamentais",
+                            type: "concept",
+                            content: `
+                                <h4>Solução Geral</h4>
+                                <p>É uma família de soluções que contém <strong>constantes arbitrárias</strong> em número igual à ordem da equação.</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mi>y</mi><mo>=</mo><mi>C</mi><msup><mi>e</mi><mrow><mi>k</mi><mi>x</mi></mrow></msup>
+                                    </math>
+                                </div>
+                                
+                                <h4>Solução Particular</h4>
+                                <p>É obtida da solução geral atribuindo-se <strong>valores específicos</strong> às constantes.</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mi>y</mi><mo>=</mo><mn>3</mn><msup><mi>e</mi><mrow><mn>2</mn><mi>x</mi></mrow></msup>
+                                    </math>
+                                </div>
+                            `,
+                            animation: "canvas2"
+                        },
+                        {
+                            title: "🔍 Problema de Valor Inicial (PVI)",
+                            type: "content",
+                            content: `
+                                <div class="concept-box">
+                                    <p>Um PVI consiste em encontrar uma solução particular que satisfaça:</p>
+                                    <ol>
+                                        <li>A equação diferencial</li>
+                                        <li>Condições iniciais específicas</li>
+                                    </ol>
+                                    <div class="formula">
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                            <mtable columnalign="left">
+                                                <mtr><mtd><mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mn>2</mn><mi>x</mi></mtd></mtr>
+                                                <mtr><mtd><mi>y</mi><mo>(</mo><mn>0</mn><mo>)</mo><mo>=</mo><mn>1</mn></mtd></mtr>
+                                            </mtable>
+                                        </math>
+                                    </div>
+                                </div>
+
+                                <div class="example-box">
+                                    <p><strong>Exemplo:</strong> Encontre a solução particular de dy/dx = 3x², y(1) = 5</p>
+                                    <p><strong>Solução:</strong></p>
+                                    <ol>
+                                        <li>Integramos: y = x³ + C</li>
+                                        <li>Aplicamos y(1) = 5: 5 = 1³ + C → C = 4</li>
+                                        <li>Solução particular: <strong>y = x³ + 4</strong></li>
+                                    </ol>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "📝 Exercícios",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Encontre a solução geral de dy/dx = 4x³</li>
+                                    <li>Determine a solução particular de dy/dx = 2y, com y(0) = 3</li>
+                                    <li>Resolva o PVI: y'' = 6x, y(0) = 1, y'(0) = 2</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap3",
+                    title: "3. EDOs de 1ª Ordem",
+                    sections: [
+                        {
+                            title: " Equações de Variáveis Separáveis",
+                            type: "concept",
+                            content: `
+                                <p>São equações que podem ser escritas na forma:</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+                                        <mo>=</mo>
+                                        <mi>g</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>h</mi><mo>(</mo><mi>y</mi><mo>)</mo>
+                                    </math>
+                                </div>
+                                <p><strong>Método:</strong> Separe as variáveis e integre ambos os lados</p>
+                                <div class="example-box">
+                                    <p><strong>Exemplo:</strong> Resolva dy/dx = xy</p>
+                                    <p><strong>Solução:</strong> dy/y = x dx → ln|y| = x²/2 + C → y = C₁e^(x²/2)</p>
+                                </div>
+                            `,
+                            animation: "canvas3"
+                        },
+                        {
+                            title: "🔄 Equações Homogêneas",
+                            type: "content",
+                            content: `
+                                <div class="concept-box">
+                                    <p>Forma: dy/dx = f(y/x)</p>
+                                    <p><strong>Método:</strong> Faça y = vx, onde v é função de x</p>
+                                    <div class="formula">
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                            <mi>y</mi><mo>=</mo><mi>v</mi><mi>x</mi>
+                                            <mo>→</mo>
+                                            <mfrac><mrow><mi>d</mi><mi>y</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+                                            <mo>=</mo>
+                                            <mi>v</mi><mo>+</mo><mi>x</mi><mfrac><mrow><mi>d</mi><mi>v</mi></mrow><mrow><mi>d</mi><mi>x</mi></mrow></mfrac>
+                                        </math>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "📐 Equações Lineares",
+                            type: "content",
+                            content: `
+                                <div class="concept-box">
+                                    <p>Forma padrão: dy/dx + P(x)y = Q(x)</p>
+                                    <p><strong>Fator Integrante:</strong> μ(x) = e^(∫P(x)dx)</p>
+                                    <p><strong>Solução:</strong> y = (1/μ(x)) ∫ μ(x)Q(x) dx</p>
+                                </div>
+                                <div class="example-box">
+                                    <p><strong>Exemplo:</strong> dy/dx + 2y = 4x</p>
+                                    <p>μ(x) = e^(2x) → y = (1/e^(2x)) ∫ e^(2x)·4x dx</p>
+                                    <p>Solução: y = 2x - 1 + Ce^(-2x)</p>
+                                </div>
+                            `,
+                            animation: "svg1"
+                        },
+                        {
+                            title: "📝 Exercícios",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Resolva: dy/dx = y/x + x/y (homogênea)</li>
+                                    <li>Resolva: dy/dx + y = e^(-x) (linear)</li>
+                                    <li>Resolva: (1 + x²)dy/dx = xy (separável)</li>
+                                    <li>Encontre a solução particular: dy/dx + 3y = 6, y(0) = 2</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap4",
+                    title: "4. EDOs de Ordem Superior",
+                    sections: [
+                        {
+                            title: " Conceitos Básicos",
+                            type: "concept",
+                            content: `
+                                <p>Equações de ordem n envolvem derivadas até a n-ésima ordem:</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <msup><mi>a</mi><mi>n</mi></msup><mo>(</mo><mi>x</mi><mo>)</mo>
+                                        <msup><mi>y</mi><mrow><mo>(</mo><mi>n</mi><mo>)</mo></mrow></msup>
+                                        <mo>+</mo>
+                                        <mo>⋯</mo>
+                                        <mo>+</mo>
+                                        <msup><mi>a</mi><mn>0</mn></msup><mo>(</mo><mi>x</mi><mo>)</mo><mi>y</mi>
+                                        <mo>=</mo>
+                                        <mi>g</mi><mo>(</mo><mi>x</mi><mo>)</mo>
+                                    </math>
+                                </div>
+                                <p>A solução geral contém <strong>n constantes arbitrárias</strong>.</p>
+                            `
+                        },
+                        {
+                            title: "📉 Redução de Ordem",
+                            type: "content",
+                            content: `
+                                <div class="concept-box">
+                                    <p>Quando a equação não contém y explicitamente:</p>
+                                    <p>Faça: u = y' → u' = y''</p>
+                                    <p>Resolva para u, depois integre para obter y</p>
+                                </div>
+                                <div class="example-box">
+                                    <p><strong>Exemplo:</strong> xy'' + y' = 0</p>
+                                    <p>Faça u = y' → xu' + u = 0 → u = C₁/x → y = C₁ln|x| + C₂</p>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "📝 Exercícios",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Resolva: y'' = 2x + 1</li>
+                                    <li>Resolva: y''' = 6x</li>
+                                    <li>Resolva: xy'' + 2y' = 0 (use redução de ordem)</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap5",
+                    title: "5. Coeficientes Constantes",
+                    sections: [
+                        {
+                            title: "🏠 Equações Homogêneas",
+                            type: "concept",
+                            content: `
+                                <p>Forma: aₙy^(n) + ... + a₀y = 0</p>
+                                <p><strong>Equação Característica:</strong> aₙr^n + ... + a₀ = 0</p>
+                                
+                                <h4>Casos das Raízes:</h4>
+                                <ul>
+                                    <li><strong>Raízes reais distintas:</strong> y = C₁e^(r₁x) + C₂e^(r₂x)</li>
+                                    <li><strong>Raiz real repetida:</strong> y = C₁e^(rx) + C₂xe^(rx)</li>
+                                    <li><strong>Raízes complexas α ± βi:</strong> y = e^(αx)[C₁cos(βx) + C₂sen(βx)]</li>
+                                </ul>
+                                
+                                <div class="example-box">
+                                    <p><strong>Exemplo:</strong> y'' - 5y' + 6y = 0</p>
+                                    <p>r² - 5r + 6 = 0 → r = 2, 3</p>
+                                    <p>Solução: y = C₁e^(2x) + C₂e^(3x)</p>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "🎯 Equações Não-Homogêneas",
+                            type: "content",
+                            content: `
+                                <div class="concept-box">
+                                    <p><strong>Solução Geral:</strong> y = y_h + y_p</p>
+                                    <ul>
+                                        <li>y_h = solução da homogênea</li>
+                                        <li>y_p = solução particular</li>
+                                    </ul>
+                                </div>
+                                
+                                <h4>Método dos Coeficientes a Determinar:</h4>
+                                <table>
+                                    <tr><th>g(x)</th><th>Forma de y_p</th></tr>
+                                    <tr><td>P_n(x)</td><td>A_nx^n + ... + A₀</td></tr>
+                                    <tr><td>e^(αx)</td><td>Ae^(αx)</td></tr>
+                                    <tr><td>sen(βx) ou cos(βx)</td><td>Asen(βx) + Bcos(βx)</td></tr>
+                                </table>
+                                
+                                <div class="example-box">
+                                    <p><strong>Exemplo:</strong> y'' - 3y' + 2y = 4x</p>
+                                    <p>y_h = C₁e^x + C₂e^(2x)</p>
+                                    <p>y_p = Ax + B → y_p = 2x + 3</p>
+                                    <p><strong>y = C₁e^x + C₂e^(2x) + 2x + 3</strong></p>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "📝 Exercícios",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Resolva: y'' + 4y = 0</li>
+                                    <li>Resolva: y'' - 6y' + 9y = 0</li>
+                                    <li>Resolva: y'' + y = sen(x)</li>
+                                    <li>Resolva: y'' - 4y' + 4y = e^(2x)</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap6",
+                    title: "6. Aplicações",
+                    sections: [
+                        {
+                            title: "️ Crescimento e Decaimento",
+                            type: "concept",
+                            content: `
+                                <p><strong>Lei:</strong> dN/dt = kN</p>
+                                <p><strong>Solução:</strong> N(t) = N₀e^(kt)</p>
+                                <ul>
+                                    <li>k > 0: crescimento <span class="emoji">📈</span></li>
+                                    <li>k < 0: decaimento <span class="emoji">📉</span></li>
+                                </ul>
+                            `,
+                            animation: "canvas6"
+                        },
+                        {
+                            title: "🍲 Lei do Resfriamento de Newton",
+                            type: "content",
+                            content: `
+                                <div class="concept-box">
+                                    <p>dT/dt = -k(T - T_a)</p>
+                                    <p><strong>Solução:</strong> T(t) = T_a + (T₀ - T_a)e^(-kt)</p>
+                                </div>
+                                <div class="example-box">
+                                    <p><strong>Exemplo:</strong> Café a 90°C em sala a 20°C. Após 10 min, 70°C. Qual temperatura após 30 min?</p>
+                                    <p>T(t) = 20 + 70e^(-kt)</p>
+                                    <p>70 = 20 + 70e^(-10k) → k ≈ 0.0336</p>
+                                    <p>T(30) ≈ 44.9°C</p>
+                                </div>
+                            `
+                        },
+                        {
+                            title: " Movimento Harmônico",
+                            type: "content",
+                            content: `
+                                <div class="concept-box">
+                                    <p>mx'' + kx = 0</p>
+                                    <p><strong>Solução:</strong> x(t) = A cos(ωt) + B sen(ωt)</p>
+                                    <p>Onde ω = √(k/m)</p>
+                                </div>
+                            `,
+                            animation: "canvas6b"
+                        },
+                        {
+                            title: "📝 Exercícios",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Uma população dobra em 5 anos. Quanto tempo leva para triplicar?</li>
+                                    <li>Corpo a 100°C em água a 20°C. Após 10 min, 60°C. Quando estará a 30°C?</li>
+                                    <li>Massa 2kg, mola k=8 N/m, deslocamento 0.5m. Encontre equação do movimento.</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap7",
+                    title: "7. Equações Diferenciais Parciais",
+                    sections: [
+                        {
+                            title: "📖 Conceituação",
+                            type: "concept",
+                            content: `
+                                <p>EDPs envolvem funções de várias variáveis e derivadas parciais.</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mi>F</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>u</mi><mo>,</mo>
+                                        <mfrac><mrow><mi>∂</mi><mi>u</mi></mrow><mrow><mi>∂</mi><mi>x</mi></mrow></mfrac><mo>,</mo>
+                                        <mfrac><mrow><mi></mi><mi>u</mi></mrow><mrow><mi>∂</mi><mi>y</mi></mrow></mfrac><mo>,</mo>
+                                        <mo>⋯</mo>
+                                        <mo>)</mo>
+                                        <mo>=</mo>
+                                        <mn>0</mn>
+                                    </math>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "🌊 Principais EDPs",
+                            type: "content",
+                            content: `
+                                <h4>1. Equação do Calor:</h4>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mfrac><mrow><mi>∂</mi><mi>u</mi></mrow><mrow><mi>∂</mi><mi>t</mi></mrow></mfrac>
+                                        <mo>=</mo>
+                                        <mi>α</mi>
+                                        <mfrac><mrow><msup><mi>∂</mi><mn>2</mn></msup><mi>u</mi></mrow><mrow><mi>∂</mi><msup><mi>x</mi><mn>2</mn></msup></mrow></mfrac>
+                                    </math>
+                                </div>
+                                
+                                <h4>2. Equação da Onda:</h4>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mfrac><mrow><msup><mi>∂</mi><mn>2</mn></msup><mi>u</mi></mrow><mrow><mi>∂</mi><msup><mi>t</mi><mn>2</mn></msup></mrow></mfrac>
+                                        <mo>=</mo>
+                                        <msup><mi>c</mi><mn>2</mn></msup>
+                                        <mfrac><mrow><msup><mi>∂</mi><mn>2</mn></msup><mi>u</mi></mrow><mrow><mi>∂</mi><msup><mi>x</mi><mn>2</mn></msup></mrow></mfrac>
+                                    </math>
+                                </div>
+                                
+                                <h4>3. Equação de Laplace:</h4>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mfrac><mrow><msup><mi>∂</mi><mn>2</mn></msup><mi>u</mi></mrow><mrow><mi>∂</mi><msup><mi>x</mi><mn>2</mn></msup></mrow></mfrac>
+                                        <mo>+</mo>
+                                        <mfrac><mrow><msup><mi>∂</mi><mn>2</mn></msup><mi>u</mi></mrow><mrow><mi>∂</mi><msup><mi>y</mi><mn>2</mn></msup></mrow></mfrac>
+                                        <mo>=</mo>
+                                        <mn>0</mn>
+                                    </math>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "🔧 Separação de Variáveis",
+                            type: "content",
+                            content: `
+                                <div class="concept-box">
+                                    <p>Suponha: u(x,t) = X(x)T(t)</p>
+                                    <p>Substitua na EDP e separe as variáveis</p>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "📝 Exercícios",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Classifique as EDPs quanto à ordem e linearidade</li>
+                                    <li>Verifique se u(x,t) = sen(x)cos(t) é solução da equação da onda</li>
+                                    <li>Aplique separação de variáveis à equação do calor</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap8",
+                    title: "8. Séries Numéricas",
+                    sections: [
+                        {
+                            title: " Definição",
+                            type: "concept",
+                            content: `
+                                <p>Série infinita: Σ a_n = a₁ + a₂ + a₃ + ...</p>
+                                <p><strong>Soma Parcial:</strong> S_n = Σ(k=1 to n) a_k</p>
+                                <p>A série <strong>converge</strong> se lim(n→∞) S_n = S (soma finita)</p>
+                            `
+                        },
+                        {
+                            title: "📊 Séries Especiais",
+                            type: "content",
+                            content: `
+                                <h4>1. Série Geométrica:</h4>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <munderover>
+                                            <mo>∑</mo>
+                                            <mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow>
+                                            <mi>∞</mi>
+                                        </munderover>
+                                        <mi>a</mi><msup><mi>r</mi><mi>n</mi></msup>
+                                    </math>
+                                </div>
+                                <p>Converge se |r| < 1, soma S = a/(1-r) <span class="emoji">📐</span></p>
+
+                                <h4>2. Série Harmônica:</h4>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <munderover>
+                                            <mo>∑</mo>
+                                            <mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow>
+                                            <mi>∞</mi>
+                                        </munderover>
+                                        <mfrac><mn>1</mn><mi>n</mi></mfrac>
+                                    </math>
+                                </div>
+                                <p>Diverge <span class="emoji">📈</span></p>
+
+                                <h4>3. Série Harmônica Alternada:</h4>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <munderover>
+                                            <mo>∑</mo>
+                                            <mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow>
+                                            <mi>∞</mi>
+                                        </munderover>
+                                        <mfrac><mrow><mo>(</mo><mo>-</mo><mn>1</mn><msup><mo>)</mo><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msup></mrow><mi>n</mi></mfrac>
+                                        <mo>=</mo>
+                                        <mi>ln</mi><mo>(</mo><mn>2</mn><mo>)</mo>
+                                    </math>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "🧪 Testes de Convergência",
+                            type: "content",
+                            content: `
+                                <ul>
+                                    <li><strong>Teste da Divergência:</strong> Se lim a_n ≠ 0, diverge</li>
+                                    <li><strong>Teste da Comparação:</strong> Compare com série conhecida</li>
+                                    <li><strong>Teste da Razão:</strong> L = lim |a_{n+1}/a_n|
+                                        <ul>
+                                            <li>L < 1: converge</li>
+                                            <li>L > 1: diverge</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Teste da Integral:</strong> Σa_n converge ⇔ f(x)dx converge</li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: "📝 Exercícios",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Determine se converge: Σ 1/n²</li>
+                                    <li>Teste a convergência: Σ n/2^n</li>
+                                    <li>Encontre a soma: Σ (1/3)^n</li>
+                                    <li>A série Σ (-1)^n/n converge? É absoluta?</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap9",
+                    title: "9. Séries de Potência",
+                    sections: [
+                        {
+                            title: " Definição",
+                            type: "concept",
+                            content: `
+                                <p>Série de potência centrada em a:</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <munderover>
+                                            <mo>∑</mo>
+                                            <mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow>
+                                            <mi>∞</mi>
+                                        </munderover>
+                                        <msub><mi>c</mi><mi>n</mi></msub>
+                                        <mo>(</mo><mi>x</mi><mo>-</mo><mi>a</mi><msup><mo>)</mo><mi>n</mi></msup>
+                                    </math>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "📏 Raio de Convergência",
+                            type: "content",
+                            content: `
+                                <div class="concept-box">
+                                    <p><strong>Teorema:</strong> Existe R ≥ 0 tal que:</p>
+                                    <ul>
+                                        <li>Converge se |x - a| < R</li>
+                                        <li>Diverge se |x - a| > R</li>
+                                    </ul>
+                                    <p><strong>R</strong> é o raio de convergência</p>
+                                    <p><strong>(a-R, a+R)</strong> é o intervalo de convergência</p>
+                                </div>
+                                
+                                <div class="example-box">
+                                    <p><strong>Exemplo:</strong> Σ x^n/n!</p>
+                                    <p>Teste da razão: L = lim |x/(n+1)| = 0</p>
+                                    <p>R = ∞ (converge para todo x)</p>
+                                </div>
+                            `,
+                            animation: "svg2"
+                        },
+                        {
+                            title: "📝 Exercícios",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Encontre R e o intervalo: Σ x^n/2^n</li>
+                                    <li>Determine R: Σ n!x^n</li>
+                                    <li>Ache o intervalo: Σ (x-3)^n/n</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap10",
+                    title: "10. Taylor e Maclaurin",
+                    sections: [
+                        {
+                            title: "📖 Definições",
+                            type: "concept",
+                            content: `
+                                <h4>Série de Taylor:</h4>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo>
+                                        <mo>=</mo>
+                                        <munderover>
+                                            <mo></mo>
+                                            <mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow>
+                                            <mi>∞</mi>
+                                        </munderover>
+                                        <mfrac><mrow><msup><mi>f</mi><mrow><mo>(</mo><mi>n</mi><mo>)</mo></mrow></msup><mo>(</mo><mi>a</mi><mo>)</mo></mrow><mrow><mi>n</mi><mo>!</mo></mrow></mfrac>
+                                        <mo>(</mo><mi>x</mi><mo>-</mo><mi>a</mi><msup><mo>)</mo><mi>n</mi></msup>
+                                    </math>
+                                </div>
+                                
+                                <h4>Série de Maclaurin (a=0):</h4>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo>
+                                        <mo>=</mo>
+                                        <munderover>
+                                            <mo>∑</mo>
+                                            <mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow>
+                                            <mi>∞</mi>
+                                        </munderover>
+                                        <mfrac><mrow><msup><mi>f</mi><mrow><mo>(</mo><mi>n</mi><mo>)</mo></mrow></msup><mo>(</mo><mn>0</mn><mo>)</mo></mrow><mrow><mi>n</mi><mo>!</mo></mrow></mfrac>
+                                        <msup><mi>x</mi><mi>n</mi></msup>
+                                    </math>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "🎯 Séries Importantes",
+                            type: "content",
+                            content: `
+                                <div class="example-box">
+                                    <h4>1. Exponencial:</h4>
+                                    <div class="formula">
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                            <msup><mi>e</mi><mi>x</mi></msup>
+                                            <mo>=</mo>
+                                            <mn>1</mn>
+                                            <mo>+</mo>
+                                            <mi>x</mi>
+                                            <mo>+</mo>
+                                            <mfrac><msup><mi>x</mi><mn>2</mn></msup><mrow><mn>2</mn><mo>!</mo></mrow></mfrac>
+                                            <mo>+</mo>
+                                            <mo>⋯</mo>
+                                        </math>
+                                    </div>
+                                </div>
+
+                                <div class="example-box">
+                                    <h4>2. Seno:</h4>
+                                    <div class="formula">
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                            <mi>sen</mi><mo>(</mo><mi>x</mi><mo>)</mo>
+                                            <mo>=</mo>
+                                            <mi>x</mi>
+                                            <mo>-</mo>
+                                            <mfrac><msup><mi>x</mi><mn>3</mn></msup><mrow><mn>3</mn><mo>!</mo></mrow></mfrac>
+                                            <mo>+</mo>
+                                            <mfrac><msup><mi>x</mi><mn>5</mn></msup><mrow><mn>5</mn><mo>!</mo></mrow></mfrac>
+                                            <mo>-</mo>
+                                            <mo>⋯</mo>
+                                        </math>
+                                    </div>
+                                </div>
+
+                                <div class="example-box">
+                                    <h4>3. ln(1+x):</h4>
+                                    <div class="formula">
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                            <mi>ln</mi><mo>(</mo><mn>1</mn><mo>+</mo><mi>x</mi><mo>)</mo>
+                                            <mo>=</mo>
+                                            <mi>x</mi>
+                                            <mo>-</mo>
+                                            <mfrac><msup><mi>x</mi><mn>2</mn></msup><mn>2</mn></mfrac>
+                                            <mo>+</mo>
+                                            <mfrac><msup><mi>x</mi><mn>3</mn></msup><mn>3</mn></mfrac>
+                                            <mo>-</mo>
+                                            <mo>⋯</mo>
+                                        </math>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: " Exercícios",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Encontre a série de Maclaurin de e^(2x)</li>
+                                    <li>Determine a série de Taylor de ln(x) centrada em a=1</li>
+                                    <li>Ache os 4 primeiros termos de cos(x²)</li>
+                                    <li>Use a série de sen(x) para aproximar sen(0.1)</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                },
+                {
+                    id: "cap11",
+                    title: "11. Aplicações de Séries",
+                    sections: [
+                        {
+                            title: "🔢 Aproximação de Funções",
+                            type: "concept",
+                            content: `
+                                <p>Polinômios de Taylor permitem aproximar funções complicadas:</p>
+                                <div class="formula">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                                        <mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo>
+                                        <mo>≈</mo>
+                                        <msub><mi>P</mi><mi>n</mi></msub><mo>(</mo><mi>x</mi><mo>)</mo>
+                                    </math>
+                                </div>
+                            `,
+                            animation: "canvas11"
+                        },
+                        {
+                            title: " Cálculo de Limites e Integrais",
+                            type: "content",
+                            content: `
+                                <div class="example-box">
+                                    <p><strong>Limite:</strong> lim(x→0) (sen(x) - x)/x³</p>
+                                    <p>sen(x) = x - x³/6 + ...</p>
+                                    <p>(sen(x) - x)/x³ = -1/6 + ...</p>
+                                    <p>lim = -1/6</p>
+                                </div>
+                                
+                                <div class="concept-box">
+                                    <p><strong>Integrais:</strong> Algumas integrais não têm primitivas elementares, mas podem ser calculadas via séries:</p>
+                                    <div class="formula">
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                            <mo>∫</mo>
+                                            <msup><mi>e</mi><mrow><mo>-</mo><msup><mi>x</mi><mn>2</mn></msup></mrow></msup>
+                                            <mi>d</mi><mi>x</mi>
+                                        </math>
+                                    </div>
+                                </div>
+                            `
+                        },
+                        {
+                            title: "📝 Exercícios Finais",
+                            type: "exercise",
+                            content: `
+                                <ol>
+                                    <li>Aproxime √1.1 usando Taylor de (1+x) com 3 termos</li>
+                                    <li>Calcule ∫₀¹ sen(x²)dx usando séries (4 termos)</li>
+                                    <li>Use séries para calcular lim(x→0) (1 - cos(x))/x²</li>
+                                    <li>Estime e^0.5 com erro menor que 0.001</li>
+                                </ol>
+                            `
+                        }
+                    ]
+                }
+            ],
+            footer: {
+                reference: "📚 Material baseado em: FINNEY et alii - Cálculo de G. B. Thomas & James Stewart",
+                copyright: "© 2026 - Aula Completa de Cálculo I"
+            }
+        };
+
+        // Funções de Renderização
+        function renderHeader() {
+            const header = document.createElement('header');
+            header.innerHTML = `
+                <h1>${courseContent.header.title}</h1>
+                <p class="subtitle">${courseContent.header.subtitle}</p>
+                <p>${courseContent.header.reference}</p>
+            `;
+            return header;
+        }
+
+        function renderMenu() {
+            const menuList = document.getElementById('menuList');
+            courseContent.chapters.forEach((chapter, index) => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#${chapter.id}`;
+                a.textContent = chapter.title;
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    showChapter(chapter.id);
+                    toggleMenu();
+                };
+                li.appendChild(a);
+                menuList.appendChild(li);
+            });
+        }
+
+        function renderChapter(chapter) {
+            const chapterDiv = document.createElement('div');
+            chapterDiv.className = 'chapter';
+            chapterDiv.id = chapter.id;
+            
+            const h2 = document.createElement('h2');
+            h2.textContent = chapter.title;
+            chapterDiv.appendChild(h2);
+            
+            chapter.sections.forEach(section => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section';
+                
+                const h3 = document.createElement('h3');
+                h3.textContent = section.title;
+                sectionDiv.appendChild(h3);
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = section.type === 'concept' ? 'concept-box' : 
+                                      section.type === 'example' ? 'example-box' : 
+                                      section.type === 'exercise' ? 'exercise-box' : '';
+                contentDiv.innerHTML = section.content;
+                sectionDiv.appendChild(contentDiv);
+                
+                if (section.animation) {
+                    const animContainer = document.createElement('div');
+                    animContainer.className = 'animation-container';
+                    
+                    if (section.animation.startsWith('canvas')) {
+                        const canvas = document.createElement('canvas');
+                        canvas.id = section.animation;
+                        canvas.width = 600;
+                        canvas.height = 300;
+                        animContainer.appendChild(canvas);
+                    } else if (section.animation.startsWith('svg')) {
+                        const svgContainer = createSVG(section.animation);
+                        animContainer.appendChild(svgContainer);
+                    }
+                    
+                    sectionDiv.appendChild(animContainer);
+                }
+                
+                chapterDiv.appendChild(sectionDiv);
+            });
+            
+            return chapterDiv;
+        }
+
+        function createSVG(id) {
+            const div = document.createElement('div');
+            if (id === 'svg1') {
+                div.innerHTML = `
+                    <svg width="600" height="250" viewBox="0 0 600 250">
+                        <rect x="50" y="20" width="150" height="60" fill="#667eea" rx="10"/>
+                        <text x="125" y="55" text-anchor="middle" fill="white" font-size="14">dy/dx + P(x)y = Q(x)</text>
+                        <line x1="125" y1="80" x2="125" y2="100" stroke="black" stroke-width="2"/>
+                        <polygon points="125,100 120,90 130,90" fill="black"/>
+                        <rect x="50" y="100" width="150" height="60" fill="#764ba2" rx="10"/>
+                        <text x="125" y="135" text-anchor="middle" fill="white" font-size="14">μ(x) = e^∫P(x)dx</text>
+                        <line x1="125" y1="160" x2="125" y2="180" stroke="black" stroke-width="2"/>
+                        <polygon points="125,180 120,170 130,170" fill="black"/>
+                        <rect x="50" y="180" width="150" height="60" fill="#f093fb" rx="10"/>
+                        <text x="125" y="215" text-anchor="middle" fill="white" font-size="14">y = (1/μ)∫μQ dx</text>
+                        <text x="250" y="55" font-size="14">Forma padrão</text>
+                        <text x="250" y="135" font-size="14">Calcule o fator</text>
+                        <text x="250" y="215" font-size="14">Solução geral</text>
+                    </svg>
+                `;
+            } else if (id === 'svg2') {
+                div.innerHTML = `
+                    <svg width="600" height="200" viewBox="0 0 600 200">
+                        <line x1="50" y1="100" x2="550" y2="100" stroke="black" stroke-width="2"/>
+                        <circle cx="300" cy="100" r="5" fill="#667eea"/>
+                        <text x="295" y="120" font-size="14">a</text>
+                        <line x1="300" y1="80" x2="400" y2="80" stroke="#764ba2" stroke-width="2"/>
+                        <text x="345" y="75" font-size="12">R</text>
+                        <line x1="200" y1="95" x2="400" y2="95" stroke="#f093fb" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="200" cy="100" r="6" fill="#ff6b6b"/>
+                        <circle cx="400" cy="100" r="6" fill="#ff6b6b"/>
+                        <text x="185" y="120" font-size="12">a-R</text>
+                        <text x="385" y="120" font-size="12">a+R</text>
+                        <text x="250" y="50" font-size="14" fill="#764ba2">Converge</text>
+                        <text x="100" y="140" font-size="12" fill="#999">Diverge</text>
+                        <text x="450" y="140" font-size="12" fill="#999">Diverge</text>
+                    </svg>
+                `;
+            }
+            return div;
+        }
+
+        function renderFooter() {
+            const footer = document.getElementById('footer');
+            footer.innerHTML = `
+                <p>${courseContent.footer.reference}</p>
+                <p>${courseContent.footer.copyright}</p>
+            `;
+        }
+
+        function showChapter(chapterId) {
+            // Esconde todos os capítulos
+            document.querySelectorAll('.chapter').forEach(ch => ch.classList.remove('active'));
+            
+            // Mostra o capítulo selecionado
+            const selectedChapter = document.getElementById(chapterId);
+            if (selectedChapter) {
+                selectedChapter.classList.add('active');
+                selectedChapter.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+            // Atualiza menu ativo
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            const activeLink = document.querySelector(`.sidebar a[href="#${chapterId}"]`);
+            if (activeLink) activeLink.classList.add('active');
+            
+            // Inicia animações se existirem
+            setTimeout(() => {
+                initAnimations();
+            }, 100);
+        }
+
+        function toggleMenu() {
+            document.querySelector('.menu-toggle').classList.toggle('active');
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        // Inicialização
+        function init() {
+            // Renderiza header
+            document.getElementById('mainContent').appendChild(renderHeader());
+            
+            // Renderiza menu
+            renderMenu();
+            
+            // Renderiza capítulos
+            courseContent.chapters.forEach(chapter => {
+                document.getElementById('mainContent').appendChild(renderChapter(chapter));
+            });
+            
+            // Renderiza footer
+            renderFooter();
+            
+            // Mostra primeiro capítulo
+            showChapter('cap1');
+            
+            // Inicia animações
+            initAnimations();
+        }
+
+        // Animações Canvas
+        function initAnimations() {
+            // Canvas 1: Derivada
+            const canvas1 = document.getElementById('canvas1');
+            if (canvas1 && !canvas1.dataset.animated) {
+                canvas1.dataset.animated = "true";
+                animateDerivative(canvas1);
+            }
+            
+            // Canvas 2: Família de Curvas
+            const canvas2 = document.getElementById('canvas2');
+            if (canvas2 && !canvas2.dataset.animated) {
+                canvas2.dataset.animated = "true";
+                animateFamily(canvas2);
+            }
+            
+            // Canvas 3: Separação
+            const canvas3 = document.getElementById('canvas3');
+            if (canvas3 && !canvas3.dataset.animated) {
+                canvas3.dataset.animated = "true";
+                animateSeparation(canvas3);
+            }
+            
+            // Canvas 6: Crescimento
+            const canvas6 = document.getElementById('canvas6');
+            if (canvas6 && !canvas6.dataset.animated) {
+                canvas6.dataset.animated = "true";
+                animateGrowth(canvas6);
+            }
+            
+            // Canvas 6b: Oscilação
+            const canvas6b = document.getElementById('canvas6b');
+            if (canvas6b && !canvas6b.dataset.animated) {
+                canvas6b.dataset.animated = "true";
+                animateOscillation(canvas6b);
+            }
+            
+            // Canvas 11: Taylor
+            const canvas11 = document.getElementById('canvas11');
+            if (canvas11 && !canvas11.dataset.animated) {
+                canvas11.dataset.animated = "true";
+                animateTaylor(canvas11);
+            }
+        }
+
+        function animateDerivative(canvas) {
+            const ctx = canvas.getContext('2d');
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Eixos
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(50, 250);
+                ctx.lineTo(550, 250);
+                ctx.moveTo(50, 250);
+                ctx.lineTo(50, 50);
+                ctx.stroke();
+                
+                // Curva
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                for(let x = 0; x <= 500; x++) {
+                    const y = 250 - (x/100) * (x/100) * 20;
+                    if(x === 0) ctx.moveTo(50 + x, y);
+                    else ctx.lineTo(50 + x, y);
+                }
+                ctx.stroke();
+                
+                // Ponto animado
+                const time = Date.now() / 1000;
+                const x0 = 150 + 100 * Math.sin(time);
+                const y0 = 250 - (x0/100) * (x0/100) * 20;
+                const slope = 2 * (x0/100) / 100 * 20;
+                
+                ctx.fillStyle = '#ff6b6b';
+                ctx.beginPath();
+                ctx.arc(x0 + 50, y0, 6, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Reta tangente
+                ctx.strokeStyle = '#f093fb';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(x0 + 50 - 80, y0 - slope * 80);
+                ctx.lineTo(x0 + 50 + 80, y0 + slope * 80);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function animateFamily(canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Eixos
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 250);
+            ctx.lineTo(550, 250);
+            ctx.moveTo(50, 250);
+            ctx.lineTo(50, 50);
+            ctx.stroke();
+            
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b'];
+            const Cs = [0.5, 1, 2, 3, 4];
+            
+            Cs.forEach((C, idx) => {
+                ctx.strokeStyle = colors[idx];
+                ctx.lineWidth = 2;
+                ctx.globalAlpha = 0.6;
+                ctx.beginPath();
+                for(let x = 0; x <= 500; x++) {
+                    const y = 250 - C * Math.exp(x/200) * 30;
+                    if(x === 0) ctx.moveTo(50 + x, y);
+                    else ctx.lineTo(50 + x, y);
+                }
+                ctx.stroke();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        function animateSeparation(canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Campo de direções
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 1;
+            
+            for(let i = 50; i < 550; i += 40) {
+                for(let j = 50; j < 250; j += 40) {
+                    const x = (i - 50) / 100;
+                    const y = (250 - j) / 50;
+                    const slope = x * y;
+                    const angle = Math.atan(slope);
+                    const len = 15;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(i - len * Math.cos(angle), j - len * Math.sin(angle));
+                    ctx.lineTo(i + len * Math.cos(angle), j + len * Math.sin(angle));
+                    ctx.stroke();
+                }
+            }
+            
+            // Soluções
+            ctx.strokeStyle = '#f093fb';
+            ctx.lineWidth = 2;
+            const Cs = [0.5, 1, 2];
+            Cs.forEach(C => {
+                ctx.beginPath();
+                for(let x = 0; x <= 500; x++) {
+                    const xv = x / 100;
+                    const yv = C * Math.exp(xv * xv / 2);
+                    const y = 250 - yv * 30;
+                    if(x === 0) ctx.moveTo(50 + x, y);
+                    else ctx.lineTo(50 + x, y);
+                }
+                ctx.stroke();
+            });
+        }
+
+        function animateGrowth(canvas) {
+            const ctx = canvas.getContext('2d');
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Eixos
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(50, 250);
+                ctx.lineTo(550, 250);
+                ctx.moveTo(50, 250);
+                ctx.lineTo(50, 50);
+                ctx.stroke();
+                
+                // Curva
+                ctx.strokeStyle = '#43e97b';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                for(let t = 0; t <= 500; t++) {
+                    const N = 50 * Math.exp(0.008 * t);
+                    const y = 250 - N;
+                    if(t === 0) ctx.moveTo(50 + t, y);
+                    else ctx.lineTo(50 + t, y);
+                }
+                ctx.stroke();
+                
+                // Ponto
+                const time = Date.now() / 2000;
+                const t0 = (time % 5) * 100;
+                const N0 = 50 * Math.exp(0.008 * t0);
+                ctx.fillStyle = '#ff6b6b';
+                ctx.beginPath();
+                ctx.arc(50 + t0, 250 - N0, 8, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function animateOscillation(canvas) {
+            const ctx = canvas.getContext('2d');
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const time = Date.now() / 500;
+                const amplitude = 100;
+                const omega = 2;
+                
+                // Suporte
+                ctx.fillStyle = '#333';
+                ctx.fillRect(250, 30, 100, 10);
+                
+                // Mola
+                ctx.strokeStyle = '#764ba2';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                const springY = 50 + amplitude * Math.sin(omega * time);
+                ctx.moveTo(300, 40);
+                for(let i = 0; i < 10; i++) {
+                    const y = 40 + (springY - 40) * (i / 10);
+                    const x = 300 + (i % 2 === 0 ? 10 : -10);
+                    if(i === 0) ctx.lineTo(300, 40);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.lineTo(300, springY);
+                ctx.stroke();
+                
+                // Massa
+                ctx.fillStyle = '#667eea';
+                ctx.fillRect(275, springY, 50, 50);
+                
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function animateTaylor(canvas) {
+            const ctx = canvas.getContext('2d');
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Eixos
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(50, 250);
+                ctx.lineTo(550, 250);
+                ctx.moveTo(50, 250);
+                ctx.lineTo(50, 50);
+                ctx.stroke();
+                
+                const time = Date.now() / 3000;
+                const n = Math.floor(time) % 5 + 1;
+                
+                // Função real
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                for(let x = 0; x <= 500; x++) {
+                    const xv = (x - 250) / 100;
+                    const y = 250 - Math.exp(xv) * 30;
+                    if(x === 0) ctx.moveTo(50 + x, y);
+                    else ctx.lineTo(50 + x, y);
+                }
+                ctx.stroke();
+                
+                // Taylor
+                ctx.strokeStyle = '#f093fb';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                for(let x = 0; x <= 500; x++) {
+                    const xv = (x - 250) / 100;
+                    let taylor = 0;
+                    let fact = 1;
+                    for(let i = 0; i <= n; i++) {
+                        if(i > 0) fact *= i;
+                        taylor += Math.pow(xv, i) / fact;
+                    }
+                    const y = 250 - taylor * 30;
+                    if(x === 0) ctx.moveTo(50 + x, y);
+                    else ctx.lineTo(50 + x, y);
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // Inicializa quando DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

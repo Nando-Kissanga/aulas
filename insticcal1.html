@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo I - Curso Completo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #5a67d8;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        /* ======================== */
+        /*   HAMBURGER MENU (☰)    */
+        /* ======================== */
+
+        .hamburger-wrapper {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .hamburger-btn {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #5a67d8, #764ba2);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 6px 20px rgba(90, 103, 216, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1002;
+        }
+
+        .hamburger-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 28px rgba(90, 103, 216, 0.7);
+        }
+
+        .hamburger-btn .bar {
+            display: block;
+            width: 28px;
+            height: 3.5px;
+            background: #fff;
+            border-radius: 4px;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transform-origin: center;
+        }
+
+        /* Animação X quando aberto */
+        .hamburger-btn.active .bar:nth-child(1) {
+            transform: translateY(9.5px) rotate(45deg);
+        }
+
+        .hamburger-btn.active .bar:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .hamburger-btn.active .bar:nth-child(3) {
+            transform: translateY(-9.5px) rotate(-45deg);
+        }
+
+        /* Overlay escuro */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.35s ease;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Painel lateral do menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -380px;
+            width: 360px;
+            max-width: 85vw;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            z-index: 1001;
+            transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow-y: auto;
+            box-shadow: 8px 0 30px rgba(0,0,0,0.4);
+            padding: 90px 20px 30px 20px;
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .side-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .side-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .side-menu::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        .menu-title {
+            color: #a5b4fc;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            font-weight: 700;
+        }
+
+        .menu-section {
+            margin-bottom: 25px;
+        }
+
+        .menu-section-title {
+            color: #818cf8;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 8px 10px 5px;
+            border-bottom: 1px solid rgba(129, 140, 248, 0.2);
+            margin-bottom: 8px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            padding: 12px 15px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 0.88em;
+            text-align: left;
+            margin-bottom: 4px;
+            font-family: inherit;
+        }
+
+        .nav-btn:hover {
+            background: rgba(90, 103, 216, 0.35);
+            color: #fff;
+            transform: translateX(6px);
+            border-color: rgba(90, 103, 216, 0.5);
+        }
+
+        .nav-btn.active-chapter {
+            background: linear-gradient(135deg, rgba(90, 103, 216, 0.5), rgba(118, 75, 162, 0.5));
+            color: #fff;
+            border-color: rgba(165, 180, 252, 0.4);
+            font-weight: 600;
+        }
+
+        .nav-btn .btn-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            background: rgba(90, 103, 216, 0.4);
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 700;
+            color: #c7d2fe;
+            flex-shrink: 0;
+        }
+
+        .nav-btn.active-chapter .btn-number {
+            background: rgba(255,255,255,0.25);
+            color: #fff;
+        }
+
+        /* ======================== */
+        /*     CONTEÚDO PRINCIPAL   */
+        /* ======================== */
+
+        .chapter {
+            background: rgba(255, 255, 255, 0.98);
+            margin-bottom: 30px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .chapter.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #5a67d8;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #5a67d8;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        h4 {
+            color: #5a67d8;
+            margin: 15px 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        .concept-box {
+            background: #f7fafc;
+            border-left: 5px solid #5a67d8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .formula {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.2em;
+            overflow-x: auto;
+        }
+
+        .example {
+            background: #fff5f5;
+            border: 2px solid #fc8181;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-title {
+            color: #c53030;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .exercise {
+            background: #f0fff4;
+            border: 2px solid #68d391;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .exercise-title {
+            color: #276749;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .visualization {
+            background: #fff;
+            border: 2px solid #cbd5e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        canvas, svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: #fef5e7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #c05621;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #cbd5e0;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #5a67d8;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .answer {
+            background: #e6fffa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .show-answer {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-family: inherit;
+            font-size: 0.95em;
+        }
+
+        .show-answer:hover {
+            background: #3182ce;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.6em; }
+            h2 { font-size: 1.4em; }
+            .chapter { padding: 20px; }
+            header { padding: 20px; }
+            .hamburger-wrapper { top: 12px; left: 12px; }
+            .hamburger-btn { width: 48px; height: 48px; }
+            .hamburger-btn .bar { width: 24px; height: 3px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== HAMBURGER MENU ========== -->
+    <div class="hamburger-wrapper">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </div>
+
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <nav class="side-menu" id="sideMenu">
+        <div class="menu-title">📚 Cálculo I</div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">Fundamentos</div>
+            <button class="nav-btn active-chapter" onclick="showChapter(1)"><span class="btn-number">1</span> Lógica e Indução</button>
+            <button class="nav-btn" onclick="showChapter(2)"><span class="btn-number">2</span> Sucessões</button>
+            <button class="nav-btn" onclick="showChapter(3)"><span class="btn-number">3</span> Funções</button>
+            <button class="nav-btn" onclick="showChapter(4)"><span class="btn-number">4</span> Tipos de Funções</button>
+            <button class="nav-btn" onclick="showChapter(5)"><span class="btn-number">5</span> Funções Várias Variáveis</button>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">Limites e Derivadas</div>
+            <button class="nav-btn" onclick="showChapter(6)"><span class="btn-number">6</span> Limites</button>
+            <button class="nav-btn" onclick="showChapter(7)"><span class="btn-number">7</span> Derivadas</button>
+            <button class="nav-btn" onclick="showChapter(8)"><span class="btn-number">8</span> Derivadas Compostas</button>
+            <button class="nav-btn" onclick="showChapter(9)"><span class="btn-number">9</span> Cálculo de Derivadas</button>
+            <button class="nav-btn" onclick="showChapter(10)"><span class="btn-number">10</span> Aplicações Derivadas</button>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title">Integrais</div>
+            <button class="nav-btn" onclick="showChapter(11)"><span class="btn-number">11</span> Introdução Integral</button>
+            <button class="nav-btn" onclick="showChapter(12)"><span class="btn-number">12</span> Integrais Indefinidas</button>
+            <button class="nav-btn" onclick="showChapter(13)"><span class="btn-number">13</span> Métodos Integração</button>
+            <button class="nav-btn" onclick="showChapter(14)"><span class="btn-number">14</span> Integrais Definidas</button>
+            <button class="nav-btn" onclick="showChapter(15)"><span class="btn-number">15</span> Áreas e Volumes</button>
+            <button class="nav-btn" onclick="showChapter(16)"><span class="btn-number">16</span> Aplicações Engenharia</button>
+        </div>
+    </nav>
+
+    <!-- ========== CONTEÚDO ========== -->
+    <div class="container">
+        <header>
+            <h1>📚 Cálculo I - Curso Completo</h1>
+            <p>Baseado em Finney (Thomas) e James Stewart</p>
+        </header>
+
+        <!-- CAPÍTULO 1 -->
+        <section id="chapter1" class="chapter active">
+            <h2>1. Noções Básicas de Lógica e Indução Matemática 🔢</h2>
+
+            <h3>1.1 Proposições e Conectivos Lógicos</h3>
+            <div class="concept-box">
+                <p><strong>Proposição:</strong> É uma sentença declarativa que pode ser verdadeira (V) ou falsa (F), mas não ambas.</p>
+                <p><strong>Exemplos:</strong></p>
+                <ul>
+                    <li>"2 + 2 = 4" é uma proposição verdadeira ✅</li>
+                    <li>"3 &gt; 5" é uma proposição falsa ❌</li>
+                    <li>"Que horas são?" não é proposição (é pergunta)</li>
+                </ul>
+            </div>
+
+            <h3>Conectivos Lógicos Fundamentais:</h3>
+            <table>
+                <tr><th>Nome</th><th>Símbolo</th><th>Leitura</th><th>Exemplo</th></tr>
+                <tr><td>Negação</td><td>¬ ou ~</td><td>não p</td><td>¬(x &gt; 0) ≡ x ≤ 0</td></tr>
+                <tr><td>Conjunção</td><td>∧</td><td>p e q</td><td>V ∧ F = F</td></tr>
+                <tr><td>Disjunção</td><td>∨</td><td>p ou q</td><td>V ∨ F = V</td></tr>
+                <tr><td>Condicional</td><td>→</td><td>se p então q</td><td>p → q</td></tr>
+                <tr><td>Bicondicional</td><td>↔</td><td>p sse q</td><td>p ↔ q</td></tr>
+            </table>
+
+            <h3>1.2 Quantificadores</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>∀</mo><mi>x</mi><mo>∈</mo><mi>ℝ</mi><mo>,</mo><msup><mi>x</mi><mn>2</mn></msup><mo>≥</mo><mn>0</mn></mrow></math>
+                <br><small>Para todo x real, x² é maior ou igual a zero</small>
+            </div>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>∃</mo><mi>x</mi><mo>∈</mo><mi>ℝ</mi><mo>|</mo><msup><mi>x</mi><mn>2</mn></msup><mo>=</mo><mn>4</mn></mrow></math>
+                <br><small>Existe x real tal que x² = 4</small>
+            </div>
+
+            <h3>1.3 Princípio da Indução Matemática 🎯</h3>
+            <div class="concept-box">
+                <p>O princípio da indução é usado para provar proposições sobre números naturais.</p>
+                <p><strong>Passos:</strong></p>
+                <ol>
+                    <li><strong>Base:</strong> Mostrar que P(1) é verdadeira</li>
+                    <li><strong>Hipótese de Indução:</strong> Supor que P(k) é verdadeira</li>
+                    <li><strong>Tese:</strong> Provar que P(k+1) é verdadeira</li>
+                </ol>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 1.1: Soma dos n primeiros naturais</div>
+                <p>Provar que: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn><mo>+</mo><mn>2</mn><mo>+</mo><mo>…</mo><mo>+</mo><mi>n</mi><mo>=</mo><mfrac><mrow><mi>n</mi><mo>(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo>)</mo></mrow><mn>2</mn></mfrac></mrow></math></p>
+                <p><strong>Demonstração:</strong></p>
+                <ol>
+                    <li><strong>Base (n=1):</strong> 1 = 1(2)/2 = 1 ✓</li>
+                    <li><strong>Hipótese:</strong> 1+2+…+k = k(k+1)/2</li>
+                    <li><strong>Tese:</strong> 1+2+…+k+(k+1) = (k+1)(k+2)/2</li>
+                </ol>
+                <div class="formula">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mfrac><mrow><mi>k</mi><mo>(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo>)</mo></mrow><mn>2</mn></mfrac><mo>+</mo><mo>(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo>)</mo><mo>=</mo><mfrac><mrow><mo>(</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo>)</mo><mo>(</mo><mi>k</mi><mo>+</mo><mn>2</mn><mo>)</mo></mrow><mn>2</mn></mfrac></mrow></math>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <h3>📋 Tabela Verdade Interativa</h3>
+                <canvas id="truthTable" width="600" height="300"></canvas>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 1</div>
+                <ol>
+                    <li>Prove por indução: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mn>1</mn><mn>2</mn></msup><mo>+</mo><msup><mn>2</mn><mn>2</mn></msup><mo>+</mo><mo>…</mo><mo>+</mo><msup><mi>n</mi><mn>2</mn></msup><mo>=</mo><mfrac><mrow><mi>n</mi><mo>(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo>)</mo><mo>(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo>)</mo></mrow><mn>6</mn></mfrac></mrow></math></li>
+                    <li>Negue: "∀x ∈ ℝ, x² &gt; 0"</li>
+                    <li>Construa a tabela verdade de (p → q) ∧ (q → p)</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans1')">Ver Respostas</button>
+                <div id="ans1" class="answer">
+                    <p>1. Use indução com base n=1</p>
+                    <p>2. ∃x ∈ ℝ | x² ≤ 0</p>
+                    <p>3. Equivalente a p ↔ q</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 2 -->
+        <section id="chapter2" class="chapter">
+            <h2>2. Noções Básicas de Sucessões 📈</h2>
+
+            <h3>2.1 Definição de Sucessão</h3>
+            <div class="concept-box">
+                <p>Uma <strong>sucessão</strong> (ou sequência) é uma função cujo domínio é o conjunto dos números naturais ℕ.</p>
+                <p>Notação: <span class="highlight">(aₙ)</span> ou <span class="highlight">{aₙ}</span> onde n ∈ ℕ</p>
+                <p>Exemplo: aₙ = 2n + 1 → 3, 5, 7, 9, 11, …</p>
+            </div>
+
+            <h3>2.2 Tipos de Sucessões</h3>
+            <table>
+                <tr><th>Tipo</th><th>Fórmula</th><th>Exemplo</th></tr>
+                <tr><td>Aritmética</td><td>aₙ = a₁ + (n-1)r</td><td>2, 5, 8, 11… (r=3)</td></tr>
+                <tr><td>Geométrica</td><td>aₙ = a₁ · q^(n-1)</td><td>3, 6, 12, 24… (q=2)</td></tr>
+                <tr><td>Recorrente</td><td>aₙ = f(aₙ₋₁)</td><td>Fibonacci: aₙ = aₙ₋₁ + aₙ₋₂</td></tr>
+            </table>
+
+            <h3>2.3 Limite de uma Sucessão</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><munder><mi>lim</mi><mrow><mi>n</mi><mo>→</mo><mi>∞</mi></mrow></munder><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><mi>L</mi></mrow></math>
+            </div>
+            <p>Para ε &gt; 0 arbitrário, existe N tal que |aₙ - L| &lt; ε para todo n &gt; N.</p>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 2.1: Sucessão convergente</div>
+                <p>aₙ = 1/n → Termos: 1, 1/2, 1/3, 1/4, …</p>
+                <div class="formula">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><munder><mi>lim</mi><mrow><mi>n</mi><mo>→</mo><mi>∞</mi></mrow></munder><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>=</mo><mn>0</mn></mrow></math>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <h3>📊 Visualização de Sucessões</h3>
+                <canvas id="sequenceGraph" width="600" height="300"></canvas>
+                <p>🔵 aₙ = 1/n (converge para 0) &nbsp; 🔴 bₙ = n/(n+1) (converge para 1)</p>
+            </div>
+
+            <h3>2.4 Sucessões Monótonas e Limitadas</h3>
+            <div class="concept-box">
+                <p><strong>Teorema:</strong> Toda sucessão monótona e limitada é convergente.</p>
+                <ul>
+                    <li><strong>Crescente:</strong> aₙ₊₁ ≥ aₙ</li>
+                    <li><strong>Decrescente:</strong> aₙ₊₁ ≤ aₙ</li>
+                    <li><strong>Limitada:</strong> ∃M : |aₙ| ≤ M</li>
+                </ul>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 2</div>
+                <ol>
+                    <li>Determine os 5 primeiros termos de aₙ = (2ⁿ - 1)/n</li>
+                    <li>Calcule: <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><munder><mi>lim</mi><mrow><mi>n</mi><mo>→</mo><mi>∞</mi></mrow></munder><mfrac><mrow><mn>3</mn><mi>n</mi><mo>+</mo><mn>2</mn></mrow><mrow><mn>5</mn><mi>n</mi><mo>-</mo><mn>1</mn></mrow></mfrac></mrow></math></li>
+                    <li>A sucessão aₙ = (-1)ⁿ é convergente?</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans2')">Ver Respostas</button>
+                <div id="ans2" class="answer">
+                    <p>1. 1, 3/2, 7/3, 15/4, 31/5</p>
+                    <p>2. 3/5</p>
+                    <p>3. Não, oscila entre -1 e 1</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 3 -->
+        <section id="chapter3" class="chapter">
+            <h2>3. Funções: Conceptualização e Propriedades 🎯</h2>
+
+            <h3>3.1 Definição Formal</h3>
+            <div class="concept-box">
+                <p>Sejam A e B conjuntos não vazios. Uma <strong>função</strong> f: A → B associa a cada x ∈ A um único y ∈ B.</p>
+                <ul>
+                    <li><strong>Domínio D(f):</strong> conjunto de entrada</li>
+                    <li><strong>Contradomínio CD(f):</strong> conjunto B</li>
+                    <li><strong>Imagem Im(f):</strong> {y ∈ B | y = f(x)}</li>
+                </ul>
+            </div>
+
+            <h3>3.2 Classificação</h3>
+            <table>
+                <tr><th>Tipo</th><th>Definição</th><th>Exemplo</th></tr>
+                <tr><td>Injetora</td><td>x₁ ≠ x₂ ⇒ f(x₁) ≠ f(x₂)</td><td>f(x) = 2x + 1</td></tr>
+                <tr><td>Sobrejetora</td><td>Im(f) = CD(f)</td><td>f(x) = x³</td></tr>
+                <tr><td>Bijetora</td><td>Injetora + Sobrejetora</td><td>f(x) = x</td></tr>
+            </table>
+
+            <h3>3.3 Função Inversa</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>f</mi><mrow><mo>-</mo><mn>1</mn></mrow></msup><mo>(</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>)</mo><mo>=</mo><mi>x</mi></mrow></math>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 3.1: Inversa</div>
+                <p>f(x) = 2x + 3 → y = 2x+3 → x = (y-3)/2 → <strong>f⁻¹(x) = (x-3)/2</strong></p>
+            </div>
+
+            <h3>3.4 Função Composta</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>(</mo><mi>g</mi><mo>∘</mo><mi>f</mi><mo>)</mo><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mi>g</mi><mo>(</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>)</mo></mrow></math>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 3</div>
+                <ol>
+                    <li>Domínio de f(x) = √(x-3)/(x-5)</li>
+                    <li>f(x)=x², g(x)=x+1 → (g∘f)(2)</li>
+                    <li>f(x)=x² é injetora em ℝ? E em [0,∞)?</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans3')">Ver Respostas</button>
+                <div id="ans3" class="answer">
+                    <p>1. D = [3,5) ∪ (5,∞)</p>
+                    <p>2. g(f(2)) = g(4) = 5</p>
+                    <p>3. Não em ℝ; sim em [0,∞)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 4 -->
+        <section id="chapter4" class="chapter">
+            <h2>4. Principais Tipos de Funções e Gráficos 📊</h2>
+
+            <h3>4.1 Função Polinomial</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><msub><mi>a</mi><mi>n</mi></msub><msup><mi>x</mi><mi>n</mi></msup><mo>+</mo><mo>…</mo><mo>+</mo><msub><mi>a</mi><mn>0</mn></msub></mrow></math>
+            </div>
+
+            <h3>4.2 Função Exponencial</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><msup><mi>a</mi><mi>x</mi></msup><mo>,</mo><mi>a</mi><mo>&gt;</mo><mn>0</mn><mo>,</mo><mi>a</mi><mo>≠</mo><mn>1</mn></mrow></math>
+            </div>
+            <ul>
+                <li>a^(x+y) = a^x · a^y</li>
+                <li>(a^x)^y = a^(xy)</li>
+            </ul>
+
+            <h3>4.3 Função Logarítmica</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>y</mi><mo>=</mo><msub><mi>log</mi><mi>a</mi></msub><mi>x</mi><mo>⇔</mo><msup><mi>a</mi><mi>y</mi></msup><mo>=</mo><mi>x</mi></mrow></math>
+            </div>
+
+            <h3>4.4 Funções Trigonométricas</h3>
+            <table>
+                <tr><th>Função</th><th>Período</th><th>Domínio</th><th>Imagem</th></tr>
+                <tr><td>sen(x)</td><td>2π</td><td>ℝ</td><td>[-1, 1]</td></tr>
+                <tr><td>cos(x)</td><td>2π</td><td>ℝ</td><td>[-1, 1]</td></tr>
+                <tr><td>tan(x)</td><td>π</td><td>x ≠ π/2+kπ</td><td>ℝ</td></tr>
+            </table>
+
+            <div class="visualization">
+                <h3>🎡 Círculo Trigonométrico Animado</h3>
+                <canvas id="trigCircle" width="400" height="400"></canvas>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 4.1: Equação exponencial</div>
+                <p>2^(x+1) + 2^x = 24 → 2^x(2+1) = 24 → 2^x = 8 → <strong>x = 3</strong></p>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 4</div>
+                <ol>
+                    <li>log₂(8) + log₃(27) - log₅(125)</li>
+                    <li>3^(2x) - 4·3^x + 3 = 0</li>
+                    <li>sen²(x) + cos²(x) + tan²(x)</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans4')">Ver Respostas</button>
+                <div id="ans4" class="answer">
+                    <p>1. 3 + 3 - 3 = 3</p>
+                    <p>2. x = 0 ou x = 1</p>
+                    <p>3. sec²(x)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 5 -->
+        <section id="chapter5" class="chapter">
+            <h2>5. Funções de Várias Variáveis 🌐</h2>
+
+            <h3>5.1 Definição</h3>
+            <div class="concept-box">
+                <p>z = f(x, y) associa a cada par (x,y) um único valor real z.</p>
+                <p>Exemplo: f(x,y) = x² + y² (paraboloide) 🏔️</p>
+            </div>
+
+            <h3>5.2 Domínio</h3>
+            <div class="example">
+                <div class="example-title">📝 Exemplo 5.1</div>
+                <p>f(x,y) = √(x² + y² - 1) → D = {(x,y) | x² + y² ≥ 1}</p>
+            </div>
+
+            <h3>5.3 Curvas de Nível</h3>
+            <div class="concept-box">
+                <p>Conjunto de pontos onde f(x,y) = k (constante). 🗺️</p>
+            </div>
+
+            <div class="visualization">
+                <h3>🏔️ Curvas de Nível</h3>
+                <canvas id="levelCurves" width="500" height="400"></canvas>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 5</div>
+                <ol>
+                    <li>Domínio de f(x,y) = ln(x+y)</li>
+                    <li>Curvas de nível k=0,1,4 de f(x,y)=√(x²+y²)</li>
+                    <li>lim((x,y)→(0,0)) xy/(x²+y²) existe?</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans5')">Ver Respostas</button>
+                <div id="ans5" class="answer">
+                    <p>1. D = {(x,y) | x+y &gt; 0}</p>
+                    <p>2. Círculos de raios 0, 1, 2</p>
+                    <p>3. Não existe</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 6 -->
+        <section id="chapter6" class="chapter">
+            <h2>6. Limites: Conceitos e Propriedades 🎯</h2>
+
+            <h3>6.1 Definição Intuitiva</h3>
+            <div class="concept-box">
+                <p><math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><munder><mi>lim</mi><mrow><mi>x</mi><mo>→</mo><mi>a</mi></mrow></munder><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mi>L</mi></mrow></math></p>
+                <p>Quando x se aproxima de a, f(x) se aproxima de L.</p>
+            </div>
+
+            <h3>6.2 Definição ε-δ</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>∀</mo><mi>ε</mi><mo>&gt;</mo><mn>0</mn><mo>,</mo><mo>∃</mo><mi>δ</mi><mo>&gt;</mo><mn>0</mn><mo>|</mo><mn>0</mn><mo>&lt;</mo><mo>|</mo><mi>x</mi><mo>-</mo><mi>a</mi><mo>|</mo><mo>&lt;</mo><mi>δ</mi><mo>⇒</mo><mo>|</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>-</mo><mi>L</mi><mo>|</mo><mo>&lt;</mo><mi>ε</mi></mrow></math>
+            </div>
+
+            <h3>6.3 Propriedades</h3>
+            <div class="concept-box">
+                <ol>
+                    <li>lim [f ± g] = L ± M</li>
+                    <li>lim [f · g] = L · M</li>
+                    <li>lim [f / g] = L / M (M ≠ 0)</li>
+                    <li>lim [k·f] = k·L</li>
+                </ol>
+            </div>
+
+            <h3>6.4 Limites Fundamentais</h3>
+            <h4>🔹 Trigonométrico:</h4>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><munder><mi>lim</mi><mrow><mi>x</mi><mo>→</mo><mn>0</mn></mrow></munder><mfrac><mrow><mi>sen</mi><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mi>x</mi></mfrac><mo>=</mo><mn>1</mn></mrow></math>
+            </div>
+            <h4>🔹 Exponencial:</h4>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><munder><mi>lim</mi><mrow><mi>x</mi><mo>→</mo><mn>0</mn></mrow></munder><msup><mrow><mo>(</mo><mn>1</mn><mo>+</mo><mi>x</mi><mo>)</mo></mrow><mrow><mn>1</mn><mo>/</mo><mi>x</mi></mrow></msup><mo>=</mo><mi>e</mi></mrow></math>
+            </div>
+            <h4>🔹 Logarítmico:</h4>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><munder><mi>lim</mi><mrow><mi>x</mi><mo>→</mo><mn>0</mn></mrow></munder><mfrac><mrow><mi>ln</mi><mo>(</mo><mn>1</mn><mo>+</mo><mi>x</mi><mo>)</mo></mrow><mi>x</mi></mfrac><mo>=</mo><mn>1</mn></mrow></math>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 6.1</div>
+                <p>lim(x→0) sen(3x)/x = 3 · lim sen(3x)/(3x) = <strong>3</strong></p>
+            </div>
+
+            <div class="visualization">
+                <h3>📉 Limite Fundamental sen(x)/x</h3>
+                <canvas id="limitGraph" width="600" height="300"></canvas>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 6</div>
+                <ol>
+                    <li>lim(x→2) (x²-4)/(x-2)</li>
+                    <li>lim(x→0) (1-cos x)/x²</li>
+                    <li>lim(x→∞) (3x²+2x)/(x²-1)</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans6')">Ver Respostas</button>
+                <div id="ans6" class="answer">
+                    <p>1. 4</p><p>2. 1/2</p><p>3. 3</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 7 -->
+        <section id="chapter7" class="chapter">
+            <h2>7. Derivadas: Definição e Interpretações 📐</h2>
+
+            <h3>7.1 Definição</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>f</mi><mo>′</mo></msup><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><munder><mi>lim</mi><mrow><mi>h</mi><mo>→</mo><mn>0</mn></mrow></munder><mfrac><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>+</mo><mi>h</mi><mo>)</mo><mo>-</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mi>h</mi></mfrac></mrow></math>
+            </div>
+
+            <h3>7.2 Interpretação Geométrica</h3>
+            <div class="concept-box">
+                <p>f'(x₀) = coeficiente angular da <strong>reta tangente</strong> em (x₀, f(x₀)).</p>
+                <p>Reta tangente: y - y₀ = f'(x₀)(x - x₀)</p>
+            </div>
+
+            <h3>7.3 Interpretação Física</h3>
+            <div class="concept-box">
+                <ul>
+                    <li>🚗 <strong>Velocidade:</strong> v(t) = s'(t)</li>
+                    <li>🏎️ <strong>Aceleração:</strong> a(t) = s''(t)</li>
+                </ul>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 7.1: f(x) = x²</div>
+                <p>f'(x) = lim[(x+h)² - x²]/h = lim[2xh + h²]/h = lim(2x+h) = <strong>2x</strong></p>
+            </div>
+
+            <div class="visualization">
+                <h3>📊 Reta Tangente</h3>
+                <canvas id="tangentLine" width="600" height="300"></canvas>
+            </div>
+
+            <h3>7.4 Derivadas Básicas</h3>
+            <table>
+                <tr><th>f(x)</th><th>f'(x)</th></tr>
+                <tr><td>c</td><td>0</td></tr>
+                <tr><td>xⁿ</td><td>n·x^(n-1)</td></tr>
+                <tr><td>sen(x)</td><td>cos(x)</td></tr>
+                <tr><td>cos(x)</td><td>-sen(x)</td></tr>
+                <tr><td>eˣ</td><td>eˣ</td></tr>
+                <tr><td>ln(x)</td><td>1/x</td></tr>
+            </table>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 7</div>
+                <ol>
+                    <li>Derivada de f(x) = 3x+2 pela definição</li>
+                    <li>Reta tangente a y=x² em (2,4)</li>
+                    <li>s(t)=t³-6t²+9t → v(2) e a(2)</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans7')">Ver Respostas</button>
+                <div id="ans7" class="answer">
+                    <p>1. f'(x) = 3</p>
+                    <p>2. y = 4x - 4</p>
+                    <p>3. v(2) = -3, a(2) = 0</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 8 -->
+        <section id="chapter8" class="chapter">
+            <h2>8. Derivadas Compostas e Regra da Cadeia 🔗</h2>
+
+            <h3>8.1 Regra da Cadeia</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mfrac><mi>d</mi><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mo>[</mo><mi>f</mi><mo>(</mo><mi>g</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>)</mo><mo>]</mo><mo>=</mo><msup><mi>f</mi><mo>′</mo></msup><mo>(</mo><mi>g</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>)</mo><mo>·</mo><msup><mi>g</mi><mo>′</mo></msup><mo>(</mo><mi>x</mi><mo>)</mo></mrow></math>
+            </div>
+
+            <div class="concept-box">
+                <p>Derivada da <strong>externa</strong> na interna × derivada da <strong>interna</strong>.</p>
+            </div>
+
+            <h3>8.2 Derivadas Sucessivas</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>f</mi><mrow><mo>(</mo><mi>n</mi><mo>)</mo></mrow></msup><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mfrac><msup><mi>d</mi><mi>n</mi></msup><mrow><mi>d</mi><msup><mi>x</mi><mi>n</mi></msup></mrow></mfrac><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo></mrow></math>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 8.1: y = sen(x²)</div>
+                <p>y' = cos(x²) · 2x = <strong>2x·cos(x²)</strong></p>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 8.2: f(x) = x⁴</div>
+                <p>f' = 4x³ → f'' = 12x² → f''' = <strong>24x</strong></p>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 8</div>
+                <ol>
+                    <li>dy/dx para y = e^(3x²)</li>
+                    <li>f''(x) para f(x) = sen(2x)</li>
+                    <li>y' para y = √(1+x²)</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans8')">Ver Respostas</button>
+                <div id="ans8" class="answer">
+                    <p>1. 6x·e^(3x²)</p>
+                    <p>2. -4sen(2x)</p>
+                    <p>3. x/√(1+x²)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 9 -->
+        <section id="chapter9" class="chapter">
+            <h2>9. Cálculo de Derivadas - Técnicas 🧮</h2>
+
+            <h3>9.1 Regras</h3>
+            <table>
+                <tr><th>Regra</th><th>Fórmula</th></tr>
+                <tr><td>Soma</td><td>(f ± g)' = f' ± g'</td></tr>
+                <tr><td>Produto</td><td>(fg)' = f'g + fg'</td></tr>
+                <tr><td>Quociente</td><td>(f/g)' = (f'g - fg')/g²</td></tr>
+                <tr><td>Potência</td><td>(xⁿ)' = nx^(n-1)</td></tr>
+            </table>
+
+            <h3>9.2 Derivação Implícita</h3>
+            <div class="concept-box">
+                <p>Derivar ambos os lados em relação a x, tratando y como y(x).</p>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 9.1: Produto</div>
+                <p>f(x) = x²·sen(x) → f'(x) = 2x·sen(x) + x²·cos(x)</p>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 9.2: Implícita x²+y²=25</div>
+                <p>2x + 2y·y' = 0 → <strong>y' = -x/y</strong></p>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 9</div>
+                <ol>
+                    <li>f'(x) para f(x) = (x³+2x)/(x²+1)</li>
+                    <li>dy/dx para x³+y³ = 6xy</li>
+                    <li>y' para y = ln(x²+1)</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans9')">Ver Respostas</button>
+                <div id="ans9" class="answer">
+                    <p>1. (x⁴+x²+2)/(x²+1)²</p>
+                    <p>2. (2y-x²)/(y²-2x)</p>
+                    <p>3. 2x/(x²+1)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 10 -->
+        <section id="chapter10" class="chapter">
+            <h2>10. Aplicações das Derivadas em Engenharia 🏗️</h2>
+
+            <h3>10.1 Otimização</h3>
+            <div class="concept-box">
+                <ol>
+                    <li>Pontos críticos: f'(x) = 0</li>
+                    <li>Teste da 2ª derivada</li>
+                    <li>Verificar endpoints</li>
+                </ol>
+                <ul>
+                    <li>f''(c) &gt; 0 → mínimo local</li>
+                    <li>f''(c) &lt; 0 → máximo local</li>
+                </ul>
+            </div>
+
+            <h3>10.2 Aplicações Práticas</h3>
+            <ul>
+                <li>🏭 Maximização de lucro</li>
+                <li>📦 Minimização de custo</li>
+                <li>⚡ Taxas relacionadas</li>
+                <li>🏗️ Projeto estrutural</li>
+            </ul>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 10.1: Caixa sem tampa</div>
+                <p>Folha 30×50cm, cortar quadrados x nos cantos.</p>
+                <p>V(x) = x(30-2x)(50-2x) → V'(x) = 12x²-320x+1500 = 0</p>
+                <p><strong>x ≈ 6,1 cm</strong> maximiza o volume</p>
+            </div>
+
+            <div class="example">
+                <div class="example-title">🎈 Exemplo 10.2: Taxas relacionadas</div>
+                <p>Balão esférico: dV/dt = 100 cm³/s, r = 5cm</p>
+                <p>V = (4/3)πr³ → dV/dt = 4πr²(dr/dt)</p>
+                <p>dr/dt = 100/(100π) = <strong>1/π ≈ 0,318 cm/s</strong></p>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 10</div>
+                <ol>
+                    <li>Dois números com soma 20 e produto máximo</li>
+                    <li>Cilindro V=1000cm³, minimizar área</li>
+                    <li>Escada 10m, base a 2m/s, base a 6m → velocidade topo?</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans10')">Ver Respostas</button>
+                <div id="ans10" class="answer">
+                    <p>1. 10 e 10</p>
+                    <p>2. r = h ≈ 5,42 cm</p>
+                    <p>3. 1,5 m/s</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 11 -->
+        <section id="chapter11" class="chapter">
+            <h2>11. Introdução ao Cálculo Integral 📐</h2>
+
+            <h3>11.1 Antiderivada</h3>
+            <div class="concept-box">
+                <p>F é antiderivada de f se F'(x) = f(x).</p>
+            </div>
+
+            <h3>11.2 Integral Indefinida</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>∫</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi><mo>=</mo><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>+</mo><mi>C</mi></mrow></math>
+            </div>
+
+            <h3>11.3 Integrais Imediatas</h3>
+            <table>
+                <tr><th>f(x)</th><th>∫ f(x)dx</th></tr>
+                <tr><td>xⁿ</td><td>x^(n+1)/(n+1) + C</td></tr>
+                <tr><td>1/x</td><td>ln|x| + C</td></tr>
+                <tr><td>eˣ</td><td>eˣ + C</td></tr>
+                <tr><td>sen(x)</td><td>-cos(x) + C</td></tr>
+                <tr><td>cos(x)</td><td>sen(x) + C</td></tr>
+            </table>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 11.1</div>
+                <p>∫(3x²+2x-5)dx = <strong>x³ + x² - 5x + C</strong></p>
+            </div>
+
+            <div class="visualization">
+                <h3>📊 Área sob a Curva</h3>
+                <canvas id="integralArea" width="600" height="300"></canvas>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 11</div>
+                <ol>
+                    <li>∫(4x³-2x+7)dx</li>
+                    <li>∫(1/x + eˣ)dx</li>
+                    <li>f'(x)=6x²-4x+3, f(1)=5 → f(x)</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans11')">Ver Respostas</button>
+                <div id="ans11" class="answer">
+                    <p>1. x⁴ - x² + 7x + C</p>
+                    <p>2. ln|x| + eˣ + C</p>
+                    <p>3. f(x) = 2x³ - 2x² + 3x + 2</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 12 -->
+        <section id="chapter12" class="chapter">
+            <h2>12. Integrais Indefinidas Simples 🔢</h2>
+
+            <h3>12.1 Substituição Simples</h3>
+            <div class="concept-box">
+                <p>u = g(x), du = g'(x)dx → ∫f(g(x))g'(x)dx = ∫f(u)du</p>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 12.1: ∫2x·cos(x²)dx</div>
+                <p>u = x², du = 2xdx → ∫cos(u)du = <strong>sen(x²) + C</strong></p>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 12.2: ∫e^(3x)dx</div>
+                <p>u = 3x → <strong>(1/3)e^(3x) + C</strong></p>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 12</div>
+                <ol>
+                    <li>∫x·√(x²+1)dx</li>
+                    <li>∫sen(2x)·cos(2x)dx</li>
+                    <li>∫1/(3x+2)dx</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans12')">Ver Respostas</button>
+                <div id="ans12" class="answer">
+                    <p>1. (1/3)(x²+1)^(3/2) + C</p>
+                    <p>2. (1/4)sen²(2x) + C</p>
+                    <p>3. (1/3)ln|3x+2| + C</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 13 -->
+        <section id="chapter13" class="chapter">
+            <h2>13. Métodos de Integração - Partes 🧩</h2>
+
+            <h3>13.1 Integração por Partes</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>∫</mo><mi>u</mi><mi>d</mi><mi>v</mi><mo>=</mo><mi>u</mi><mi>v</mi><mo>-</mo><mo>∫</mo><mi>v</mi><mi>d</mi><mi>u</mi></mrow></math>
+            </div>
+
+            <h3>13.2 Regra LIATE (escolha de u)</h3>
+            <div class="concept-box">
+                <ol>
+                    <li><strong>L</strong>ogarítmicas</li>
+                    <li><strong>I</strong>nversas trigonométricas</li>
+                    <li><strong>A</strong>lgébricas</li>
+                    <li><strong>T</strong>rigonométricas</li>
+                    <li><strong>E</strong>xponenciais</li>
+                </ol>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 13.1: ∫x·eˣdx</div>
+                <p>u=x, dv=eˣdx → xeˣ - ∫eˣdx = <strong>eˣ(x-1) + C</strong></p>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 13.2: ∫x²·sen(x)dx</div>
+                <p>Partes 2× → <strong>-x²cos(x) + 2x·sen(x) + 2cos(x) + C</strong></p>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 13</div>
+                <ol>
+                    <li>∫x·ln(x)dx</li>
+                    <li>∫eˣ·cos(x)dx</li>
+                    <li>∫x²·e^(3x)dx</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans13')">Ver Respostas</button>
+                <div id="ans13" class="answer">
+                    <p>1. (x²/2)ln(x) - x²/4 + C</p>
+                    <p>2. (eˣ/2)[sen(x)+cos(x)] + C</p>
+                    <p>3. e^(3x)(x²/3 - 2x/9 + 2/27) + C</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 14 -->
+        <section id="chapter14" class="chapter">
+            <h2>14. Integrais Definidas - Conceitos 📏</h2>
+
+            <h3>14.1 Definição</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi><mo>=</mo><munder><mi>lim</mi><mrow><mi>n</mi><mo>→</mo><mi>∞</mi></mrow></munder><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>f</mi><mo>(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>)</mo><mi>Δ</mi><mi>x</mi></mrow></math>
+            </div>
+
+            <h3>14.2 Teorema Fundamental do Cálculo</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi><mo>=</mo><mi>F</mi><mo>(</mo><mi>b</mi><mo>)</mo><mo>-</mo><mi>F</mi><mo>(</mo><mi>a</mi><mo>)</mo></mrow></math>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 14.1</div>
+                <p>∫₀²(3x²+2x)dx = [x³+x²]₀² = (8+4) - 0 = <strong>12</strong></p>
+            </div>
+
+            <div class="visualization">
+                <h3>📊 Soma de Riemann</h3>
+                <canvas id="riemannSum" width="600" height="300"></canvas>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 14</div>
+                <ol>
+                    <li>∫₁³(2x-1)dx</li>
+                    <li>∫₀^π sen(x)dx</li>
+                    <li>∫₋₁² x³dx</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans14')">Ver Respostas</button>
+                <div id="ans14" class="answer">
+                    <p>1. 8</p><p>2. 2</p><p>3. 15/4</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 15 -->
+        <section id="chapter15" class="chapter">
+            <h2>15. Cálculo de Áreas e Volumes 📐</h2>
+
+            <h3>15.1 Área entre Curvas</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>A</mi><mo>=</mo><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mo>[</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>-</mo><mi>g</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>]</mo><mi>d</mi><mi>x</mi></mrow></math>
+            </div>
+
+            <h3>15.2 Volume por Discos</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>V</mi><mo>=</mo><mi>π</mi><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mo>[</mo><mi>R</mi><mo>(</mo><mi>x</mi><mo>)</mo><msup><mo>]</mo><mn>2</mn></msup><mi>d</mi><mi>x</mi></mrow></math>
+            </div>
+
+            <h3>15.3 Cascas Cilíndricas</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>V</mi><mo>=</mo><mn>2</mn><mi>π</mi><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>x</mi><mo>·</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi></mrow></math>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 15.1: Área entre y=x² e y=x</div>
+                <p>A = ∫₀¹(x-x²)dx = [x²/2 - x³/3]₀¹ = 1/2 - 1/3 = <strong>1/6</strong></p>
+            </div>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 15.2: Volume y=√x, eixo x, [0,4]</div>
+                <p>V = π∫₀⁴ x dx = π[x²/2]₀⁴ = <strong>8π u.v.</strong></p>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 15</div>
+                <ol>
+                    <li>Área entre y=sen(x) e y=0, [0,π]</li>
+                    <li>Volume y=x², eixo x, [0,2]</li>
+                    <li>Área entre y=x e y=x²</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans15')">Ver Respostas</button>
+                <div id="ans15" class="answer">
+                    <p>1. 2 u.a.</p><p>2. 32π/5 u.v.</p><p>3. 1/6 u.a.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAPÍTULO 16 -->
+        <section id="chapter16" class="chapter">
+            <h2>16. Aplicações das Integrais em Engenharia 🏭</h2>
+
+            <h3>16.1 Trabalho Mecânico</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>W</mi><mo>=</mo><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>F</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi></mrow></math>
+            </div>
+
+            <h3>16.2 Centroide</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mover><mi>x</mi><mo>¯</mo></mover><mo>=</mo><mfrac><mn>1</mn><mi>A</mi></mfrac><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><mi>x</mi><mo>·</mo><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>d</mi><mi>x</mi></mrow></math>
+            </div>
+
+            <h3>16.3 Comprimento de Arco</h3>
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>L</mi><mo>=</mo><msubsup><mo>∫</mo><mi>a</mi><mi>b</mi></msubsup><msqrt><mrow><mn>1</mn><mo>+</mo><mo>[</mo><msup><mi>f</mi><mo>′</mo></msup><mo>(</mo><mi>x</mi><mo>)</mo><msup><mo>]</mo><mn>2</mn></msup></mrow></msqrt><mi>d</mi><mi>x</mi></mrow></math>
+            </div>
+
+            <h3>16.4 Aplicações</h3>
+            <ul>
+                <li>🏗️ Momentos de inércia</li>
+                <li>⚡ Valores RMS, energia</li>
+                <li>💧 Vazão, pressão em barragens</li>
+                <li>🏭 Custo e receita total</li>
+                <li>📡 Potência de sinal</li>
+            </ul>
+
+            <div class="example">
+                <div class="example-title">📝 Exemplo 16.1: Mola (Hooke)</div>
+                <p>F = kx, k = 100 N/m. W = ∫₀^0.3 100x dx = 50(0.09) = <strong>4,5 J</strong></p>
+            </div>
+
+            <div class="exercise">
+                <div class="exercise-title">🏋️ Exercícios 16</div>
+                <ol>
+                    <li>Trabalho para bombear água (tanque cilíndrico r=2m, h=5m)</li>
+                    <li>Centroide entre y=x² e y=4</li>
+                    <li>Comprimento y=x^(3/2), [0,4]</li>
+                </ol>
+                <button class="show-answer" onclick="toggleAnswer('ans16')">Ver Respostas</button>
+                <div id="ans16" class="answer">
+                    <p>1. ≈ 1,54×10⁶ J</p>
+                    <p>2. x̄=0, ȳ=12/5</p>
+                    <p>3. ≈ 9,07</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ===== HAMBURGER MENU =====
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        function openMenu() {
+            hamburgerBtn.classList.add('active');
+            sideMenu.classList.add('active');
+            menuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            hamburgerBtn.classList.remove('active');
+            sideMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        hamburgerBtn.addEventListener('click', () => {
+            if (sideMenu.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        menuOverlay.addEventListener('click', closeMenu);
+
+        // Fechar com ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMenu();
+        });
+
+        // ===== NAVEGAÇÃO =====
+        function showChapter(num) {
+            document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+            document.getElementById('chapter' + num).classList.add('active');
+
+            // Atualizar botão ativo no menu
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active-chapter'));
+            const buttons = document.querySelectorAll('.nav-btn');
+            if (buttons[num - 1]) buttons[num - 1].classList.add('active-chapter');
+
+            closeMenu();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleAnswer(id) {
+            const el = document.getElementById(id);
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // ===== CANVAS: Tabela Verdade =====
+        (function() {
+            const c = document.getElementById('truthTable');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.fillStyle = '#5a67d8'; ctx.font = 'bold 16px Arial';
+            ctx.fillText('Tabela Verdade — Conjunção (∧)', 170, 30);
+            ctx.strokeStyle = '#cbd5e0'; ctx.lineWidth = 2;
+            for (let i = 0; i <= 4; i++) { ctx.beginPath(); ctx.moveTo(100,50+i*50); ctx.lineTo(500,50+i*50); ctx.stroke(); }
+            for (let i = 0; i <= 3; i++) { ctx.beginPath(); ctx.moveTo(100+i*133,50); ctx.lineTo(100+i*133,250); ctx.stroke(); }
+            ctx.fillStyle = '#2d3748'; ctx.font = 'bold 14px Arial';
+            ['p','q','p ∧ q'].forEach((t,i) => ctx.fillText(t, 150+i*133, 80));
+            ctx.font = '14px Arial';
+            [['V','V','V'],['V','F','F'],['F','V','F'],['F','F','F']].forEach((r,i) => {
+                r.forEach((v,j) => {
+                    ctx.fillStyle = v === 'V' ? '#38a169' : '#e53e3e';
+                    ctx.fillText(v, 155+j*133, 120+i*50);
+                });
+            });
+        })();
+
+        // ===== CANVAS: Sucessões =====
+        (function() {
+            const c = document.getElementById('sequenceGraph');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(50,250); ctx.lineTo(550,250); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(50,250); ctx.lineTo(50,50); ctx.stroke();
+            // a_n = 1/n
+            ctx.fillStyle = '#4299e1';
+            for (let n = 1; n <= 20; n++) {
+                const x = 50+(n-1)*25, y = 250-(1/n)*200;
+                ctx.beginPath(); ctx.arc(x,y,4,0,2*Math.PI); ctx.fill();
+            }
+            // b_n = n/(n+1)
+            ctx.fillStyle = '#f56565';
+            for (let n = 1; n <= 20; n++) {
+                const x = 50+(n-1)*25, y = 250-(n/(n+1))*200;
+                ctx.beginPath(); ctx.arc(x,y,4,0,2*Math.PI); ctx.fill();
+            }
+            ctx.font = '13px Arial';
+            ctx.fillStyle = '#4299e1'; ctx.fillText('● aₙ = 1/n', 420, 70);
+            ctx.fillStyle = '#f56565'; ctx.fillText('● bₙ = n/(n+1)', 420, 90);
+        })();
+
+        // ===== CANVAS: Círculo Trigonométrico Animado =====
+        (function() {
+            const c = document.getElementById('trigCircle');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            let angle = 0;
+            function draw() {
+                ctx.clearRect(0,0,400,400);
+                const cx=200, cy=200, r=150;
+                ctx.strokeStyle='#5a67d8'; ctx.lineWidth=3;
+                ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI); ctx.stroke();
+                ctx.strokeStyle='#718096'; ctx.lineWidth=1;
+                ctx.beginPath(); ctx.moveTo(20,cy); ctx.lineTo(380,cy); ctx.moveTo(cx,20); ctx.lineTo(cx,380); ctx.stroke();
+                const px=cx+r*Math.cos(angle), py=cy-r*Math.sin(angle);
+                // Projeções
+                ctx.strokeStyle='#38a169'; ctx.setLineDash([5,5]); ctx.lineWidth=2;
+                ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,cy); ctx.stroke();
+                ctx.strokeStyle='#e53e3e';
+                ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(cx,py); ctx.stroke();
+                ctx.setLineDash([]);
+                // Raio
+                ctx.strokeStyle='#5a67d8'; ctx.lineWidth=3;
+                ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(px,py); ctx.stroke();
+                ctx.fillStyle='#e53e3e'; ctx.beginPath(); ctx.arc(px,py,7,0,2*Math.PI); ctx.fill();
+                // Info
+                ctx.fillStyle='#2d3748'; ctx.font='bold 14px Arial';
+                ctx.fillText('θ = '+(angle*180/Math.PI).toFixed(0)+'°', 15, 30);
+                ctx.fillText('cos θ = '+Math.cos(angle).toFixed(3), 15, 50);
+                ctx.fillText('sen θ = '+Math.sin(angle).toFixed(3), 15, 70);
+                angle += 0.015;
+                if (angle > 2*Math.PI) angle -= 2*Math.PI;
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+
+        // ===== CANVAS: Curvas de Nível =====
+        (function() {
+            const c = document.getElementById('levelCurves');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const cx=250, cy=200;
+            const colors = ['#fed7d7','#fbb6ce','#f687b3','#d53f8c','#97266d'];
+            [0.5,1,2,3,4].forEach((k,i) => {
+                const r = Math.sqrt(k)*40;
+                ctx.strokeStyle=colors[i]; ctx.lineWidth=2;
+                ctx.beginPath(); ctx.arc(cx,cy,r,0,2*Math.PI); ctx.stroke();
+                ctx.fillStyle=colors[i]; ctx.font='12px Arial';
+                ctx.fillText('k='+k, cx+r+5, cy-5);
+            });
+            ctx.fillStyle='#2d3748'; ctx.beginPath(); ctx.arc(cx,cy,4,0,2*Math.PI); ctx.fill();
+            ctx.font='13px Arial'; ctx.fillText('f(x,y) = x² + y²', 180, 380);
+        })();
+
+        // ===== CANVAS: Limite sen(x)/x =====
+        (function() {
+            const c = document.getElementById('limitGraph');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.strokeStyle='#2d3748'; ctx.lineWidth=2;
+            ctx.beginPath(); ctx.moveTo(50,150); ctx.lineTo(550,150); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(300,30); ctx.lineTo(300,270); ctx.stroke();
+            ctx.strokeStyle='#e53e3e'; ctx.setLineDash([5,5]); ctx.lineWidth=1;
+            ctx.beginPath(); ctx.moveTo(50,50); ctx.lineTo(550,50); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle='#e53e3e'; ctx.font='12px Arial'; ctx.fillText('y = 1', 555, 54);
+            ctx.strokeStyle='#4299e1'; ctx.lineWidth=3; ctx.beginPath();
+            for (let px=-240; px<=240; px++) {
+                const rad=px/50;
+                let y = Math.abs(rad)<0.001 ? 1 : Math.sin(rad)/rad;
+                const sy = 150 - y*100;
+                if (px===-240) ctx.moveTo(300+px,sy); else ctx.lineTo(300+px,sy);
+            }
+            ctx.stroke();
+            ctx.fillStyle='#e53e3e'; ctx.beginPath(); ctx.arc(300,50,6,0,2*Math.PI); ctx.fill();
+            ctx.fillStyle='#2d3748'; ctx.font='bold 14px Arial';
+            ctx.fillText('f(x) = sen(x)/x → 1', 340, 90);
+        })();
+
+        // ===== CANVAS: Reta Tangente =====
+        (function() {
+            const c = document.getElementById('tangentLine');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.strokeStyle='#2d3748'; ctx.lineWidth=2;
+            ctx.beginPath(); ctx.moveTo(50,250); ctx.lineTo(550,250); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(300,250); ctx.lineTo(300,30); ctx.stroke();
+            // Parábola
+            ctx.strokeStyle='#5a67d8'; ctx.lineWidth=3; ctx.beginPath();
+            for (let px=-120; px<=120; px++) {
+                const sy = 250 - (px/20)*(px/20)*10;
+                if (px===-120) ctx.moveTo(300+px,sy); else ctx.lineTo(300+px,sy);
+            }
+            ctx.stroke();
+            // Tangente em x=2 (px=40, py=210)
+            ctx.strokeStyle='#e53e3e'; ctx.lineWidth=2;
+            ctx.beginPath(); ctx.moveTo(220,250); ctx.lineTo(420,170); ctx.stroke();
+            ctx.fillStyle='#e53e3e'; ctx.beginPath(); ctx.arc(340,210,6,0,2*Math.PI); ctx.fill();
+            ctx.fillStyle='#2d3748'; ctx.font='13px Arial';
+            ctx.fillText('y = x²', 360, 120);
+            ctx.fillText('Tangente em (2, 4)', 360, 140);
+        })();
+
+        // ===== CANVAS: Área Integral =====
+        (function() {
+            const c = document.getElementById('integralArea');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.strokeStyle='#2d3748'; ctx.lineWidth=2;
+            ctx.beginPath(); ctx.moveTo(50,250); ctx.lineTo(550,250); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(50,250); ctx.lineTo(50,30); ctx.stroke();
+            ctx.fillStyle='rgba(66,153,225,0.25)'; ctx.beginPath(); ctx.moveTo(50,250);
+            for (let px=0; px<=300; px++) { const sy=250-(px*px)/200; ctx.lineTo(50+px,sy); }
+            ctx.lineTo(350,250); ctx.closePath(); ctx.fill();
+            ctx.strokeStyle='#5a67d8'; ctx.lineWidth=3; ctx.beginPath();
+            for (let px=0; px<=400; px++) { const sy=250-(px*px)/200; if(px===0) ctx.moveTo(50+px,sy); else ctx.lineTo(50+px,sy); }
+            ctx.stroke();
+            ctx.fillStyle='#2d3748'; ctx.font='bold 14px Arial'; ctx.fillText('∫ f(x)dx = Área', 380, 100);
+        })();
+
+        // ===== CANVAS: Riemann =====
+        (function() {
+            const c = document.getElementById('riemannSum');
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            ctx.strokeStyle='#2d3748'; ctx.lineWidth=2;
+            ctx.beginPath(); ctx.moveTo(50,250); ctx.lineTo(550,250); ctx.stroke();
+            ctx.strokeStyle='#5a67d8'; ctx.lineWidth=3; ctx.beginPath();
+            for (let px=0; px<=400; px++) { const sy=250-80*Math.sin(px/60); if(px===0) ctx.moveTo(50+px,sy); else ctx.lineTo(50+px,sy); }
+            ctx.stroke();
+            const n=10, w=400/n;
+            for (let i=0; i<n; i++) {
+                const h=80*Math.sin((i*w+w/2)/60);
+                ctx.fillStyle='rgba(255,215,0,0.45)'; ctx.fillRect(50+i*w,250-h,w,h);
+                ctx.strokeStyle='#d69e2e'; ctx.lineWidth=1; ctx.strokeRect(50+i*w,250-h,w,h);
+            }
+            ctx.fillStyle='#2d3748'; ctx.font='bold 13px Arial'; ctx.fillText('Soma de Riemann (n=10)', 350, 80);
+        })();
+    </script>
+</body>
+</html>

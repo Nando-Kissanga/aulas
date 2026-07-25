@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano Curricular - Ciências da Computação</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --purple-color: #8b5cf6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+        }
+
+        header h1 { font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 700; }
+        header p { color: rgba(255, 255, 255, 0.9); margin-bottom: 1.5rem; font-size: 1.1rem; }
+
+        #searchInput {
+            width: 100%;
+            max-width: 500px;
+            padding: 0.85rem 1.2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        #searchInput:focus { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25); }
+
+        .nav-ancoragem {
+            background: var(--bg-color);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background-color: rgba(248, 250, 252, 0.95);
+        }
+
+        .nav-ancoragem h3 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        #nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            list-style: none;
+            padding: 0;
+        }
+        #nav-links li { margin: 0; }
+
+        .nav-link {
+            display: inline-block;
+            padding: 0.35rem 0.9rem;
+            background: white;
+            color: var(--text-primary);
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .nav-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+            border-color: var(--primary-color);
+        }
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .area-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: fadeIn 0.4s ease-out;
+            scroll-margin-top: 90px;
+        }
+        .area-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+
+        .area-card h2 {
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .discipline-list { list-style: none; }
+
+        .discipline-item {
+            padding: 0.7rem 0;
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            transition: all 0.2s;
+        }
+        .discipline-item:last-child { border-bottom: none; }
+        .discipline-item:hover {
+            background-color: var(--bg-color);
+            margin: 0 -0.5rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .discipline-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .discipline-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.65rem;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .btn-link:hover { transform: translateY(-1px); filter: brightness(1.15); }
+        .btn-link.wiki { background: var(--warning-color); }
+        .btn-link.site { background: var(--success-color); }
+        .btn-link.course { background: var(--purple-color); }
+        .btn-link.docs { background: var(--info-color); }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+        }
+
+        .btn-topo {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            z-index: 1000;
+        }
+        .btn-topo.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .btn-topo:hover { background: var(--primary-hover); transform: translateY(-4px); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-count {
+            grid-column: 1/-1;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            padding: 0.5rem;
+        }
+
+        .legend {
+            grid-column: 1/-1;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+        .legend strong { color: var(--text-primary); margin-right: 0.5rem; }
+        .legend-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .modal-content h3 { color: var(--text-primary); margin-bottom: 0.5rem; }
+        .modal-content p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .modal-content .btn-close {
+            background: var(--bg-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .modal-content .btn-close:hover { background: var(--border-color); }
+
+        @media (max-width: 768px) {
+            .nav-ancoragem { padding: 0.8rem 1rem; }
+            #nav-links { gap: 0.4rem; }
+            .nav-link { font-size: 0.75rem; padding: 0.3rem 0.7rem; }
+            main { grid-template-columns: 1fr; padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📚 Plano Curricular</h1>
+        <p>Ciências da Computação — Recursos Educativos Prioritários</p>
+        <input type="text" id="searchInput" placeholder="🔍 Pesquisar por área ou disciplina..." onkeyup="filterDisciplines()">
+    </header>
+
+    <nav class="nav-ancoragem" id="navAncoragem">
+        <h3>📌 Navegação Rápida (Por Progressão Académica)</h3>
+        <ul id="nav-links"></ul>
+    </nav>
+
+    <main id="curriculum-container"></main>
+
+    <button class="btn-topo" id="btnTopo" onclick="scrollToTop()" aria-label="Voltar ao topo">↑</button>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <h3 id="modalTitle">🔗 Redirecionamento</h3>
+            <p id="modalMessage">A abrir recurso externo...</p>
+            <button class="btn-close" onclick="closeModal()">Fechar</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 - Instituição de Ensino Superior. Fontes públicas selecionadas: Khan Academy, MIT OCW, GeeksforGeeks, MDN, IEEE, Coursera, entre outras.</p>
+    </footer>
+
+    <script>
+        // ORDEM LÓGICA: Fundamentos Científicos -> Fundamentos da Computação -> Sistemas -> Aplicações -> Gestão -> Projeto
+        const curriculumData = [
+            // 1. FUNDAMENTOS CIENTÍFICOS
+            {
+                area: "Matemática",
+                disciplinas: [
+                    { nome: "Álgebra e Geometria Analítica", icone: "📐", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/%C3%81lgebra_linear", label: "Wiki" },
+                        { tipo: "course", url: "https://pt.khanacademy.org/math/linear-algebra", label: "Khan Academy" },
+                        { tipo: "site", url: "https://www.3blue1brown.com/topics/linear-algebra", label: "3Blue1Brown" }
+                    ]},
+                    { nome: "Cálculo I", icone: "∫", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/C%C3%A1lculo", label: "Wiki" },
+                        { tipo: "course", url: "https://pt.khanacademy.org/math/calculus-1", label: "Khan Academy" },
+                        { tipo: "site", url: "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx", label: "Paul's Math Notes" }
+                    ]},
+                    { nome: "Cálculo II", icone: "∫", fontes: [
+                        { tipo: "wiki", url: "https://en.wikipedia.org/wiki/Calculus", label: "Wiki" },
+                        { tipo: "course", url: "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/", label: "MIT OCW" }
+                    ]},
+                    { nome: "Matemática Discreta", icone: "🎲", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Matem%C3%A1tica_discreta", label: "Wiki" },
+                        { tipo: "course", url: "https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/", label: "MIT 6.042J" }
+                    ]},
+                    { nome: "Probabilidade e Estatística", icone: "📊", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Probabilidade", label: "Wiki" },
+                        { tipo: "course", url: "https://pt.khanacademy.org/math/statistics-probability", label: "Khan Academy" },
+                        { tipo: "site", url: "https://www.stat trek.com/", label: "Stat Trek" }
+                    ]},
+                    
+                    { nome: "Processos Estocásticos",
+                    icone: "📈",
+                    fontes: [
+                    { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Processo_estoc%C3%A1stico", label: "Wiki" },
+                    { tipo: "course", url: "https://www.coursera.org/learn/probability-statistics", label: "Coursera" },
+                    { tipo: "site", url: "https://www.mathworks.com/help/stats/stochastic-processes.html", label: "MathWorks" }
+                    ]
+                    }
+                ]
+            },
+            {
+                area: "Física",
+                disciplinas: [
+                    { nome: "Física I (Mecânica)", icone: "⚛️", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/F%C3%ADsica", label: "Wiki" },
+                        { tipo: "course", url: "https://pt.khanacademy.org/science/physics", label: "Khan Academy" },
+                        { tipo: "site", url: "http://hyperphysics.phy-astr.gsu.edu/hbase/hph.html", label: "HyperPhysics" }
+                    ]},
+                    { nome: "Física II (Eletromagnetismo)", icone: "⚡", fontes: [
+                        { tipo: "wiki", url: "https://en.wikipedia.org/wiki/Electromagnetism", label: "Wiki" },
+                        { tipo: "course", url: "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2007/", label: "MIT 8.02" }
+                    ]}
+                ]
+            },
+            {
+                area: "Línguas Estrangeiras Modernas",
+                disciplinas: [
+                    { nome: "Inglês Técnico I", icone: "🇬🇧", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/L%C3%ADngua_inglesa", label: "Wiki" },
+                        { tipo: "site", url: "https://www.britishcouncil.org/learn-english", label: "British Council" }
+                    ]},
+                    { nome: "Inglês Técnico II", icone: "🇬🇧", fontes: [
+                        { tipo: "wiki", url: "https://en.wikipedia.org/wiki/Technical_English", label: "Wiki" },
+                        { tipo: "site", url: "https://www.bbc.co.uk/learningenglish", label: "BBC Learning" }
+                    ]},
+                    { nome: "Língua Portuguesa (Redação Técnica)", icone: "🇵🇹", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/L%C3%ADngua_portuguesa", label: "Wiki" },
+                        { tipo: "site", url: "https://www.priberam.org/", label: "Priberam" },
+                        { tipo: "site", url: "https://ciberduvidas.iscte-iul.pt/", label: "Ciberdúvidas" }
+                    ]}
+                ]
+            },
+
+            // 2. FUNDAMENTOS DA COMPUTAÇÃO
+            {
+                area: "Metodologias de Programação",
+                disciplinas: [
+                    { nome: "Construção de Algoritmos e Programação", icone: "🧩", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Algoritmo", label: "Wiki" },
+                        { tipo: "site", url: "https://www.geeksforgeeks.org/fundamentals-of-algorithms/", label: "GeeksforGeeks" },
+                        { tipo: "course", url: "https://www.freecodecamp.org/learn/", label: "freeCodeCamp" }
+                    ]},
+                    { nome: "Estruturas de Dados I", icone: "📦", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Estrutura_de_dados", label: "Wiki" },
+                        { tipo: "site", url: "https://www.geeksforgeeks.org/data-structures/", label: "GeeksforGeeks" },
+                        { tipo: "course", url: "https://pt.khanacademy.org/computing/computer-science/algorithms", label: "Khan Academy" }
+                    ]},
+                    { nome: "Estruturas de Dados II", icone: "📦", fontes: [
+                        { tipo: "wiki", url: "https://en.wikipedia.org/wiki/Data_structure", label: "Wiki" },
+                        { tipo: "course", url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/", label: "MIT 6.006" }
+                    ]},
+                    { nome: "Programação Web", icone: "🌐", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Programa%C3%A7%C3%A3o_web", label: "Wiki" },
+                        { tipo: "docs", url: "https://developer.mozilla.org/pt-BR/", label: "MDN (PT)" },
+                        { tipo: "course", url: "https://www.freecodecamp.org/learn/responsive-web-design/", label: "freeCodeCamp" }
+                    ]},
+                    { nome: "Engenharia de Software I", icone: "🛠️", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Engenharia_de_software", label: "Wiki" },
+                        { tipo: "site", url: "https://martinfowler.com/", label: "Martin Fowler" },
+                        { tipo: "site", url: "https://refactoring.guru/", label: "Refactoring Guru" }
+                    ]}
+                ]
+            },
+            {
+                area: "Dispositivos e Circuitos Electrónicos",
+                disciplinas: [
+                    { nome: "Circuitos Eléctricos", icone: "⚡", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Circuito_el%C3%A9trico", label: "Wiki" },
+                        { tipo: "site", url: "https://www.allaboutcircuits.com/textbook/", label: "All About Circuits" }
+                    ]},
+                    { nome: "Electrónica Digital", icone: "💻", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Eletr%C3%B4nica_digital", label: "Wiki" },
+                        { tipo: "site", url: "https://www.electronics-tutorials.ws/", label: "Elec. Tutorials" },
+                        { tipo: "course", url: "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/", label: "MIT 6.004" }
+                    ]},
+                    { nome: "Circuitos Reconfiguráveis (FPGA)", icone: "🔧", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/FPGA", label: "Wiki" },
+                        { tipo: "docs", url: "https://www.intel.com/content/www/us/en/products/details/fpga/resources/overview.html", label: "Intel FPGA" }
+                    ]}
+                ]
+            },
+
+            // 3. SISTEMAS E TECNOLOGIAS DE COMPUTAÇÃO
+            {
+                area: "Tecnologias e Sistemas de Computação",
+                disciplinas: [
+                    { nome: "Arquitectura de Computadores I", icone: "🏗️", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Arquitetura_de_computadores", label: "Wiki" },
+                        { tipo: "site", url: "https://www.nand2tetris.org/", label: "Nand2Tetris" }
+                    ]},
+                    { nome: "Sistemas Operacionais I", icone: "🖥️", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Sistema_operacional", label: "Wiki" },
+                        { tipo: "course", url: "https://ocw.mit.edu/courses/6-828-operating-system-engineering-fall-2012/", label: "MIT 6.828" },
+                        { tipo: "site", url: "https://pages.cs.wisc.edu/~remzi/OSTEP/", label: "OSTEP (Livro)" }
+                    ]},
+                    { nome: "Banco de Dados I", icone: "🗄️", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Banco_de_dados", label: "Wiki" },
+                        { tipo: "site", url: "https://www.w3schools.com/sql/", label: "W3Schools SQL" },
+                        { tipo: "docs", url: "https://www.postgresql.org/docs/", label: "PostgreSQL Docs" }
+                    ]},
+                    { nome: "Redes de Computadores I", icone: "🌐", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Rede_de_computadores", label: "Wiki" },
+                        { tipo: "site", url: "https://www.cloudflare.com/learning/", label: "Cloudflare Learning" },
+                        { tipo: "docs", url: "https://beej.us/guide/bgnet/html/split-wide/", label: "Beej's Net Guide" }
+                    ]},
+                    { nome: "Sistemas Distribuídos e Paralelos", icone: "🌐", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Sistema_distribu%C3%ADdo", label: "Wiki" },
+                        { tipo: "course", url: "https://ocw.mit.edu/courses/6-824-distributed-computer-systems-engineering-spring-2006/", label: "MIT 6.824" }
+                    ]}
+                ]
+            },
+
+            // 4. APLICAÇÕES COMPUTACIONAIS (AVANÇADO)
+            {
+                area: "Aplicativos Computacionais",
+                disciplinas: [
+                    { nome: "Inteligência Artificial", icone: "🤖", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Intelig%C3%AAncia_artificial", label: "Wiki" },
+                        { tipo: "course", url: "https://www.coursera.org/specializations/deep-learning", label: "Deep Learning AI" },
+                        { tipo: "site", url: "https://huggingface.co/learn", label: "Hugging Face" }
+                    ]},
+                    { nome: "Computação Gráfica", icone: "🎨", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Computa%C3%A7%C3%A3o_gr%C3%A1fica", label: "Wiki" },
+                        { tipo: "site", url: "https://learnopengl.com/", label: "LearnOpenGL" },
+                        { tipo: "site", url: "https://www.scratchapixel.com/", label: "Scratchapixel" }
+                    ]},
+                    { nome: "Redes Neurais", icone: "🧠", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Rede_neural_artificial", label: "Wiki" },
+                        { tipo: "course", url: "https://course.fast.ai/", label: "Fast.ai" },
+                        { tipo: "site", url: "https://pytorch.org/tutorials/", label: "PyTorch Tutorials" }
+                    ]},
+                    { nome: "Interface Homem-Máquina", icone: "🖱️", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Intera%C3%A7%C3%A3o_homem-computador", label: "Wiki" },
+                        { tipo: "site", url: "https://www.nngroup.com/articles/", label: "Nielsen Norman" }
+                    ]}
+                ]
+            },
+
+            // 5. CONTEXTO PROFISSIONAL E GESTÃO
+            {
+                area: "Ciências Sociais Aplicadas",
+                disciplinas: [
+                    { nome: "Administração e Gestão", icone: "🏢", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Administra%C3%A7%C3%A3o", label: "Wiki" },
+                        { tipo: "site", url: "https://hbr.org/", label: "Harvard Business Review" }
+                    ]},
+                    { nome: "Economia para TI", icone: "💰", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Economia", label: "Wiki" },
+                        { tipo: "course", url: "https://pt.khanacademy.org/economics-finance-domain", label: "Khan Academy" }
+                    ]},
+                    { nome: "Empreendedorismo e Startups", icone: "🚀", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Empreendedorismo", label: "Wiki" },
+                        { tipo: "site", url: "https://www.sebrae.com.br/", label: "Sebrae" },
+                        { tipo: "course", url: "https://www.coursera.org/specializations/entrepreneurship", label: "Coursera" }
+                    ]},
+                    { nome: "Gestão de Projectos de TI", icone: "📋", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Gest%C3%A3o_de_projetos", label: "Wiki" },
+                        { tipo: "site", url: "https://www.pmi.org/learning", label: "PMI" },
+                        { tipo: "site", url: "https://www.scrum.org/resources", label: "Scrum.org" }
+                    ]},
+                    { nome: "Metodologia Científica", icone: "🔬", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Metodologia_cient%C3%ADfica", label: "Wiki" },
+                        { tipo: "site", url: "https://scholar.google.com/", label: "Google Scholar" }
+                    ]}
+                ]
+            },
+
+            // 6. CONSOLIDAÇÃO
+            {
+                area: "Projecto",
+                disciplinas: [
+                    { nome: "Projecto de Bacharelato / TCC", icone: "📝", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Trabalho_de_conclus%C3%A3o_de_curso", label: "Wiki" },
+                        { tipo: "site", url: "https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes", label: "Overleaf LaTeX" },
+                        { tipo: "site", url: "https://www.zotero.org/", label: "Zotero (Gestão de Ref.)" }
+                    ]},
+                    { nome: "Projecto de Licenciatura", icone: "🎓", fontes: [
+                        { tipo: "wiki", url: "https://pt.wikipedia.org/wiki/Tese", label: "Wiki" },
+                        { tipo: "site", url: "https://connectedpapers.com/", label: "Connected Papers" },
+                        { tipo: "site", url: "https://github.com/", label: "GitHub (Portfólio)" }
+                    ]}
+                ]
+            }
+        ];
+
+        function generateAreaId(area, index) {
+            return `area-${index}-${area.replace(/[^\w\s]/g, '').replace(/\s+/g, '-').toLowerCase()}`;
+        }
+
+        function showModal(title, message) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modalOverlay').classList.add('active');
+            setTimeout(() => closeModal(), 2500);
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function openLink(url, disciplineName) {
+            if (!url) {
+                showModal('⚠️ Indisponível', `Sem link configurado para "${disciplineName}".`);
+                return;
+            }
+            window.open(url, '_blank');
+        }
+
+        function renderCurriculum(data) {
+            const container = document.getElementById('curriculum-container');
+            container.innerHTML = '';
+
+            const legend = document.createElement('div');
+            legend.className = 'legend';
+            legend.innerHTML = `
+                <strong>Legenda de Fontes:</strong>
+                <span class="legend-chip" style="background: var(--warning-color);">📖 Wiki</span>
+                <span class="legend-chip" style="background: var(--success-color);">🌍 Site Oficial</span>
+                <span class="legend-chip" style="background: var(--purple-color);">🎓 Curso Online</span>
+                <span class="legend-chip" style="background: var(--info-color);">📄 Documentação</span>
+            `;
+            container.appendChild(legend);
+
+            if (data.length === 0) {
+                container.innerHTML += `
+                    <div class="result-count">
+                        <p style="color: var(--text-secondary); padding: 2rem;">
+                            🔍 Nenhuma disciplina ou área encontrada para a sua pesquisa.
+                        </p>
+                    </div>`;
+                return;
+            }
+
+            const totalDisciplinas = data.reduce((acc, s) => acc + s.disciplinas.length, 0);
+            const countDiv = document.createElement('div');
+            countDiv.className = 'result-count';
+            countDiv.innerHTML = `<p>📊 Mostrando <strong>${data.length}</strong> área(s) com <strong>${totalDisciplinas}</strong> disciplina(s)</p>`;
+            container.appendChild(countDiv);
+
+            data.forEach((section, index) => {
+                const card = document.createElement('div');
+                card.className = 'area-card';
+                const areaId = generateAreaId(section.area, index);
+                card.id = areaId;
+
+                const title = document.createElement('h2');
+                title.textContent = section.area;
+                card.appendChild(title);
+
+                const list = document.createElement('ul');
+                list.className = 'discipline-list';
+
+                section.disciplinas.forEach(disciplina => {
+                    const item = document.createElement('li');
+                    item.className = 'discipline-item';
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'discipline-name';
+                    nameSpan.innerHTML = `${disciplina.icone || '•'} ${disciplina.nome}`;
+
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'discipline-actions';
+
+                    (disciplina.fontes || []).forEach(fonte => {
+                        const btn = document.createElement('button');
+                        btn.className = `btn-link ${fonte.tipo}`;
+                        btn.textContent = fonte.label;
+                        btn.onclick = (e) => {
+                            e.stopPropagation();
+                            openLink(fonte.url, disciplina.nome);
+                        };
+                        actionsDiv.appendChild(btn);
+                    });
+
+                    item.appendChild(nameSpan);
+                    item.appendChild(actionsDiv);
+                    list.appendChild(item);
+                });
+
+                card.appendChild(list);
+                container.appendChild(card);
+            });
+        }
+
+        function generateNavLinks(data) {
+            const navList = document.getElementById('nav-links');
+            navList.innerHTML = '';
+
+            data.forEach((section, index) => {
+                const areaId = generateAreaId(section.area, index);
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = `#${areaId}`;
+                link.textContent = section.area;
+                link.className = 'nav-link';
+                link.setAttribute('data-target', areaId);
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.getElementById(areaId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+                listItem.appendChild(link);
+                navList.appendChild(listItem);
+            });
+        }
+
+        function updateActiveNavLink() {
+            const sections = document.querySelectorAll('.area-card');
+            const navLinks = document.querySelectorAll('.nav-link');
+            let currentId = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 110;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionBottom) {
+                    currentId = section.id;
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-target') === currentId) link.classList.add('active');
+            });
+        }
+
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        function toggleBackToTopButton() {
+            const btn = document.getElementById('btnTopo');
+            if (window.pageYOffset > 300) btn.classList.add('visible');
+            else btn.classList.remove('visible');
+        }
+
+        function filterDisciplines() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filteredData = curriculumData.map(section => {
+                const areaMatches = section.area.toLowerCase().includes(searchTerm);
+                const filteredDisciplines = section.disciplinas.filter(d =>
+                    d.nome.toLowerCase().includes(searchTerm)
+                );
+                if (areaMatches) return section;
+                else if (filteredDisciplines.length > 0) return { area: section.area, disciplinas: filteredDisciplines };
+                return null;
+            }).filter(item => item !== null);
+
+            renderCurriculum(filteredData);
+            generateNavLinks(filteredData);
+            if (filteredData.length > 0) setTimeout(updateActiveNavLink, 100);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCurriculum(curriculumData);
+            generateNavLinks(curriculumData);
+            window.addEventListener('scroll', () => {
+                updateActiveNavLink();
+                toggleBackToTopButton();
+            });
+            setTimeout(updateActiveNavLink, 300);
+        });
+
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
