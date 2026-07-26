@@ -1,0 +1,2916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processos Estocásticos - Aula Completa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #ecf0f1;
+            --dark-text: #2c3e50;
+            --light-text: #7f8c8d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark-text);
+        }
+
+        /* Menu Hamburger */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .menu-toggle:hover {
+            transform: scale(1.1);
+            background: var(--secondary-color);
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            padding-top: 80px;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar h2 {
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .sidebar a:hover {
+            background: var(--light-bg);
+            color: var(--secondary-color);
+            padding-left: 25px;
+        }
+
+        .sidebar a.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 0;
+            padding: 100px 20px 40px;
+            max-width: 1200px;
+            margin-right: auto;
+            margin-left: auto;
+            transition: margin-left 0.3s;
+        }
+
+        .chapter {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s;
+        }
+
+        .chapter.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            border-bottom: 4px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin: 30px 0 15px;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: var(--accent-color);
+            margin: 20px 0 10px;
+            font-size: 1.4em;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .concept-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .example-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .exercise-box {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.2em;
+            overflow-x: auto;
+        }
+
+        .canvas-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        canvas {
+            border: 2px solid var(--light-bg);
+            border-radius: 10px;
+            max-width: 100%;
+        }
+
+        .emoji-list {
+            font-size: 1.3em;
+            line-height: 2;
+        }
+
+        .highlight {
+            background: yellow;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 100px 15px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .chapter {
+                padding: 20px;
+            }
+        }
+
+        .math-display {
+            display: block;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        .queue-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .queue-item {
+            background: var(--secondary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .state-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .state {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .state:hover {
+            transform: scale(1.1);
+            background: var(--accent-color);
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: var(--secondary-color);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .bibliografia {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .bibliografia ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .bibliografia li {
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .bibliografia li:before {
+            content: "📚";
+            position: absolute;
+            left: 0;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px;
+        }
+
+        .interactive-demo {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .control-panel {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .control-panel label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        .control-panel input[type="range"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="overlay" onclick="toggleMenu()"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <h2>📚 Conteúdo Programático</h2>
+        <ul>
+            <li><a onclick="showChapter(1)" id="link-1">1. Conceito de Processo Estocástico</a></li>
+            <li><a onclick="showChapter(2)" id="link-2">2. Caracterização e Exemplos</a></li>
+            <li><a onclick="showChapter(3)" id="link-3">3. Processos de Markov</a></li>
+            <li><a onclick="showChapter(4)" id="link-4">4. Cadeias de Markov Tempo Contínuo</a></li>
+            <li><a onclick="showChapter(5)" id="link-5">5. Filas Markovianas em Equilíbrio</a></li>
+            <li><a onclick="showChapter(6)" id="link-6">6. Processos de Renovação</a></li>
+            <li><a onclick="showChapter(7)" id="link-7">7. Elementos de um Sistema de Filas</a></li>
+            <li><a onclick="showChapter(8)" id="link-8">8. Filas M/G/1, M/M/1, M/M/s</a></li>
+            <li><a onclick="showChapter(9)" id="link-9">9. Redes de Filas</a></li>
+            <li><a onclick="showChapter(10)" id="link-10">10. Análise Operacional</a></li>
+            <li><a onclick="showChapter(11)" id="link-11">11. Planeamento de Capacidade</a></li>
+            <li><a onclick="showChapter(12)" id="link-12">12. Aplicação em Redes</a></li>
+            <li><a onclick="showChapter(13)" id="link-13">📖 Bibliografia</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <!-- Capítulo 1 -->
+        <div class="chapter active" id="chapter-1">
+            <h1>1. Conceito de Processo Estocástico 🎲</h1>
+            
+            <div class="concept-box">
+                <h3>📌 Definição Fundamental</h3>
+                <p>Um <strong>processo estocástico</strong> é uma coleção de variáveis aleatórias {X(t), t ∈ T} indexadas por um parâmetro t, geralmente interpretado como <span class="highlight">tempo</span>.</p>
+                <p>Onde:</p>
+                <ul class="emoji-list">
+                    <li>📍 <strong>X(t)</strong>: Estado do sistema no instante t</li>
+                    <li>⏰ <strong>T</strong>: Conjunto de índices (tempo discreto ou contínuo)</li>
+                    <li>🎯 <strong>E</strong>: Espaço de estados (valores possíveis de X(t))</li>
+                </ul>
+            </div>
+
+            <div class="canvas-container">
+                <h3>📊 Visualização de um Processo Estocástico</h3>
+                <canvas id="canvas1" width="800" height="400"></canvas>
+                <p><em>Figura: Trajetórias possíveis de um processo estocástico ao longo do tempo</em></p>
+            </div>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>X</mi>
+                        <mo>:</mo>
+                        <mi>T</mi>
+                        <mo>×</mo>
+                        <mi>Ω</mi>
+                        <mo>→</mo>
+                        <mi>ℝ</mi>
+                    </mrow>
+                </math>
+                <p>Onde Ω é o espaço amostral</p>
+            </div>
+
+            <h2> Classificação dos Processos</h2>
+            
+            <div class="state-diagram">
+                <div class="state">Tempo<br>Discreto<br>📅</div>
+                <div class="arrow"></div>
+                <div class="state">Tempo<br>Contínuo<br>️</div>
+            </div>
+
+            <div class="example-box">
+                <h3>💡 Exemplo Prático 1</h3>
+                <p><strong>Lançamento de Moedas:</strong> Seja Xₙ o resultado do n-ésimo lançamento (0=coroa, 1=cara). {Xₙ, n≥1} é um processo estocástico de tempo discreto.</p>
+                <p>🎲 Espaço de estados: E = {0, 1}</p>
+            </div>
+
+            <div class="example-box">
+                <h3>💡 Exemplo Prático 2</h3>
+                <p><strong>Processo de Chegadas:</strong> N(t) = número de clientes que chegaram até o instante t em uma fila. É um processo de tempo contínuo com valores inteiros não-negativos.</p>
+                <p>👥 Espaço de estados: E = {0, 1, 2, 3, ...}</p>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 1</h3>
+                <p>Considere o preço de uma ação observado diariamente. Classifique este processo quanto a:</p>
+                <ol>
+                    <li>Tempo (discreto ou contínuo)</li>
+                    <li>Espaço de estados (discreto ou contínuo)</li>
+                </ol>
+                <button class="btn" onclick="toggleAnswer('ans1')">Ver Resposta</button>
+                <div id="ans1" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resposta:</strong> Tempo discreto (observações diárias) e espaço de estados contínuo (preço pode assumir qualquer valor real positivo). 📈
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" disabled>← Anterior</button>
+                <button class="btn" onclick="showChapter(2)">Próximo: Caracterização →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 2 -->
+        <div class="chapter" id="chapter-2">
+            <h1>2. Caracterização e Exemplos de Processos Estocásticos 📐</h1>
+
+            <div class="concept-box">
+                <h3>📊 Funções de Distribuição</h3>
+                <p>Um processo estocástico é completamente caracterizado pelas suas <strong>funções de distribuição finito-dimensionais</strong>:</p>
+            </div>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msub>
+                            <mi>F</mi>
+                            <mrow>
+                                <msub>
+                                    <mi>t</mi>
+                                    <mn>1</mn>
+                                </msub>
+                                <mo>,</mo>
+                                <mo>…</mo>
+                                <mo>,</mo>
+                                <msub>
+                                    <mi>t</mi>
+                                    <mi>n</mi>
+                                </msub>
+                            </mrow>
+                        </msub>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>x</mi>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>,</mo>
+                        <mo>…</mo>
+                        <mo>,</mo>
+                        <msub>
+                            <mi>x</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>t</mi>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>)</mo>
+                        <mo>≤</mo>
+                        <msub>
+                            <mi>x</mi>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>,</mo>
+                        <mo>…</mo>
+                        <mo>,</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>t</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>)</mo>
+                        <mo>≤</mo>
+                        <msub>
+                            <mi>x</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>)</mo>
+                    </mrow>
+                </math>
+            </div>
+
+            <h2>📈 Momentos de um Processo</h2>
+            
+            <div class="formula">
+                <h3>Função Média:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msub>
+                            <mi>m</mi>
+                            <mi>X</mi>
+                        </msub>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>E</mi>
+                        <mo>[</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>]</mo>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="formula">
+                <h3>Função de Autocorrelação:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msub>
+                            <mi>R</mi>
+                            <mi>X</mi>
+                        </msub>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>t</mi>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>,</mo>
+                        <msub>
+                            <mi>t</mi>
+                            <mn>2</mn>
+                        </msub>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>E</mi>
+                        <mo>[</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>t</mi>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>)</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>t</mi>
+                            <mn>2</mn>
+                        </msub>
+                        <mo>)</mo>
+                        <mo>]</mo>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="canvas-container">
+                <h3>🎯 Exemplo: Processo de Wiener (Movimento Browniano)</h3>
+                <canvas id="canvas2" width="800" height="400"></canvas>
+            </div>
+
+            <div class="example-box">
+                <h3>🌊 Processo de Poisson</h3>
+                <p>Um dos processos mais importantes! Caracterizado por:</p>
+                <ul class="emoji-list">
+                    <li>📍 N(0) = 0</li>
+                    <li>📍 Incrementos independentes</li>
+                    <li>📍 Incrementos estacionários</li>
+                    <li>📍 P(N(t+h) - N(t) = 1) = λh + o(h)</li>
+                    <li> P(N(t+h) - N(t) ≥ 2) = o(h)</li>
+                </ul>
+            </div>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>P</mi>
+                        <mo>[</mo>
+                        <mi>N</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>k</mi>
+                        <mo>]</mo>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <mo>(</mo>
+                                <mi>λ</mi>
+                                <mi>t</mi>
+                                <msup>
+                                    <mo>)</mo>
+                                    <mi>k</mi>
+                                </msup>
+                            </mrow>
+                            <mrow>
+                                <mi>k</mi>
+                                <mo>!</mo>
+                            </mrow>
+                        </mfrac>
+                        <msup>
+                            <mi>e</mi>
+                            <mrow>
+                                <mo>−</mo>
+                                <mi>λ</mi>
+                                <mi>t</mi>
+                            </mrow>
+                        </msup>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="exercise-box">
+                <h3> Exercício 2</h3>
+                <p>Em um processo de Poisson com taxa λ = 3 clientes/hora, calcule a probabilidade de chegarem exatamente 5 clientes em 2 horas.</p>
+                <button class="btn" onclick="toggleAnswer('ans2')">Ver Resposta</button>
+                <div id="ans2" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    λt = 3 × 2 = 6<br>
+                    P(N(2) = 5) = (6/5!) × e⁻⁶<br>
+                    P(N(2) = 5) = (7776/120) × 0.00248<br>
+                    P(N(2) = 5) ≈ 0.1606 ou 16.06% 
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(1)">← Anterior</button>
+                <button class="btn" onclick="showChapter(3)">Próximo: Processos de Markov →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 3 -->
+        <div class="chapter" id="chapter-3">
+            <h1>3. Caracterização e Exemplos de Processos de Markov 🔄</h1>
+
+            <div class="concept-box">
+                <h3>🎯 Propriedade de Markov</h3>
+                <p>Um processo estocástico {X(t), t ≥ 0} possui a <strong>propriedade de Markov</strong> se:</p>
+            </div>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>P</mi>
+                        <mo>[</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>≤</mo>
+                        <mi>x</mi>
+                        <mo>|</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>t</mi>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <msub>
+                            <mi>x</mi>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>,</mo>
+                        <mo>…</mo>
+                        <mo>,</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>t</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <msub>
+                            <mi>x</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>]</mo>
+                        <mo>=</mo>
+                        <mi>P</mi>
+                        <mo>[</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>≤</mo>
+                        <mi>x</mi>
+                        <mo>|</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>t</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <msub>
+                            <mi>x</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>]</mo>
+                    </mrow>
+                </math>
+                <p><em>"O futuro depende apenas do presente, não do passado"</em></p>
+            </div>
+
+            <div class="canvas-container">
+                <h3>🎲 Cadeia de Markov Discreta - Simulação</h3>
+                <canvas id="canvas3" width="800" height="400"></canvas>
+            </div>
+
+            <h2>📊 Matriz de Transição</h2>
+            
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>P</mi>
+                        <mo>=</mo>
+                        <mfenced open="[" close="]">
+                            <mtable>
+                                <mtr>
+                                    <mtd><msub><mi>p</mi><mn>11</mn></msub></mtd>
+                                    <mtd><msub><mi>p</mi><mn>12</mn></msub></mtd>
+                                    <mtd><mo>…</mo></mtd>
+                                </mtr>
+                                <mtr>
+                                    <mtd><msub><mi>p</mi><mn>21</mn></msub></mtd>
+                                    <mtd><msub><mi>p</mi><mn>22</mn></msub></mtd>
+                                    <mtd><mo>…</mo></mtd>
+                                </mtr>
+                                <mtr>
+                                    <mtd><mo></mo></mtd>
+                                    <mtd><mo>⋮</mo></mtd>
+                                    <mtd><mo>⋱</mo></mtd>
+                                </mtr>
+                            </mtable>
+                        </mfenced>
+                    </mrow>
+                </math>
+                <p>Onde pᵢⱼ = P(Xₙ₊₁ = j | Xₙ = i)</p>
+            </div>
+
+            <div class="example-box">
+                <h3>🌤️ Exemplo: Previsão do Tempo</h3>
+                <p>Suponha que o tempo amanhã depende apenas do tempo de hoje:</p>
+                <ul class="emoji-list">
+                    <li>☀️ Se hoje está sol: 80% chance de sol amanhã, 20% chuva</li>
+                    <li>🌧️ Se hoje está chovendo: 60% chance de chuva, 40% sol</li>
+                </ul>
+            </div>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>P</mi>
+                        <mo>=</mo>
+                        <mfenced open="[" close="]">
+                            <mtable>
+                                <mtr>
+                                    <mtd><mn>0.8</mn></mtd>
+                                    <mtd><mn>0.2</mn></mtd>
+                                </mtr>
+                                <mtr>
+                                    <mtd><mn>0.4</mn></mtd>
+                                    <mtd><mn>0.6</mn></mtd>
+                                </mtr>
+                            </mtable>
+                        </mfenced>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 3</h3>
+                <p>Dada a matriz de transição acima e sabendo que hoje está sol (estado 1), qual a probabilidade de estar chovendo daqui a 2 dias?</p>
+                <button class="btn" onclick="toggleAnswer('ans3')">Ver Resposta</button>
+                <div id="ans3" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    Precisamos calcular P²:<br>
+                    P² = P × P<br>
+                    p₁₂(2) = 0.8×0.2 + 0.2×0.6 = 0.16 + 0.12 = 0.28<br>
+                    <strong>Resposta: 28% de chance de chuva em 2 dias</strong> ️
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(2)">← Anterior</button>
+                <button class="btn" onclick="showChapter(4)">Próximo: Tempo Contínuo →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 4 -->
+        <div class="chapter" id="chapter-4">
+            <h1>4. Cadeias de Markov de Tempo Contínuo ⏱️</h1>
+
+            <div class="concept-box">
+                <h3>🔄 Definição</h3>
+                <p>Uma cadeia de Markov de tempo contínuo é um processo estocástico {X(t), t ≥ 0} com espaço de estados discreto que satisfaz a propriedade de Markov e é homogêneo no tempo.</p>
+            </div>
+
+            <div class="formula">
+                <h3>Matriz de Taxas de Transição Q:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msub>
+                            <mi>q</mi>
+                            <mrow>
+                                <mi>i</mi>
+                                <mi>j</mi>
+                            </mrow>
+                        </msub>
+                        <mo>=</mo>
+                        <munder>
+                            <mi>lim</mi>
+                            <mrow>
+                                <mi>h</mi>
+                                <mo>→</mo>
+                                <mn>0</mn>
+                            </mrow>
+                        </munder>
+                        <mfrac>
+                            <mrow>
+                                <msub>
+                                    <mi>p</mi>
+                                    <mrow>
+                                        <mi>i</mi>
+                                        <mi>j</mi>
+                                    </mrow>
+                                </msub>
+                                <mo>(</mo>
+                                <mi>h</mi>
+                                <mo>)</mo>
+                            </mrow>
+                            <mi>h</mi>
+                        </mfrac>
+                        <mo>,</mo>
+                        <mi>i</mi>
+                        <mo>≠</mo>
+                        <mi>j</mi>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="canvas-container">
+                <h3>📊 Diagrama de Transição de Estados</h3>
+                <canvas id="canvas4" width="800" height="400"></canvas>
+            </div>
+
+            <h2> Equações de Kolmogorov</h2>
+
+            <div class="formula">
+                <h3>Equações Diretas (Forward):</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msup>
+                            <mi>P</mi>
+                            <mo>′</mo>
+                        </msup>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mi>Q</mi>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="formula">
+                <h3>Equações Reversas (Backward):</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msup>
+                            <mi>P</mi>
+                            <mo>′</mo>
+                        </msup>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>Q</mi>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="example-box">
+                <h3>🏥 Exemplo: Sistema de Dois Servidores</h3>
+                <p>Considere um sistema com dois servidores onde:</p>
+                <ul class="emoji-list">
+                    <li> Taxa de chegada: λ = 2 clientes/hora</li>
+                    <li> Taxa de serviço: μ = 3 clientes/hora por servidor</li>
+                    <li>👥 Estados: 0, 1, 2 clientes no sistema</li>
+                </ul>
+            </div>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>Q</mi>
+                        <mo>=</mo>
+                        <mfenced open="[" close="]">
+                            <mtable>
+                                <mtr>
+                                    <mtd><mo>−</mo><mn>2</mn></mtd>
+                                    <mtd><mn>2</mn></mtd>
+                                    <mtd><mn>0</mn></mtd>
+                                </mtr>
+                                <mtr>
+                                    <mtd><mn>3</mn></mtd>
+                                    <mtd><mo>−</mo><mn>5</mn></mtd>
+                                    <mtd><mn>2</mn></mtd>
+                                </mtr>
+                                <mtr>
+                                    <mtd><mn>0</mn></mtd>
+                                    <mtd><mn>6</mn></mtd>
+                                    <mtd><mo>−</mo><mn>6</mn></mtd>
+                                </mtr>
+                            </mtable>
+                        </mfenced>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 4</h3>
+                <p>Para o sistema acima, encontre as probabilidades de estado estacionário π₀, π₁, π₂ resolvendo πQ = 0 com Σπᵢ = 1.</p>
+                <button class="btn" onclick="toggleAnswer('ans4')">Ver Resposta</button>
+                <div id="ans4" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    πQ = 0 gera:<br>
+                    -2π₀ + 3π₁ = 0 → π₁ = (2/3)π₀<br>
+                    2π₀ - 5π₁ + 6π₂ = 0<br>
+                    2π₁ - 6π₂ = 0 → π₂ = (1/3)π₁ = (2/9)π₀<br>
+                    π₀ + π₁ + π₂ = 1<br>
+                    π₀(1 + 2/3 + 2/9) = 1<br>
+                    π₀ = 9/17 ≈ 0.529<br>
+                    π₁ = 6/17 ≈ 0.353<br>
+                    π₂ = 2/17 ≈ 0.118<br>
+                    <strong>Resposta: π = [0.529, 0.353, 0.118]</strong> ✅
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(3)">← Anterior</button>
+                <button class="btn" onclick="showChapter(5)">Próximo: Filas em Equilíbrio →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 5 -->
+        <div class="chapter" id="chapter-5">
+            <h1>5. Filas Markovianas em Equilíbrio ⚖️</h1>
+
+            <div class="concept-box">
+                <h3>🎯 Condição de Equilíbrio</h3>
+                <p>Um sistema de filas está em <strong>equilíbrio</strong> (estado estacionário) quando as probabilidades de estado não mudam com o tempo:</p>
+            </div>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <munder>
+                            <mi>lim</mi>
+                            <mrow>
+                                <mi>t</mi>
+                                <mo>→</mo>
+                                <mo>∞</mo>
+                            </mrow>
+                        </munder>
+                        <mi>P</mi>
+                        <mo>[</mo>
+                        <mi>X</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>j</mi>
+                        <mo>]</mo>
+                        <mo>=</mo>
+                        <msub>
+                            <mi>π</mi>
+                            <mi>j</mi>
+                        </msub>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="canvas-container">
+                <h3>📊 Evolução para o Equilíbrio</h3>
+                <canvas id="canvas5" width="800" height="400"></canvas>
+            </div>
+
+            <h2>📐 Equações de Equilíbrio</h2>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>π</mi>
+                        <mi>Q</mi>
+                        <mo>=</mo>
+                        <mn>0</mn>
+                        <mo>,</mo>
+                        <mstyle displaystyle="true">
+                            <munderover>
+                                <mo>∑</mo>
+                                <mrow>
+                                    <mi>i</mi>
+                                    <mo>=</mo>
+                                    <mn>0</mn>
+                                </mrow>
+                                <mo>∞</mo>
+                            </munderover>
+                        </mstyle>
+                        <msub>
+                            <mi>π</mi>
+                            <mi>i</mi>
+                        </msub>
+                        <mo>=</mo>
+                        <mn>1</mn>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="example-box">
+                <h3>🏪 Exemplo: Loja com Caixa Único</h3>
+                <p>Em uma loja, clientes chegam segundo um processo de Poisson com taxa λ = 10/hora e são atendidos com tempo exponencial de média 5 minutos (μ = 12/hora).</p>
+                <p><strong>Fator de utilização:</strong>  = λ/μ = 10/12 = 5/6 ≈ 0.833</p>
+            </div>
+
+            <div class="formula">
+                <h3>Distribuição Geométrica:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msub>
+                            <mi>π</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>=</mo>
+                        <mo>(</mo>
+                        <mn>1</mn>
+                        <mo>−</mo>
+                        <mi>ρ</mi>
+                        <mo>)</mo>
+                        <msup>
+                            <mi>ρ</mi>
+                            <mi>n</mi>
+                        </msup>
+                        <mo>,</mo>
+                        <mi>n</mi>
+                        <mo>≥</mo>
+                        <mn>0</mn>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="exercise-box">
+                <h3> Exercício 5</h3>
+                <p>Para o sistema acima, calcule:</p>
+                <ol>
+                    <li>Probabilidade de não haver clientes na loja</li>
+                    <li>Probabilidade de haver pelo menos 3 clientes</li>
+                </ol>
+                <button class="btn" onclick="toggleAnswer('ans5')">Ver Resposta</button>
+                <div id="ans5" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    1. π₀ = 1 - ρ = 1 - 5/6 = 1/6 ≈ 0.167 (16.7%)<br>
+                    2. P(N ≥ 3) = 1 - P(N < 3) = 1 - (π₀ + π₁ + π₂)<br>
+                    π₁ = (1/6)(5/6) = 5/36<br>
+                    π₂ = (1/6)(5/6)² = 25/216<br>
+                    P(N ≥ 3) = 1 - (36/216 + 30/216 + 25/216) = 1 - 91/216<br>
+                    P(N ≥ 3) = 125/216 ≈ 0.579 (57.9%) 📊
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(4)">← Anterior</button>
+                <button class="btn" onclick="showChapter(6)">Próximo: Processos de Renovação →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 6 -->
+        <div class="chapter" id="chapter-6">
+            <h1>6. Processos de Renovação 🔄</h1>
+
+            <div class="concept-box">
+                <h3>📌 Definição</h3>
+                <p>Um <strong>processo de renovação</strong> é um processo de contagem {N(t), t ≥ 0} onde os tempos entre eventos consecutivos são variáveis aleatórias independentes e identicamente distribuídas (i.i.d.).</p>
+            </div>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>N</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>max</mi>
+                        <mo>{</mo>
+                        <mi>n</mi>
+                        <mo>:</mo>
+                        <msub>
+                            <mi>S</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>≤</mo>
+                        <mi>t</mi>
+                        <mo>}</mo>
+                    </mrow>
+                </math>
+                <p>Onde Sₙ = X₁ + X₂ + ... + Xₙ é o tempo do n-ésimo evento</p>
+            </div>
+
+            <div class="canvas-container">
+                <h3>📊 Processo de Renovação - Simulação</h3>
+                <canvas id="canvas6" width="800" height="400"></canvas>
+            </div>
+
+            <h2>📐 Teorema da Renovação</h2>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <munder>
+                            <mi>lim</mi>
+                            <mrow>
+                                <mi>t</mi>
+                                <mo>→</mo>
+                                <mo>∞</mo>
+                            </mrow>
+                        </munder>
+                        <mfrac>
+                            <mrow>
+                                <mi>N</mi>
+                                <mo>(</mo>
+                                <mi>t</mi>
+                                <mo>)</mo>
+                            </mrow>
+                            <mi>t</mi>
+                        </mfrac>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mn>1</mn>
+                            <mi>E</mi>
+                            <mo>[</mo>
+                            <mi>X</mi>
+                            <mo>]</mo>
+                        </mfrac>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mn>1</mn>
+                            <mi>μ</mi>
+                        </mfrac>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="example-box">
+                <h3>💡 Exemplo: Substituição de Lâmpadas</h3>
+                <p>Uma lâmpada dura em média 1000 horas (distribuição exponencial). Qual a taxa de substituição a longo prazo?</p>
+                <p><strong>Resposta:</strong> 1/1000 = 0.001 lâmpadas/hora ou 1 lâmpada a cada 1000 horas 💡</p>
+            </div>
+
+            <div class="formula">
+                <h3>Função de Renovação:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>M</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>E</mi>
+                        <mo>[</mo>
+                        <mi>N</mi>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                        <mo>]</mo>
+                        <mo>=</mo>
+                        <mstyle displaystyle="true">
+                            <munderover>
+                                <mo>∑</mo>
+                                <mrow>
+                                    <mi>n</mi>
+                                    <mo>=</mo>
+                                    <mn>1</mn>
+                                </mrow>
+                                <mo>∞</mo>
+                            </munderover>
+                        </mstyle>
+                        <msub>
+                            <mi>F</mi>
+                            <mi>n</mi>
+                        </msub>
+                        <mo>(</mo>
+                        <mi>t</mi>
+                        <mo>)</mo>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 6</h3>
+                <p>Se o tempo entre falhas de uma máquina segue uma distribuição uniforme entre 8 e 12 horas, qual o número esperado de falhas em 100 horas?</p>
+                <button class="btn" onclick="toggleAnswer('ans6')">Ver Resposta</button>
+                <div id="ans6" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    E[X] = (8 + 12)/2 = 10 horas<br>
+                    Pelo teorema da renovação:<br>
+                    M(100) ≈ 100/E[X] = 100/10 = 10 falhas<br>
+                    <strong>Resposta: Aproximadamente 10 falhas em 100 horas</strong> 🔧
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(5)">← Anterior</button>
+                <button class="btn" onclick="showChapter(7)">Próximo: Elementos de Filas →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 7 -->
+        <div class="chapter" id="chapter-7">
+            <h1>7. Elementos de um Sistema de Filas 🎪</h1>
+
+            <div class="concept-box">
+                <h3>🏗️ Componentes Fundamentais</h3>
+                <p>Todo sistema de filas possui os seguintes elementos:</p>
+            </div>
+
+            <div class="queue-diagram">
+                <div class="queue-item">👥<br>Chegadas</div>
+                <div class="arrow">→</div>
+                <div class="queue-item">⏳<br>Fila de<br>Espera</div>
+                <div class="arrow">→</div>
+                <div class="queue-item">️<br>Serviço</div>
+                <div class="arrow">→</div>
+                <div class="queue-item">✅<br>Saídas</div>
+            </div>
+
+            <h2>📊 Notação de Kendall</h2>
+            
+            <div class="formula">
+                <p><strong>A/B/s/K/m/Z</strong></p>
+                <ul style="text-align: left; display: inline-block;">
+                    <li>A = Distribuição das chegadas</li>
+                    <li>B = Distribuição do serviço</li>
+                    <li>s = Número de servidores</li>
+                    <li>K = Capacidade do sistema</li>
+                    <li>m = Tamanho da população</li>
+                    <li>Z = Disciplina da fila</li>
+                </ul>
+            </div>
+
+            <div class="example-box">
+                <h3> Distribuições Comuns</h3>
+                <ul class="emoji-list">
+                    <li><strong>M</strong> = Markoviana (Exponencial/Poisson) 🎲</li>
+                    <li><strong>D</strong> = Determinística (constante) </li>
+                    <li><strong>G</strong> = Geral (qualquer distribuição) </li>
+                    <li><strong>E</strong> = Erlang de ordem k 🔢</li>
+                </ul>
+            </div>
+
+            <div class="canvas-container">
+                <h3> Sistema M/M/1 - Visualização</h3>
+                <canvas id="canvas7" width="800" height="400"></canvas>
+            </div>
+
+            <h2>📐 Medidas de Desempenho</h2>
+
+            <div class="formula">
+                <ul style="text-align: left;">
+                    <li><strong>L</strong> = Número médio de clientes no sistema</li>
+                    <li><strong>Lq</strong> = Número médio na fila</li>
+                    <li><strong>W</strong> = Tempo médio no sistema</li>
+                    <li><strong>Wq</strong> = Tempo médio na fila</li>
+                    <li><strong>ρ</strong> = Fator de utilização = λ/μ</li>
+                </ul>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 7</h3>
+                <p>Classifique o seguinte sistema: "Um banco com 3 caixas, chegadas Poisson, tempo de serviço exponencial, fila ilimitada e população infinita."</p>
+                <button class="btn" onclick="toggleAnswer('ans7')">Ver Resposta</button>
+                <div id="ans7" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resposta:</strong> M/M/3/∞/∞/FIFO ou simplesmente M/M/3 🏦
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(6)">← Anterior</button>
+                <button class="btn" onclick="showChapter(8)">Próximo: Modelos M/M/1 →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 8 -->
+        <div class="chapter" id="chapter-8">
+            <h1>8. As Filas M/G/1, M/M/1, M/M/s e M/M/∞ 🎰</h1>
+
+            <div class="concept-box">
+                <h3>🎯 Fila M/M/1</h3>
+                <p>O modelo mais básico e importante! Características:</p>
+                <ul class="emoji-list">
+                    <li>Chegadas: Processo de Poisson (taxa λ)</li>
+                    <li>Serviço: Exponencial (taxa μ)</li>
+                    <li>1 servidor</li>
+                    <li>Fila ilimitada</li>
+                    <li>Disciplina: FIFO</li>
+                </ul>
+            </div>
+
+            <div class="formula">
+                <h3>Fórmulas Fundamentais M/M/1:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>ρ</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mi>λ</mi>
+                            <mi>μ</mi>
+                        </mfrac>
+                        <mo>&lt;</mo>
+                        <mn>1</mn>
+                    </mrow>
+                </math>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>L</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mi>ρ</mi>
+                            <mrow>
+                                <mn>1</mn>
+                                <mo>−</mo>
+                                <mi>ρ</mi>
+                            </mrow>
+                        </mfrac>
+                        <mo>,</mo>
+                        <mspace width="1em"/>
+                        <mi>W</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mn>1</mn>
+                            <mrow>
+                                <mi>μ</mi>
+                                <mo>−</mo>
+                                <mi>λ</mi>
+                            </mrow>
+                        </mfrac>
+                    </mrow>
+                </math>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msub>
+                            <mi>L</mi>
+                            <mi>q</mi>
+                        </msub>
+                        <mo>=</mo>
+                        <mfrac>
+                            <msup>
+                                <mi>ρ</mi>
+                                <mn>2</mn>
+                            </msup>
+                            <mrow>
+                                <mn>1</mn>
+                                <mo>−</mo>
+                                <mi>ρ</mi>
+                            </mrow>
+                        </mfrac>
+                        <mo>,</mo>
+                        <mspace width="1em"/>
+                        <msub>
+                            <mi>W</mi>
+                            <mi>q</mi>
+                        </msub>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mi>ρ</mi>
+                            <mrow>
+                                <mi>μ</mi>
+                                <mo>−</mo>
+                                <mi>λ</mi>
+                            </mrow>
+                        </mfrac>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="canvas-container">
+                <h3>📊 Comportamento M/M/1 vs ρ</h3>
+                <canvas id="canvas8" width="800" height="400"></canvas>
+            </div>
+
+            <h2>🔄 Fórmula de Pollaczek-Khinchine (M/G/1)</h2>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msub>
+                            <mi>L</mi>
+                            <mi>q</mi>
+                        </msub>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <msup>
+                                    <mi>λ</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <msup>
+                                    <mi>σ</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>+</mo>
+                                <msup>
+                                    <mi>ρ</mi>
+                                    <mn>2</mn>
+                                </msup>
+                            </mrow>
+                            <mrow>
+                                <mn>2</mn>
+                                <mo>(</mo>
+                                <mn>1</mn>
+                                <mo>−</mo>
+                                <mi>ρ</mi>
+                                <mo>)</mo>
+                            </mrow>
+                        </mfrac>
+                    </mrow>
+                </math>
+                <p>Onde σ² é a variância do tempo de serviço</p>
+            </div>
+
+            <h2>👥 Sistema M/M/s (Múltiplos Servidores)</h2>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mn>0</mn>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <msup>
+                            <mfenced open="[" close="]">
+                                <mrow>
+                                    <mstyle displaystyle="true">
+                                        <munderover>
+                                            <mo>∑</mo>
+                                            <mrow>
+                                                <mi>n</mi>
+                                                <mo>=</mo>
+                                                <mn>0</mn>
+                                            </mrow>
+                                            <mrow>
+                                                <mi>s</mi>
+                                                <mo>−</mo>
+                                                <mn>1</mn>
+                                            </mrow>
+                                        </munderover>
+                                    </mstyle>
+                                    <mfrac>
+                                        <msup>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <mi>λ</mi>
+                                                <mo>/</mo>
+                                                <mi>μ</mi>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mi>n</mi>
+                                        </msup>
+                                        <mrow>
+                                            <mi>n</mi>
+                                            <mo>!</mo>
+                                        </mrow>
+                                    </mfrac>
+                                    <mo>+</mo>
+                                    <mfrac>
+                                        <msup>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <mi>λ</mi>
+                                                <mo>/</mo>
+                                                <mi>μ</mi>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mi>s</mi>
+                                        </msup>
+                                        <mrow>
+                                            <mi>s</mi>
+                                            <mo>!</mo>
+                                        </mrow>
+                                    </mfrac>
+                                    <mfrac>
+                                        <mn>1</mn>
+                                        <mrow>
+                                            <mn>1</mn>
+                                            <mo>−</mo>
+                                            <mi>ρ</mi>
+                                        </mrow>
+                                    </mfrac>
+                                </mrow>
+                            </mfenced>
+                            <mrow>
+                                <mo>−</mo>
+                                <mn>1</mn>
+                            </mrow>
+                        </msup>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="example-box">
+                <h3>🏥 Exemplo Prático M/M/1</h3>
+                <p>Em um posto de saúde, pacientes chegam a uma taxa de 4/hora (λ=4) e são atendidos em média em 10 minutos (μ=6/hora).</p>
+                <p><strong>Cálculos:</strong></p>
+                <ul>
+                    <li>ρ = 4/6 = 2/3 ≈ 0.667</li>
+                    <li>L = (2/3)/(1-2/3) = 2 pacientes</li>
+                    <li>W = 1/(6-4) = 0.5 horas = 30 minutos</li>
+                    <li>Lq = (4/9)/(1/3) = 4/3 ≈ 1.33 pacientes na fila</li>
+                    <li>Wq = (2/3)/(6-4) = 1/3 hora = 20 minutos</li>
+                </ul>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 8</h3>
+                <p>Em um sistema M/M/2 com λ=10/hora e μ=8/hora por servidor, calcule ρ e verifique se o sistema é estável.</p>
+                <button class="btn" onclick="toggleAnswer('ans8')">Ver Resposta</button>
+                <div id="ans8" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    ρ = λ/(s×μ) = 10/(2×8) = 10/16 = 0.625<br>
+                    Como ρ < 1, o sistema é <strong>estável</strong> ✅<br>
+                    O sistema opera a 62.5% da capacidade total.
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(7)">← Anterior</button>
+                <button class="btn" onclick="showChapter(9)">Próximo: Redes de Filas →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 9 -->
+        <div class="chapter" id="chapter-9">
+            <h1>9. Redes de Filas - Abertas e Fechadas 🌐</h1>
+
+            <div class="concept-box">
+                <h3>🔗 Definição de Rede de Filas</h3>
+                <p>Uma <strong>rede de filas</strong> é um conjunto de nós (serviços) interconectados onde clientes podem se mover entre os nós seguindo regras de roteamento.</p>
+            </div>
+
+            <div class="canvas-container">
+                <h3>📊 Rede de Filas Aberta - Jackson Network</h3>
+                <canvas id="canvas9" width="800" height="400"></canvas>
+            </div>
+
+            <h2> Teorema de Jackson (Redes Abertas)</h2>
+
+            <div class="formula">
+                <p>Para uma rede com J nós, as equações de tráfego são:</p>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <msub>
+                            <mi>λ</mi>
+                            <mi>j</mi>
+                        </msub>
+                        <mo>=</mo>
+                        <msub>
+                            <mi>γ</mi>
+                            <mi>j</mi>
+                        </msub>
+                        <mo>+</mo>
+                        <mstyle displaystyle="true">
+                            <munderover>
+                                <mo>∑</mo>
+                                <mrow>
+                                    <mi>i</mi>
+                                    <mo>=</mo>
+                                    <mn>1</mn>
+                                </mrow>
+                                <mi>J</mi>
+                            </munderover>
+                        </mstyle>
+                        <msub>
+                            <mi>λ</mi>
+                            <mi>i</mi>
+                        </msub>
+                        <msub>
+                            <mi>p</mi>
+                            <mrow>
+                                <mi>i</mi>
+                                <mi>j</mi>
+                            </mrow>
+                        </msub>
+                    </mrow>
+                </math>
+                <p>Onde γⱼ = taxa externa de chegada no nó j</p>
+            </div>
+
+            <div class="example-box">
+                <h3>🏭 Exemplo: Sistema de Produção</h3>
+                <p>Considere uma fábrica com 3 estações:</p>
+                <ul class="emoji-list">
+                    <li>📥 Estação 1: Montagem inicial (λ₁ = 10/hora)</li>
+                    <li>🔧 Estação 2: Acabamento (70% vão para cá)</li>
+                    <li>✅ Estação 3: Inspeção final (30% vão direto)</li>
+                    <li>🔄 20% da inspeção retornam para acabamento</li>
+                </ul>
+            </div>
+
+            <h2>🔄 Redes de Filas Fechadas (Gordon-Newell)</h2>
+
+            <div class="formula">
+                <p>Em redes fechadas com N clientes circulando:</p>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <msub>
+                            <mi>n</mi>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>,</mo>
+                        <mo>…</mo>
+                        <mo>,</mo>
+                        <msub>
+                            <mi>n</mi>
+                            <mi>J</mi>
+                        </msub>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mn>1</mn>
+                            <mrow>
+                                <mi>G</mi>
+                                <mo>(</mo>
+                                <mi>N</mi>
+                                <mo>)</mo>
+                            </mrow>
+                        </mfrac>
+                        <mstyle displaystyle="true">
+                            <munderover>
+                                <mo>∏</mo>
+                                <mrow>
+                                    <mi>j</mi>
+                                    <mo>=</mo>
+                                    <mn>1</mn>
+                                </mrow>
+                                <mi>J</mi>
+                            </munderover>
+                        </mstyle>
+                        <msup>
+                            <mi>ρ</mi>
+                            <msub>
+                                <mi>n</mi>
+                                <mi>j</mi>
+                            </msub>
+                        </msup>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 9</h3>
+                <p>Em uma rede com 2 nós, chegadas externas λ₁=5, λ₂=3. Probabilidades de roteamento: p₁₂=0.4, p₂₁=0.3. Calcule as taxas totais λ₁ e λ₂.</p>
+                <button class="btn" onclick="toggleAnswer('ans9')">Ver Resposta</button>
+                <div id="ans9" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    λ₁ = 5 + 0.3λ₂<br>
+                    λ₂ = 3 + 0.4λ₁<br>
+                    Substituindo:<br>
+                    λ₁ = 5 + 0.3(3 + 0.4λ₁)<br>
+                    λ₁ = 5 + 0.9 + 0.12λ₁<br>
+                    0.88λ₁ = 5.9<br>
+                    λ₁ ≈ 6.70<br>
+                    λ₂ = 3 + 0.4(6.70) ≈ 5.68<br>
+                    <strong>Resposta: λ₁ ≈ 6.70, λ₂ ≈ 5.68</strong> 🔄
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(8)">← Anterior</button>
+                <button class="btn" onclick="showChapter(10)">Próximo: Análise Operacional →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 10 -->
+        <div class="chapter" id="chapter-10">
+            <h1>10. Introdução à Análise Operacional 📊</h1>
+
+            <div class="concept-box">
+                <h3>🎯 Lei de Little</h3>
+                <p>A relação fundamental da teoria de filas:</p>
+            </div>
+
+            <div class="formula">
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>L</mi>
+                        <mo>=</mo>
+                        <mi>λ</mi>
+                        <mi>W</mi>
+                    </mrow>
+                </math>
+                <p><em>"O número médio no sistema = taxa de chegada × tempo médio no sistema"</em></p>
+            </div>
+
+            <div class="canvas-container">
+                <h3>📈 Visualização da Lei de Little</h3>
+                <canvas id="canvas10" width="800" height="400"></canvas>
+            </div>
+
+            <h2>🔍 Análise de Filas Isoladas</h2>
+
+            <div class="example-box">
+                <h3>📋 Métricas de Desempenho</h3>
+                <ul class="emoji-list">
+                    <li><strong>Throughput (X)</strong>: Taxa de saída do sistema</li>
+                    <li><strong>Utilização (U)</strong>: Fração de tempo ocupado</li>
+                    <li><strong>Tempo de Resposta (R)</strong>: Tempo total no sistema</li>
+                    <li><strong>Demanda (D)</strong>: Tempo total de serviço necessário</li>
+                </ul>
+            </div>
+
+            <div class="formula">
+                <h3>Lei da Utilização:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>U</mi>
+                        <mo>=</mo>
+                        <mi>X</mi>
+                        <mi>D</mi>
+                        <mo>=</mo>
+                        <mi>λ</mi>
+                        <mo>/</mo>
+                        <mi>μ</mi>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="formula">
+                <h3>Lei do Tempo de Resposta:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>R</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mi>S</mi>
+                            <mrow>
+                                <mn>1</mn>
+                                <mo>−</mo>
+                                <mi>U</mi>
+                            </mrow>
+                        </mfrac>
+                    </mrow>
+                </math>
+                <p>Onde S é o tempo de serviço</p>
+            </div>
+
+            <h2> Análise de Redes de Filas</h2>
+
+            <div class="example-box">
+                <h3>🖥️ Exemplo: Sistema Cliente-Servidor</h3>
+                <p>Um sistema com:</p>
+                <ul>
+                    <li> 100 usuários (think time Z = 10s)</li>
+                    <li>💻 Servidor com D = 0.5s por transação</li>
+                    <li> Throughput máximo: X₀ = N/(D+Z) = 100/10.5 ≈ 9.52 trans/s</li>
+                    <li>️ Tempo de resposta mínimo: R₀ = D = 0.5s</li>
+                </ul>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 10</h3>
+                <p>Em um sistema observado por 1 hora, foram processadas 3600 transações. O tempo médio de resposta foi 2 segundos. Qual o número médio de transações no sistema?</p>
+                <button class="btn" onclick="toggleAnswer('ans10')">Ver Resposta</button>
+                <div id="ans10" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    λ = 3600 trans/hora = 1 trans/segundo<br>
+                    W = 2 segundos<br>
+                    Pela Lei de Little:<br>
+                    L = λ × W = 1 × 2 = 2 transações<br>
+                    <strong>Resposta: 2 transações em média no sistema</strong> 📊
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(9)">← Anterior</button>
+                <button class="btn" onclick="showChapter(11)">Próximo: Planeamento →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 11 -->
+        <div class="chapter" id="chapter-11">
+            <h1>11. Conceito de Planeamento de Capacidade 📈</h1>
+
+            <div class="concept-box">
+                <h3> Definição</h3>
+                <p><strong>Planeamento de capacidade</strong> é o processo de determinar os recursos necessários (servidores, largura de banda, etc.) para atender à demanda atual e futura mantendo níveis aceitáveis de desempenho.</p>
+            </div>
+
+            <div class="canvas-container">
+                <h3> Curva de Crescimento de Demanda vs Capacidade</h3>
+                <canvas id="canvas11" width="800" height="400"></canvas>
+            </div>
+
+            <h2>📐 Métricas de Planeamento</h2>
+
+            <div class="formula">
+                <h3>Fator de Carga:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>ρ</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mi>λ</mi>
+                            <mrow>
+                                <mi>s</mi>
+                                <mi>μ</mi>
+                            </mrow>
+                        </mfrac>
+                    </mrow>
+                </math>
+            </div>
+
+            <div class="example-box">
+                <h3> Cenários de Planeamento</h3>
+                <ul class="emoji-list">
+                    <li><strong>Cenário Base:</strong> Demanda atual conhecida</li>
+                    <li><strong>Cenário de Crescimento:</strong> Projeção de aumento (ex: 20%/ano)</li>
+                    <li><strong>Cenário de Pico:</strong> Demanda máxima esperada</li>
+                    <li><strong>Cenário de Contingência:</strong> Falhas e recuperação</li>
+                </ul>
+            </div>
+
+            <h2> Análise What-If</h2>
+
+            <div class="interactive-demo">
+                <h3>🧪 Simulador de Capacidade</h3>
+                <div class="control-panel">
+                    <label>Taxa de Chegada (λ): <span id="val-lambda">5</span>/hora</label>
+                    <input type="range" id="lambda" min="1" max="20" value="5" oninput="updateSimulation()">
+                    
+                    <label>Taxa de Serviço (μ): <span id="val-mu">8</span>/hora</label>
+                    <input type="range" id="mu" min="3" max="25" value="8" oninput="updateSimulation()">
+                    
+                    <label>Número de Servidores (s): <span id="val-servers">1</span></label>
+                    <input type="range" id="servers" min="1" max="5" value="1" oninput="updateSimulation()">
+                </div>
+                
+                <div class="stats" id="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-rho">0.625</div>
+                        <div class="stat-label">Utilização (ρ)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-L">1.67</div>
+                        <div class="stat-label">Clientes no Sistema (L)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-W">0.33</div>
+                        <div class="stat-label">Tempo Médio (W) horas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-stable">✅</div>
+                        <div class="stat-label">Estabilidade</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 11</h3>
+                <p>Um data center processa 1000 requisições/hora com tempo médio de 2 segundos. Planeja-se um aumento de 50% na demanda. Quantos servidores adicionais são necessários se cada servidor processa 400 req/hora?</p>
+                <button class="btn" onclick="toggleAnswer('ans11')">Ver Resposta</button>
+                <div id="ans11" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    Demanda atual: 1000 req/hora<br>
+                    Demanda futura: 1000 × 1.5 = 1500 req/hora<br>
+                    Capacidade por servidor: 400 req/hora<br>
+                    Servidores necessários: 1500/400 = 3.75 → 4 servidores<br>
+                    Servidores atuais: 1000/400 = 2.5 → 3 servidores<br>
+                    <strong>Resposta: Adicionar 1 servidor</strong> (total de 4) ️
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(10)">← Anterior</button>
+                <button class="btn" onclick="showChapter(12)">Próximo: Aplicações →</button>
+            </div>
+        </div>
+
+        <!-- Capítulo 12 -->
+        <div class="chapter" id="chapter-12">
+            <h1>12. Aplicação em Redes de Computadores 🌐</h1>
+
+            <div class="concept-box">
+                <h3>💻 Teoria de Filas em Redes</h3>
+                <p>A teoria de filas é essencial para analisar e projetar:</p>
+                <ul class="emoji-list">
+                    <li>🌐 Redes de computadores e internet</li>
+                    <li>📡 Sistemas de telecomunicações</li>
+                    <li>🔗 Protocolos de múltiplo acesso</li>
+                    <li>📱 Redes sem fio (WiFi, 5G)</li>
+                </ul>
+            </div>
+
+            <div class="canvas-container">
+                <h3>📊 Modelo de Router com Múltiplas Filas</h3>
+                <canvas id="canvas12" width="800" height="400"></canvas>
+            </div>
+
+            <h2>📡 Sistemas de Múltiplo Acesso</h2>
+
+            <div class="example-box">
+                <h3> ALOHA e CSMA/CD</h3>
+                <p><strong>ALOHA Puro:</strong></p>
+                <ul>
+                    <li>Throughput máximo: S = Ge^(-2G)</li>
+                    <li>Máximo em G=0.5: S_max ≈ 0.184 (18.4%)</li>
+                </ul>
+                <p><strong>CSMA/CD (Ethernet):</strong></p>
+                <ul>
+                    <li>Throughput muito superior</li>
+                    <li>Evita colisões detectando portadora</li>
+                </ul>
+            </div>
+
+            <div class="formula">
+                <h3>Fórmula de Erlang-B (Perda):</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>B</mi>
+                        <mo>(</mo>
+                        <mi>s</mi>
+                        <mo>,</mo>
+                        <mi>A</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <msup>
+                                    <mi>A</mi>
+                                    <mi>s</mi>
+                                </msup>
+                                <mo>/</mo>
+                                <mi>s</mi>
+                                <mo>!</mo>
+                            </mrow>
+                            <mrow>
+                                <mstyle displaystyle="true">
+                                    <munderover>
+                                        <mo>∑</mo>
+                                        <mrow>
+                                            <mi>k</mi>
+                                            <mo>=</mo>
+                                            <mn>0</mn>
+                                        </mrow>
+                                        <mi>s</mi>
+                                    </munderover>
+                                </mstyle>
+                                <msup>
+                                    <mi>A</mi>
+                                    <mi>k</mi>
+                                </msup>
+                                <mo>/</mo>
+                                <mi>k</mi>
+                                <mo>!</mo>
+                            </mrow>
+                        </mfrac>
+                    </mrow>
+                </math>
+                <p>Onde A = λ/μ (tráfego em Erlangs)</p>
+            </div>
+
+            <div class="example-box">
+                <h3>🌐 Exemplo: Dimensionamento de Links</h3>
+                <p>Um link de internet deve atender:</p>
+                <ul>
+                    <li>📊 1000 usuários</li>
+                    <li>📤 Cada usuário gera 0.01 Erlangs</li>
+                    <li>🎯 Probabilidade de bloqueio: 1%</li>
+                </ul>
+                <p><strong>Solução:</strong> Usar fórmula de Erlang-B iterativamente para encontrar s tal que B(s, 10) ≤ 0.01</p>
+            </div>
+
+            <h2>📱 Redes de Filas em Sistemas Distribuídos</h2>
+
+            <div class="formula">
+                <h3>Lei de Amdahl:</h3>
+                <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                    <mrow>
+                        <mi>S</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mn>1</mn>
+                            <mrow>
+                                <mo>(</mo>
+                                <mn>1</mn>
+                                <mo>−</mo>
+                                <mi>p</mi>
+                                <mo>)</mo>
+                                <mo>+</mo>
+                                <mi>p</mi>
+                                <mo>/</mo>
+                                <mi>N</mi>
+                            </mrow>
+                        </mfrac>
+                    </mrow>
+                </math>
+                <p>Onde p = fração paralelizável, N = número de processadores</p>
+            </div>
+
+            <div class="exercise-box">
+                <h3>📝 Exercício 12</h3>
+                <p>Em uma rede Ethernet com 100 estações, cada uma transmitindo 10 pacotes/segundo de 1000 bytes. O link tem capacidade de 100 Mbps. Qual a utilização do link?</p>
+                <button class="btn" onclick="toggleAnswer('ans12')">Ver Resposta</button>
+                <div id="ans12" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:5px;">
+                    <strong>Resolução:</strong><br>
+                    Taxa total de dados: 100 × 10 × 1000 × 8 = 8,000,000 bps<br>
+                    Capacidade do link: 100 Mbps = 100,000,000 bps<br>
+                    Utilização: ρ = 8,000,000 / 100,000,000 = 0.08 = 8%<br>
+                    <strong>Resposta: 8% de utilização</strong> ✅<br>
+                    O link está subutilizado, podendo suportar mais tráfego.
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(11)">← Anterior</button>
+                <button class="btn" onclick="showChapter(13)">Próximo: Bibliografia →</button>
+            </div>
+        </div>
+
+        <!-- Bibliografia -->
+        <div class="chapter" id="chapter-13">
+            <h1>📚 Bibliografia Recomendada</h1>
+
+            <div class="bibliografia">
+                <ul>
+                    <li><strong>MULLER, D.</strong> - Processos Estocásticos e Aplicações; Lisboa: Livraria Almedina, 2007.</li>
+                    <li><strong>KLEINROCK, L.</strong> - Queueing Systems Theory; Vol. 1 e 2. New York: John Willey & Sons, 1975.</li>
+                    <li><strong>JAIN, R.</strong> - The Art of Computer Systems Performance Analysis. New York: John Willey & Sons, Inc., 1991.</li>
+                    <li><strong>MENASCÉ, D., ALMEIDA, V. e DOWDY, L.</strong> - Capacity Planning and Performance Modeling: From Mainframes to Client-server Systems. New York: Prentice Hall, Inc., 1994.</li>
+                    <li><strong>ROSS, S.M.</strong> - Introduction to Probability Models. Academic Press, 2019.</li>
+                    <li><strong>GROSS, D. e HARRIS, C.M.</strong> - Fundamentals of Queueing Theory. Wiley, 2008.</li>
+                </ul>
+            </div>
+
+            <div class="concept-box" style="margin-top: 30px;">
+                <h3>🎓 Conclusão</h3>
+                <p>Os processos estocásticos e a teoria de filas são ferramentas fundamentais para:</p>
+                <ul class="emoji-list">
+                    <li>📊 Análise de desempenho de sistemas</li>
+                    <li>️ Dimensionamento de capacidade</li>
+                    <li>💰 Otimização de recursos</li>
+                    <li> Tomada de decisão baseada em dados</li>
+                </ul>
+                <p style="margin-top: 20px; text-align: center; font-size: 1.2em;"><strong>Bons estudos! 📖✨</strong></p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn" onclick="showChapter(12)">← Anterior</button>
+                <button class="btn" onclick="showChapter(1)">🔄 Reiniciar Curso</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Menu Toggle
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.menu-toggle').classList.toggle('active');
+            document.querySelector('.overlay').classList.toggle('active');
+        }
+
+        // Navigation
+        function showChapter(chapterNum) {
+            // Hide all chapters
+            document.querySelectorAll('.chapter').forEach(ch => {
+                ch.classList.remove('active');
+            });
+            
+            // Remove active from all links
+            document.querySelectorAll('.sidebar a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected chapter
+            document.getElementById('chapter-' + chapterNum).classList.add('active');
+            document.getElementById('link-' + chapterNum).classList.add('active');
+            
+            // Close menu on mobile
+            if (window.innerWidth <= 768) {
+                toggleMenu();
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Initialize canvas for this chapter
+            initCanvas(chapterNum);
+        }
+
+        // Toggle Answer
+        function toggleAnswer(id) {
+            const element = document.getElementById(id);
+            element.style.display = element.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Canvas Animations
+        function initCanvas(chapterNum) {
+            // Clear all canvases first
+            document.querySelectorAll('canvas').forEach(canvas => {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            });
+
+            switch(chapterNum) {
+                case 1:
+                    drawStochasticProcess();
+                    break;
+                case 2:
+                    drawWienerProcess();
+                    break;
+                case 3:
+                    drawMarkovChain();
+                    break;
+                case 4:
+                    drawContinuousTimeMarkov();
+                    break;
+                case 5:
+                    drawEquilibrium();
+                    break;
+                case 6:
+                    drawRenewalProcess();
+                    break;
+                case 7:
+                    drawQueueSystem();
+                    break;
+                case 8:
+                    drawMM1Behavior();
+                    break;
+                case 9:
+                    drawQueueNetwork();
+                    break;
+                case 10:
+                    drawLittleLaw();
+                    break;
+                case 11:
+                    drawCapacityPlanning();
+                    break;
+                case 12:
+                    drawNetworkRouter();
+                    break;
+            }
+        }
+
+        // Chapter 1: Stochastic Process Visualization
+        function drawStochasticProcess() {
+            const canvas = document.getElementById('canvas1');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 2;
+            
+            for (let path = 0; path < 5; path++) {
+                ctx.beginPath();
+                ctx.moveTo(50, 200);
+                
+                let y = 200;
+                for (let x = 50; x < 750; x += 10) {
+                    y += (Math.random() - 0.5) * 30;
+                    y = Math.max(50, Math.min(350, y));
+                    ctx.lineTo(x, y);
+                }
+                
+                ctx.strokeStyle = `hsl(${200 + path * 30}, 70%, 50%)`;
+                ctx.stroke();
+            }
+            
+            // Axes
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(50, 350);
+            ctx.lineTo(750, 350);
+            ctx.moveTo(50, 50);
+            ctx.lineTo(50, 350);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '16px Arial';
+            ctx.fillText('Tempo (t)', 700, 350);
+            ctx.fillText('X(t)', 20, 40);
+        }
+
+        // Chapter 2: Wiener Process
+        function drawWienerProcess() {
+            const canvas = document.getElementById('canvas2');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw multiple Brownian paths
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.strokeStyle = `hsl(${180 + i * 40}, 70%, ${40 + i * 10}%)`;
+                ctx.lineWidth = 3;
+                
+                let x = 50;
+                let y = 200;
+                ctx.moveTo(x, y);
+                
+                for (let t = 0; t < 700; t += 5) {
+                    x += 5;
+                    y += (Math.random() - 0.5) * 20;
+                    y = Math.max(50, Math.min(350, y));
+                    ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+            
+            // Axes
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 350);
+            ctx.lineTo(750, 350);
+            ctx.moveTo(50, 50);
+            ctx.lineTo(50, 350);
+            ctx.stroke();
+        }
+
+        // Chapter 3: Markov Chain
+        function drawMarkovChain() {
+            const canvas = document.getElementById('canvas3');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            const states = [
+                {x: 200, y: 200, label: 'Sol ☀️'},
+                {x: 600, y: 200, label: 'Chuva 🌧️'}
+            ];
+            
+            // Draw states
+            states.forEach((state, i) => {
+                ctx.beginPath();
+                ctx.arc(state.x, state.y, 60, 0, 2 * Math.PI);
+                ctx.fillStyle = i === 0 ? '#f39c12' : '#3498db';
+                ctx.fill();
+                ctx.strokeStyle = '#2c3e50';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(state.label, state.x, state.y);
+            });
+            
+            // Draw transitions
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 3;
+            
+            // Self loops
+            ctx.beginPath();
+            ctx.arc(200, 140, 40, 0.2 * Math.PI, 0.8 * Math.PI);
+            ctx.stroke();
+            ctx.fillText('0.8', 200, 110);
+            
+            ctx.beginPath();
+            ctx.arc(600, 140, 40, 1.2 * Math.PI, 1.8 * Math.PI);
+            ctx.stroke();
+            ctx.fillText('0.6', 600, 110);
+            
+            // Between states
+            ctx.beginPath();
+            ctx.moveTo(260, 200);
+            ctx.lineTo(540, 200);
+            ctx.stroke();
+            ctx.fillText('0.2', 400, 190);
+            
+            ctx.beginPath();
+            ctx.moveTo(540, 220);
+            ctx.lineTo(260, 220);
+            ctx.stroke();
+            ctx.fillText('0.4', 400, 240);
+        }
+
+        // Chapter 4: Continuous Time Markov
+        function drawContinuousTimeMarkov() {
+            const canvas = document.getElementById('canvas4');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            const states = [
+                {x: 150, y: 200, label: '0'},
+                {x: 400, y: 200, label: '1'},
+                {x: 650, y: 200, label: '2'}
+            ];
+            
+            states.forEach((state, i) => {
+                ctx.beginPath();
+                ctx.arc(state.x, state.y, 50, 0, 2 * Math.PI);
+                ctx.fillStyle = '#9b59b6';
+                ctx.fill();
+                ctx.strokeStyle = '#2c3e50';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(state.label, state.x, state.y + 8);
+            });
+            
+            // Arrows with rates
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 3;
+            
+            // 0 -> 1
+            ctx.beginPath();
+            ctx.moveTo(200, 190);
+            ctx.lineTo(350, 190);
+            ctx.stroke();
+            ctx.fillText('λ=2', 275, 180);
+            
+            // 1 -> 0
+            ctx.beginPath();
+            ctx.moveTo(350, 210);
+            ctx.lineTo(200, 210);
+            ctx.stroke();
+            ctx.fillText('μ=3', 275, 230);
+            
+            // 1 -> 2
+            ctx.beginPath();
+            ctx.moveTo(450, 190);
+            ctx.lineTo(600, 190);
+            ctx.stroke();
+            ctx.fillText('λ=2', 525, 180);
+            
+            // 2 -> 1
+            ctx.beginPath();
+            ctx.moveTo(600, 210);
+            ctx.lineTo(450, 210);
+            ctx.stroke();
+            ctx.fillText('2μ=6', 525, 230);
+        }
+
+        // Chapter 5: Equilibrium
+        function drawEquilibrium() {
+            const canvas = document.getElementById('canvas5');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw convergence to equilibrium
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(50, 300);
+            
+            for (let t = 0; t < 700; t += 5) {
+                const y = 200 + 100 * Math.exp(-t/200) * Math.cos(t/20);
+                ctx.lineTo(50 + t, y);
+            }
+            ctx.stroke();
+            
+            // Equilibrium line
+            ctx.strokeStyle = '#e74c3c';
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(50, 200);
+            ctx.lineTo(750, 200);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = '#e74c3c';
+            ctx.fillText('Estado Estacionário (π)', 600, 190);
+            
+            // Axes
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 350);
+            ctx.lineTo(750, 350);
+            ctx.moveTo(50, 50);
+            ctx.lineTo(50, 350);
+            ctx.stroke();
+        }
+
+        // Chapter 6: Renewal Process
+        function drawRenewalProcess() {
+            const canvas = document.getElementById('canvas6');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw renewal events
+            ctx.fillStyle = '#e74c3c';
+            let x = 50;
+            
+            for (let i = 0; i < 8; i++) {
+                const interval = 50 + Math.random() * 80;
+                
+                // Vertical line
+                ctx.beginPath();
+                ctx.moveTo(x, 150);
+                ctx.lineTo(x, 250);
+                ctx.lineWidth = 4;
+                ctx.strokeStyle = '#e74c3c';
+                ctx.stroke();
+                
+                // Label
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = '14px Arial';
+                ctx.fillText(`S${i}`, x - 10, 270);
+                
+                x += interval;
+            }
+            
+            // Horizontal axis
+            ctx.beginPath();
+            ctx.moveTo(50, 200);
+            ctx.lineTo(750, 200);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#2c3e50';
+            ctx.stroke();
+            
+            ctx.fillText('Tempo (t)', 700, 190);
+        }
+
+        // Chapter 7: Queue System
+        function drawQueueSystem() {
+            const canvas = document.getElementById('canvas7');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw queue
+            ctx.fillStyle = '#3498db';
+            for (let i = 0; i < 4; i++) {
+                ctx.beginPath();
+                ctx.arc(150 + i * 60, 200, 25, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${i+1}`, 150 + i * 60, 205);
+                ctx.fillStyle = '#3498db';
+            }
+            
+            // Server
+            ctx.fillStyle = '#2ecc71';
+            ctx.fillRect(400, 150, 80, 100);
+            ctx.fillStyle = 'white';
+            ctx.fillText('Servidor', 440, 205);
+            
+            // Arrow
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(380, 200);
+            ctx.lineTo(400, 200);
+            ctx.stroke();
+            
+            // Exit
+            ctx.beginPath();
+            ctx.moveTo(480, 200);
+            ctx.lineTo(550, 200);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#2ecc71';
+            ctx.beginPath();
+            ctx.arc(570, 200, 20, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        // Chapter 8: M/M/1 Behavior
+        function drawMM1Behavior() {
+            const canvas = document.getElementById('canvas8');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw L vs rho curve
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            for (let rho = 0; rho < 0.99; rho += 0.01) {
+                const L = rho / (1 - rho);
+                const x = 50 + rho * 650;
+                const y = 350 - (L / 10) * 280;
+                
+                if (rho === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // Axes
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 350);
+            ctx.lineTo(750, 350);
+            ctx.moveTo(50, 50);
+            ctx.lineTo(50, 350);
+            ctx.stroke();
+            
+            ctx.fillText('ρ (Utilização)', 650, 370);
+            ctx.fillText('L (Clientes)', 20, 40);
+            
+            // Warning zone
+            ctx.fillStyle = 'rgba(231, 76, 60, 0.2)';
+            ctx.fillRect(50 + 0.8 * 650, 50, 650 * 0.2, 300);
+            ctx.fillStyle = '#e74c3c';
+            ctx.fillText('Zona Crítica (ρ > 0.8)', 600, 100);
+        }
+
+        // Chapter 9: Queue Network
+        function drawQueueNetwork() {
+            const canvas = document.getElementById('canvas9');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw nodes
+            const nodes = [
+                {x: 150, y: 150, label: 'Nó 1'},
+                {x: 400, y: 100, label: 'Nó 2'},
+                {x: 400, y: 300, label: 'Nó 3'},
+                {x: 650, y: 200, label: 'Saída'}
+            ];
+            
+            nodes.forEach((node, i) => {
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 50, 0, 2 * Math.PI);
+                ctx.fillStyle = i < 3 ? '#9b59b6' : '#27ae60';
+                ctx.fill();
+                ctx.strokeStyle = '#2c3e50';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(node.label, node.x, node.y);
+            });
+            
+            // Draw connections
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 3;
+            
+            // External arrival
+            ctx.beginPath();
+            ctx.moveTo(50, 150);
+            ctx.lineTo(100, 150);
+            ctx.stroke();
+            
+            // Node 1 to 2
+            ctx.beginPath();
+            ctx.moveTo(195, 130);
+            ctx.lineTo(355, 115);
+            ctx.stroke();
+            
+            // Node 1 to 3
+            ctx.beginPath();
+            ctx.moveTo(195, 170);
+            ctx.lineTo(355, 285);
+            ctx.stroke();
+            
+            // Node 2 to 3
+            ctx.beginPath();
+            ctx.moveTo(400, 150);
+            ctx.lineTo(400, 250);
+            ctx.stroke();
+            
+            // Node 3 to exit
+            ctx.beginPath();
+            ctx.moveTo(450, 285);
+            ctx.lineTo(605, 215);
+            ctx.stroke();
+        }
+
+        // Chapter 10: Little's Law
+        function drawLittleLaw() {
+            const canvas = document.getElementById('canvas10');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Visual representation: Area = L, Width = W, Height = λ
+            const lambda = 100;
+            const W = 200;
+            
+            // Draw rectangle
+            ctx.fillStyle = 'rgba(52, 152, 219, 0.6)';
+            ctx.fillRect(200, 100, W, lambda);
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(200, 100, W, lambda);
+            
+            // Labels
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('L = λ × W', 450, 190);
+            
+            ctx.textAlign = 'left';
+            ctx.fillText('λ (chegadas/tempo)', 50, 150);
+            ctx.fillText('W (tempo)', 350, 320);
+            
+            // Arrows
+            ctx.beginPath();
+            ctx.moveTo(190, 100);
+            ctx.lineTo(190, 100 + lambda);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#e74c3c';
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(200, 310);
+            ctx.lineTo(200 + W, 310);
+            ctx.stroke();
+        }
+
+        // Chapter 11: Capacity Planning
+        function drawCapacityPlanning() {
+            const canvas = document.getElementById('canvas11');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw demand curve
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(50, 300);
+            
+            for (let t = 0; t < 700; t += 5) {
+                const demand = 300 - 150 * (1 - Math.exp(-t/300));
+                ctx.lineTo(50 + t, demand);
+            }
+            ctx.stroke();
+            
+            // Capacity steps
+            ctx.strokeStyle = '#27ae60';
+            ctx.lineWidth = 3;
+            
+            ctx.beginPath();
+            ctx.moveTo(50, 280);
+            ctx.lineTo(250, 280);
+            ctx.lineTo(250, 200);
+            ctx.lineTo(500, 200);
+            ctx.lineTo(500, 120);
+            ctx.lineTo(750, 120);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#e74c3c';
+            ctx.fillText('Demanda', 650, 180);
+            ctx.fillStyle = '#27ae60';
+            ctx.fillText('Capacidade', 650, 150);
+            
+            // Axes
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 350);
+            ctx.lineTo(750, 350);
+            ctx.moveTo(50, 50);
+            ctx.lineTo(50, 350);
+            ctx.stroke();
+        }
+
+        // Chapter 12: Network Router
+        function drawNetworkRouter() {
+            const canvas = document.getElementById('canvas12');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw router
+            ctx.fillStyle = '#34495e';
+            ctx.fillRect(350, 150, 100, 100);
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Router', 400, 205);
+            
+            // Input queues
+            for (let i = 0; i < 3; i++) {
+                const y = 100 + i * 80;
+                
+                // Queue
+                ctx.fillStyle = '#3498db';
+                ctx.fillRect(150, y, 150, 40);
+                ctx.fillStyle = 'white';
+                ctx.fillText(`Fila ${i+1}`, 225, y + 25);
+                
+                // Arrow to router
+                ctx.strokeStyle = '#e74c3c';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(300, y + 20);
+                ctx.lineTo(350, y + 20);
+                ctx.stroke();
+            }
+            
+            // Output
+            ctx.strokeStyle = '#27ae60';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(450, 200);
+            ctx.lineTo(650, 200);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#27ae60';
+            ctx.fillText('Saída', 600, 195);
+        }
+
+        // Simulation for Chapter 11
+        function updateSimulation() {
+            const lambda = parseInt(document.getElementById('lambda').value);
+            const mu = parseInt(document.getElementById('mu').value);
+            const s = parseInt(document.getElementById('servers').value);
+            
+            document.getElementById('val-lambda').textContent = lambda;
+            document.getElementById('val-mu').textContent = mu;
+            document.getElementById('val-servers').textContent = s;
+            
+            const rho = lambda / (s * mu);
+            const stable = rho < 1;
+            
+            let L, W;
+            if (s === 1) {
+                L = stable ? rho / (1 - rho) : '∞';
+                W = stable ? 1 / (mu - lambda) : '∞';
+            } else {
+                // Simplified M/M/s approximation
+                L = stable ? rho / (1 - rho) * 0.8 : '∞';
+                W = stable ? L / lambda : '∞';
+            }
+            
+            document.getElementById('stat-rho').textContent = rho.toFixed(3);
+            document.getElementById('stat-L').textContent = typeof L === 'number' ? L.toFixed(2) : L;
+            document.getElementById('stat-W').textContent = typeof W === 'number' ? W.toFixed(2) : W;
+            document.getElementById('stat-stable').textContent = stable ? '✅' : '❌';
+            document.getElementById('stat-stable').parentElement.style.background = stable ? 
+                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 
+                'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+        }
+
+        // Initialize
+        window.onload = function() {
+            showChapter(1);
+        };
+    </script>
+</body>
+</html>
