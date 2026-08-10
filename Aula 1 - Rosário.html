@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌍 Viagem pelos Números — Angola (Offline)</title>
+<style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    :root{
+        --cor-fundo:#aee7ff; --cor-fundo2:#e8fbff; --cor-fundo3:#fff6d8;
+        --cor-texto:#333; --cor-cartao:#fff; --cor-cartao2:#f8fbff;
+        --vermelho:#E53935; --amarelo:#FFB300; --preto:#333; --bordas:#2b2b2b;
+    }
+    body.escuro{
+        --cor-fundo:#0d1b2a; --cor-fundo2:#1b263b; --cor-fundo3:#1a1a2e;
+        --cor-texto:#e0e1dd; --cor-cartao:#1b263b; --cor-cartao2:#243447;
+    }
+    body{font-family:'Comic Sans MS','Comic Sans','Chalkboard SE',cursive;
+        background:linear-gradient(180deg,var(--cor-fundo),var(--cor-fundo2) 55%,var(--cor-fundo3));
+        color:var(--cor-texto);overflow-x:hidden;padding-bottom:40px;transition:.4s}
+    .ceu{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .ceu span{position:absolute;top:105%;animation:sobe linear infinite;opacity:.75}
+    @keyframes sobe{to{transform:translateY(-135vh) rotate(15deg)}}
+    @keyframes pula{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes baloiça{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+    @keyframes brilho{0%,100%{filter:drop-shadow(0 0 4px #FFD93D)}50%{filter:drop-shadow(0 0 14px #FFD93D)}}
+    header,nav,main,footer{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 16px}
+    header{text-align:center;padding-top:26px}
+    h1{font-size:2.2rem;color:#E53935;text-shadow:2px 2px 0 #fff,4px 4px 0 #FFB300}
+    body.escuro h1{text-shadow:2px 2px 0 #000,4px 4px 0 #FFB300}
+    .sub{font-size:1.05rem;margin:8px 0 10px}
+    .tag{display:inline-block;padding:2px 12px;border-radius:14px;color:#fff;font-weight:bold;margin:2px}
+    .tag.vermelho{background:#E53935}.tag.amarelo{background:#FFB300;color:#333}.tag.preto{background:#333}
+    .mascote{width:min(460px,94%);animation:baloiça 3.5s ease-in-out infinite}
+    .balao{display:inline-block;background:var(--cor-cartao);border:4px solid #E53935;border-radius:20px;
+        padding:10px 20px;margin:10px auto 6px;font-size:1.1rem;font-weight:bold;position:relative;
+        max-width:90%}
+    .balao::after{content:"";position:absolute;left:50%;top:-12px;width:16px;height:16px;background:var(--cor-cartao);
+        border-left:4px solid #E53935;border-top:4px solid #E53935;transform:translateX(-50%) rotate(45deg)}
+    nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px auto}
+    nav a{background:var(--cor-cartao);border:3px solid #FFB300;border-radius:30px;padding:8px 14px;
+        text-decoration:none;color:var(--cor-texto);font-weight:bold;transition:.2s}
+    nav a:hover{transform:scale(1.08) rotate(-2deg);background:#FFB300;color:#333}
+    .placar{position:fixed;top:10px;right:10px;background:#FFB300;border:3px solid #fff;border-radius:30px;
+        padding:8px 16px;font-weight:bold;z-index:60;box-shadow:0 4px 10px rgba(0,0,0,.25);color:#333}
+    .topo-bts{position:fixed;top:10px;left:10px;z-index:60;display:flex;gap:6px}
+    .topo-bts button{font-size:1.2rem;background:var(--cor-cartao);border:3px solid #E53935;border-radius:50%;
+        width:48px;height:48px;cursor:pointer;color:var(--cor-texto)}
+    section.cartao{background:var(--cor-cartao);border:4px solid var(--borda,#E53935);border-radius:26px;
+        padding:22px;margin:26px 0;box-shadow:0 10px 24px rgba(0,0,0,.12)}
+    body.escuro section.cartao{box-shadow:0 10px 24px rgba(0,0,0,.5)}
+    h2{display:inline-block;background:var(--borda,#E53935);color:#fff;padding:8px 20px;
+        border-radius:16px;margin-bottom:14px;font-size:1.4rem}
+    h3{margin:14px 0 6px;color:var(--borda,#E53935)}
+    p{margin:6px 0;line-height:1.6}
+    .img-aula{width:100%;border-radius:18px;border:4px solid var(--bordas);box-shadow:0 6px 16px rgba(0,0,0,.15);margin:10px 0}
+    .legenda{text-align:center;font-size:.95rem;color:#666;margin-top:-4px}
+    .grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-top:12px}
+    .num-card,.ord-card{background:var(--cor-cartao2);border:3px solid #E53935;border-radius:16px;
+        text-align:center;padding:10px;transition:.2s;cursor:pointer}
+    .num-card:hover,.ord-card:hover{transform:translateY(-6px) rotate(-2deg);box-shadow:0 8px 16px rgba(0,0,0,.2)}
+    .num-card .grande,.ord-card .grande{font-size:1.9rem;font-weight:bold;color:#E53935;display:block}
+    .num-card .palavra,.ord-card .palavra{display:block;font-weight:bold;color:var(--cor-texto);font-size:.95rem}
+    .num-card .emojis,.ord-card .emojis{display:block;font-size:.9rem;letter-spacing:1px;word-break:break-all;margin-top:3px}
+    .ord-card{border-color:#FFB300}
+    .ord-card .grande{color:#B8860B}
+    .fila{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0}
+    .fila div{text-align:center;font-size:2.1rem;background:var(--cor-cartao);border:3px solid #FFB300;border-radius:16px;padding:6px 12px;min-width:60px}
+    .fila small{display:block;font-size:1rem;font-weight:bold;color:#E53935}
+    .vs-wrap{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap}
+    .vs-card{flex:1;min-width:240px;border-radius:18px;padding:16px;text-align:center;color:#fff;font-size:1.05rem}
+    .vs-card h3{color:#fff}
+    .vs{align-self:center;font-size:1.4rem;font-weight:bold;background:#FFB300;border-radius:50%;
+        width:58px;height:58px;display:flex;align-items:center;justify-content:center;margin:auto;
+        border:4px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.25);color:#333}
+    ul.exemplos li{list-style:none;background:var(--cor-cartao2);border:2px solid #6BCB77;border-radius:14px;
+        padding:8px 12px;margin:8px 0;font-size:1.05rem}
+    b.verdeT{color:#2e8b57} b.roxoT{color:#B8860B} body.escuro b.roxoT{color:#FFB300}
+    .jogo{background:var(--cor-cartao2);border:3px dashed #E53935;border-radius:18px;padding:16px;margin-top:18px}
+    .botao{font-family:inherit;font-size:1rem;font-weight:bold;border:none;border-radius:30px;padding:10px 20px;
+        cursor:pointer;background:#6BCB77;color:#fff;margin:6px 4px;transition:.15s;box-shadow:0 4px 0 #4ca05b}
+    .botao:hover{transform:translateY(-2px)}
+    .botao:active{transform:translateY(3px);box-shadow:none}
+    .botao.azul{background:#4D96FF;box-shadow:0 4px 0 #3572c4}
+    .botao.roxo{background:#9B5DE5;box-shadow:0 4px 0 #7a3fc0}
+    .botao.amarelo{background:#FFB300;box-shadow:0 4px 0 #c78f00;color:#333}
+    .botao.vermelho{background:#E53935;box-shadow:0 4px 0 #9e1d1d}
+    .botao.pequeno{padding:6px 12px;font-size:.9rem}
+    .pergunta{background:var(--cor-cartao2);border:2px solid #ddd;border-radius:14px;padding:12px;margin:10px 0}
+    .opcao{display:block;width:100%;text-align:left;background:#eef7ff;border:3px solid #4D96FF;border-radius:14px;
+        padding:8px 14px;margin:6px 0;cursor:pointer;font-weight:bold;font-family:inherit;font-size:1rem;color:#333}
+    body.escuro .opcao{background:#243447;color:#e0e1dd;border-color:#4D96FF}
+    .opcao:hover{background:#dceeff}
+    body.escuro .opcao:hover{background:#2e4a66}
+    .opcao.certa{background:#d8f5dc;border-color:#6BCB77}
+    .opcao.errada{background:#ffe0e0;border-color:#FF6B6B}
+    .feedback{font-weight:bold;margin-top:8px;min-height:1.4em}
+    .bom{color:#2e8b57}.mau{color:#d33}
+    .obj{font-size:2rem;margin:2px 4px;display:inline-block;animation:pula 1.6s ease-in-out infinite}
+    input[type=number],input[type=text]{font-family:inherit;font-size:1.2rem;width:90px;padding:6px;border-radius:12px;
+        border:3px solid #E53935;text-align:center;background:var(--cor-cartao);color:var(--cor-texto)}
+    .animal{font-size:2.2rem;background:var(--cor-cartao);border:3px solid #FFB300;border-radius:16px;padding:8px 14px;
+        cursor:pointer;margin:4px;transition:.15s;font-family:inherit;color:var(--cor-texto)}
+    .animal:hover{transform:scale(1.15)}
+    .animal .pos{display:block;font-size:.95rem;color:#B8860B;font-weight:bold}
+    .trilha{display:flex;flex-wrap:wrap;gap:3px;align-items:center;background:var(--cor-cartao2);border:3px solid #B8860B;
+        border-radius:16px;padding:12px;max-height:380px;overflow:auto;margin:12px 0}
+    .trilha .num{padding:2px 5px;color:var(--cor-texto);font-size:.92rem}
+    .trilha .num.cem{font-weight:bold;color:#E53935;background:#ffe4e4;border-radius:8px}
+    body.escuro .trilha .num.cem{background:#3a1d1d}
+    .trilha .num.destaque,.trilha .lacuna.destaque{background:#FFB300;border-radius:8px;transform:scale(1.3);color:#333;animation:brilho 1.2s infinite}
+    .lacuna{width:54px;margin:1px;padding:4px;border:2px solid #B8860B;border-radius:8px;text-align:center;
+        font-family:inherit;font-weight:bold;font-size:.95rem;background:var(--cor-cartao);color:var(--cor-texto)}
+    .lacuna.ok{background:#d8f5dc;border-color:#6BCB77;color:#2e8b57}
+    .lacuna.erro{background:#ffe0e0;border-color:#FF6B6B}
+    .rima{background:#fffbe6;border:3px solid #FFB300;border-radius:18px;padding:18px;
+        font-size:1.08rem;line-height:1.8;white-space:pre-line;text-align:center}
+    ul.curios li{list-style:none;background:var(--cor-cartao2);border:2px solid #FFB300;border-radius:14px;
+        padding:10px 14px;margin:8px 0;font-size:1.05rem}
+    .ex{background:var(--cor-cartao2);border:3px solid #B8860B;border-radius:16px;padding:12px 16px;margin:10px 0;font-size:1.05rem}
+    .resposta{display:none;background:#d8f5dc;padding:2px 10px;border-radius:12px;font-weight:bold;color:#2e8b57;margin-left:8px}
+    .resposta.visivel{display:inline-block}
+    /* Medalhas */
+    .medalhas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+    .medalha{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+        flex-direction:column;font-size:2rem;background:#888;color:#fff;position:relative;opacity:.5;transition:.3s}
+    .medalha.conquistada{background:linear-gradient(135deg,#FFB300,#FFD93D);opacity:1;box-shadow:0 4px 10px rgba(0,0,0,.3);animation:brilho 2s infinite}
+    .medalha .nome{font-size:.7rem;font-weight:bold;margin-top:2px}
+    .dica{background:#fff8e1;border-left:5px solid #FFB300;padding:8px 14px;margin:8px 0;border-radius:8px;font-size:.95rem}
+    .dica b{color:#B8860B}
+    body.escuro .dica{background:#2a2410}
+    .progresso{background:#eee;border-radius:20px;height:18px;overflow:hidden;margin:10px 0;border:2px solid #999}
+    body.escuro .progresso{background:#333}
+    .progresso-barra{background:linear-gradient(90deg,#6BCB77,#FFB300);height:100%;transition:.6s;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:.85rem}
+    .drag-zona{min-height:70px;border:3px dashed #4D96FF;border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;background:var(--cor-cartao2)}
+    .drag-item{background:#4D96FF;color:#fff;padding:6px 14px;border-radius:20px;cursor:move;font-weight:bold;user-select:none}
+    .drag-item:active{transform:scale(1.08)}
+    footer{margin-top:34px;text-align:center;font-size:.95rem;color:var(--cor-texto)}
+    footer .coracao{color:#E53935}
+    .bandeira{display:inline-block;width:30px;height:20px;background:linear-gradient(to bottom,#E53935 50%,#000 50%);
+        border:1px solid #333;vertical-align:middle;margin:0 4px;position:relative}
+    .bandeira::after{content:"⭐";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#FFB300;font-size:.9rem}
+    @media(max-width:600px){h1{font-size:1.5rem}.placar{top:auto;bottom:10px}.topo-bts{top:auto;bottom:10px;left:10px}
+        .placar{right:10px;font-size:.85rem;padding:6px 10px}}
+    @media print{
+        .ceu,nav,.placar,.topo-bts,.botao,.jogo,#zonaContagem,#zonaCorrida,#zonaDitado,#zonaMaiorMenor{display:none !important}
+        .resposta{display:inline-block !important}
+        section.cartao{box-shadow:none;break-inside:avoid}
+        body{background:#fff;color:#000}
+        .medalha{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+    }
+</style>
+</head>
+<body>
+
+<div class="ceu" aria-hidden="true">
+    <span style="left:4%;font-size:34px;animation-duration:11s">🎈</span>
+    <span style="left:16%;font-size:26px;animation-duration:14s;animation-delay:2s">⭐</span>
+    <span style="left:30%;font-size:40px;animation-duration:12s;animation-delay:5s">🎈</span>
+    <span style="left:48%;font-size:26px;animation-duration:16s;animation-delay:1s">☁️</span>
+    <span style="left:62%;font-size:30px;animation-duration:13s;animation-delay:4s">🎈</span>
+    <span style="left:76%;font-size:26px;animation-duration:15s">⭐</span>
+    <span style="left:88%;font-size:38px;animation-duration:12s;animation-delay:3s">🎈</span>
+</div>
+
+<div class="topo-bts">
+    <button onclick="alternarSom()" title="Ligar/desligar som" id="btnSom">🔊</button>
+    <button onclick="alternarTema()" title="Modo escuro/claro" id="btnTema">🌙</button>
+</div>
+<div class="placar" id="placar">⭐ Pontos: 0</div>
+
+<header>
+    <h1>🌍 Viagem pelos Números <span class="bandeira"></span></h1>
+    <p class="sub">Uma aventura por Angola com os números <span class="tag vermelho">Cardinais</span> e <span class="tag amarelo">Ordinais</span></p>
+    <p><span class="tag preto">✈️ 100% OFFLINE</span></p>
+
+    <!-- MASCOTE: Tia Números (SVG embutido) -->
+    <svg class="mascote" viewBox="0 0 320 220" role="img" aria-label="Tia Números com três crianças">
+        <ellipse cx="160" cy="210" rx="130" ry="8" fill="#00000022"/>
+        <!-- Tia Números -->
+        <ellipse cx="160" cy="120" rx="35" ry="50" fill="#E53935" stroke="#000" stroke-width="2"/>
+        <circle cx="160" cy="70" r="28" fill="#a0522d" stroke="#000" stroke-width="2"/>
+        <path d="M132,60 Q160,30 188,60 Q190,45 160,38 Q130,45 132,60" fill="#2b1810" stroke="#000" stroke-width="2"/>
+        <circle cx="152" cy="72" r="3" fill="#000"/><circle cx="168" cy="72" r="3" fill="#000"/>
+        <path d="M150,84 Q160,90 170,84" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="146" cy="80" r="3" fill="#ff9aa2" opacity=".8"/><circle cx="174" cy="80" r="3" fill="#ff9aa2" opacity=".8"/>
+        <path d="M128,120 Q110,150 125,175 M192,120 Q210,150 195,175" stroke="#a0522d" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M140,168 L140,205 M180,168 L180,205" stroke="#333" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <!-- Menino 1 -->
+        <circle cx="60" cy="140" r="18" fill="#d2691e" stroke="#000" stroke-width="2"/>
+        <path d="M44,130 Q60,115 76,130" fill="#000"/>
+        <rect x="44" y="158" width="32" height="40" fill="#FFB300" stroke="#000" stroke-width="2" rx="6"/>
+        <circle cx="55" cy="140" r="2" fill="#000"/><circle cx="65" cy="140" r="2" fill="#000"/>
+        <path d="M55,150 Q60,154 65,150" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Menino 2 -->
+        <circle cx="260" cy="140" r="18" fill="#8b4513" stroke="#000" stroke-width="2"/>
+        <rect x="244" y="158" width="32" height="40" fill="#4D96FF" stroke="#000" stroke-width="2" rx="6"/>
+        <circle cx="255" cy="140" r="2" fill="#000"/><circle cx="265" cy="140" r="2" fill="#000"/>
+        <path d="M255,150 Q260,154 265,150" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Balão com números -->
+        <circle cx="240" cy="30" r="22" fill="#FFB300" stroke="#000" stroke-width="2"/>
+        <text x="240" y="37" font-size="16" text-anchor="middle" font-weight="bold" fill="#E53935">1 2 3</text>
+        <line x1="240" y1="52" x2="240" y2="80" stroke="#000" stroke-width="1.5"/>
+    </svg>
+
+    <div class="balao">👋 Olá, meu nome é <b>Tia Números</b>! Vamos viajar pelas províncias de Angola e aprender a contar e a ordenar. Prontos? 🚀</div>
+
+    <p>
+        <button class="botao vermelho" onclick="salvarPagina()">💾 Guardar cópia offline</button>
+        <button class="botao amarelo" onclick="window.print()">🖨️ Imprimir ficha</button>
+        <button class="botao azul" onclick="reiniciarPontos()">🔄 Recomeçar</button>
+    </p>
+</header>
+
+<nav>
+    <a href="#cardinais">🔢 Cardinais</a>
+    <a href="#ordinais">🏅 Ordinais</a>
+    <a href="#diferenca">🆚 Diferença</a>
+    <a href="#diaadia">🏠 Dia a dia</a>
+    <a href="#jogos">🎮 Jogos</a>
+    <a href="#trilha">🛤️ Trilha 0–1000</a>
+    <a href="#rima">🎵 Rima</a>
+    <a href="#curiosidades">🧠 Curiosidades</a>
+    <a href="#medalhas">🏆 Medalhas</a>
+    <a href="#exercicios">✏️ Exercícios</a>
+</nav>
+
+<main>
+
+<!-- ============ CARDINAIS ============ -->
+<section class="cartao" id="cardinais" style="--borda:#E53935">
+    <h2>🔢 1. Números Cardinais — os números que CONTAM</h2>
+    <p>Os <strong>números cardinais</strong> servem para contar coisas. Eles respondem à pergunta mágica: <em>“QUANTOS há?”</em> 🤔</p>
+
+    <div class="dica">💡 <b>Dica da Tia Números:</b> Sempre que perguntas <em>quantos</em>, estás a usar um número cardinal!</div>
+
+    <h3>De 0 a 20 (começamos devagar!)</h3>
+    <div class="grade" id="gradeCard"></div>
+
+    <h3>As dezenas (10 em 10 até 100)</h3>
+    <div class="grade" id="gradeDez"></div>
+
+    <h3>As centenas (100 em 100 até 1000)</h3>
+    <div class="grade" id="gradeCem"></div>
+
+    <div class="dica">💡 <b>Curiosidade angolana:</b> A nota de <b>5000 kwanzas</b> é um número cardinal grande que podes ver na carteira dos teus pais!</div>
+</section>
+
+<!-- ============ ORDINAIS ============ -->
+<section class="cartao" id="ordinais" style="--borda:#FFB300">
+    <h2>🏅 2. Números Ordinais — os números da ORDEM</h2>
+    <p>Os <strong>números ordinais</strong> mostram a <strong>POSIÇÃO</strong> de alguém numa fila. Eles respondem à pergunta: <em>“Em que LUGAR está?”</em> 🏁</p>
+
+    <!-- CENA: corrida de palancas negras (animal nacional de Angola) -->
+    <svg class="img-aula" viewBox="0 0 480 240" role="img" aria-label="Corrida de palancas negras: 1º, 2º, 3º">
+        <rect width="480" height="240" fill="#fff8e1" rx="18"/>
+        <!-- Sol -->
+        <circle cx="60" cy="40" r="22" fill="#FFB300"/>
+        <path d="M60,10 L60,18 M60,62 L60,70 M30,40 L38,40 M82,40 L90,40" stroke="#FFB300" stroke-width="3" stroke-linecap="round"/>
+        <!-- Bandeira pequena -->
+        <rect x="200" y="15" width="40" height="25" fill="#E53935" stroke="#000" stroke-width="1.5"/>
+        <rect x="200" y="28" width="40" height="12" fill="#000"/>
+        <text x="220" y="33" font-size="10" text-anchor="middle" fill="#FFB300">⭐</text>
+        <!-- Pódio -->
+        <rect x="80" y="150" width="90" height="60" fill="#cfd8dc" stroke="#000" stroke-width="2"/>
+        <rect x="170" y="118" width="90" height="92" fill="#FFB300" stroke="#000" stroke-width="2"/>
+        <rect x="260" y="168" width="90" height="42" fill="#d7a17a" stroke="#000" stroke-width="2"/>
+        <text x="125" y="185" font-size="22" text-anchor="middle" font-weight="bold" fill="#333">2º</text>
+        <text x="215" y="170" font-size="24" text-anchor="middle" font-weight="bold" fill="#000">1º</text>
+        <text x="305" y="196" font-size="20" text-anchor="middle" font-weight="bold" fill="#000">3º</text>
+        <!-- Animais (representação) -->
+        <text x="215" y="112" font-size="40" text-anchor="middle">🦌</text>
+        <text x="125" y="144" font-size="36" text-anchor="middle">🐘</text>
+        <text x="305" y="162" font-size="32" text-anchor="middle">🦓</text>
+        <text x="215" y="35" font-size="20" text-anchor="middle">🥇</text>
+        <text x="125" y="92" font-size="20" text-anchor="middle">🥈</text>
+        <text x="305" y="112" font-size="20" text-anchor="middle">🥉</text>
+    </svg>
+    <p class="legenda">Na corrida dos animais de Angola: a palanca negra 🦌 ficou em <b>1º</b>, o elefante 🐘 em <b>2º</b> e a zebra 🦓 em <b>3º</b>!</p>
+
+    <div class="fila">
+        <div>🦌<small>1º</small></div><div>🐘<small>2º</small></div><div>🦓<small>3º</small></div>
+        <div>🦏<small>4º</small></div><div>🦒<small>5º</small></div>
+    </div>
+
+    <h3>Ordinais de 1º a 20º</h3>
+    <div class="grade" id="gradeOrd"></div>
+    <h3>Ordinais gigantes (para impressionar!)</h3>
+    <div class="grade" id="gradeOrdEsp"></div>
+
+    <div class="dica">💡 <b>Truque mágico:</b> o ordinal tem um “º” pequenino ao lado do número (1º, 2º, 3º…). Se vires o “º”, é ordinal! ✨</div>
+</section>
+
+<!-- ============ DIFERENÇA ============ -->
+<section class="cartao" id="diferenca" style="--borda:#4D96FF">
+    <h2>🆚 3. Qual é a diferença?</h2>
+    <div class="vs-wrap">
+        <div class="vs-card" style="background:#E53935">
+            <h3>🔢 CARDINAL</h3>
+            <p>Diz <b>QUANTOS</b> existem.<br>Ex.: Tenho <b>5</b> rebuçados 🍬<br>Ex.: A escola tem <b>1000</b> alunos!</p>
+        </div>
+        <div class="vs">VS</div>
+        <div class="vs-card" style="background:#FFB300;color:#333">
+            <h3>🏅 ORDINAL</h3>
+            <p>Diz a <b>POSIÇÃO</b> na fila.<br>Ex.: Fiquei em <b>5º</b> lugar.<br>Ex.: Foi o <b>1000º</b> (milésimo) visitante!</p>
+        </div>
+    </div>
+</section>
+
+<!-- ============ DIA A DIA ============ -->
+<section class="cartao" id="diaadia" style="--borda:#6BCB77">
+    <h2>🏠 4. Os números no dia a dia em Angola</h2>
+    <ul class="exemplos">
+        <li>🐟 “Tenho <b>3</b> peixes do rio Kwanza.” → <b class="verdeT">Cardinal</b></li>
+        <li>🏢 “Moro no <b>3º</b> andar, em Luanda.” → <b class="roxoT">Ordinal</b></li>
+        <li>🎂 “O meu aniversário é no dia <b>8</b> de novembro.” → <b class="roxoT">Ordinal</b> (posição no mês)</li>
+        <li>📚 “Li <b>6</b> livros este ano.” → <b class="verdeT">Cardinal</b></li>
+        <li>🏆 “A minha equipa do 1º de Agosto ficou em <b>1º</b> lugar!” → <b class="roxoT">Ordinal</b></li>
+        <li>💰 “Tenho uma nota de <b>1000</b> kwanzas.” → <b class="verdeT">Cardinal</b></li>
+        <li>📖 “Estamos no século <b>XXI</b> (vigésimo primeiro).” → <b class="roxoT">Ordinal</b></li>
+        <li>🚐 “Fui o <b>15º</b> passageiro do azul e branco.” → <b class="roxoT">Ordinal</b></li>
+    </ul>
+</section>
+
+<!-- ============ JOGOS ============ -->
+<section class="cartao" id="jogos" style="--borda:#9B5DE5">
+    <h2>🎮 5. Hora de jogar! (ganhas pontos ⭐ e medalhas 🏆)</h2>
+
+    <div class="jogo">
+        <h3>🧠 Jogo 1: Quiz Relâmpago</h3>
+        <div id="quiz"></div>
+    </div>
+
+    <div class="jogo">
+        <h3>🔢 Jogo 2: Contagem (até 20)</h3>
+        <p>Conta os objetos e escreve o número cardinal:</p>
+        <div id="zonaContagem" style="margin:10px 0"></div>
+        <input type="number" id="respostaContagem" min="0" max="20">
+        <button class="botao" onclick="verificarContagem()">✅ Verificar</button>
+        <button class="botao azul" onclick="novaContagem()">🔁 Novos objetos</button>
+        <p id="feedbackContagem" class="feedback"></p>
+    </div>
+
+    <div class="jogo">
+        <h3>🏁 Jogo 3: Corrida dos Ordinais</h3>
+        <p id="perguntaCorrida"></p>
+        <div id="zonaCorrida"></div>
+        <p id="feedbackCorrida" class="feedback"></p>
+        <button class="botao roxo" onclick="novaCorrida()">🔁 Nova corrida</button>
+    </div>
+
+    <div class="jogo">
+        <h3>🔤 Jogo 4: Ditado dos Números</h3>
+        <p>A Tia Números vai <b>dizer um número</b>. Tu escreves o numeral! 🎧</p>
+        <button class="botao amarelo" onclick="novoDitado()">📢 Ouvir novo número</button>
+        <p id="palavraDitada" style="font-size:1.2rem;font-weight:bold;color:#B8860B"></p>
+        <input type="number" id="respostaDitado" min="0" max="9999">
+        <button class="botao" onclick="verificarDitado()">✅ Verificar</button>
+        <p id="feedbackDitado" class="feedback"></p>
+    </div>
+
+    <div class="jogo">
+        <h3>⚖️ Jogo 5: Maior ou Menor?</h3>
+        <p>Qual número é maior? Clica no sinal correto!</p>
+        <p id="zonaMaiorMenor" style="font-size:1.8rem;text-align:center;margin:10px 0"></p>
+        <div style="text-align:center">
+            <button class="botao" onclick="verificarMM('<')">＜</button>
+            <button class="botao azul" onclick="verificarMM('=')">＝</button>
+            <button class="botao vermelho" onclick="verificarMM('>')" >＞</button>
+        </div>
+        <button class="botao roxo" onclick="novoMM()" style="display:block;margin:10px auto">🔁 Nova conta</button>
+        <p id="feedbackMM" class="feedback"></p>
+    </div>
+
+    <div class="jogo">
+        <h3>🎲 Jogo 6: Pares ou Ímpares?</h3>
+        <p>Os números pares terminam em 0, 2, 4, 6, 8. Os ímpares em 1, 3, 5, 7, 9.</p>
+        <p id="parImparNum" style="font-size:2.4rem;text-align:center;font-weight:bold;color:#E53935;margin:10px 0"></p>
+        <div style="text-align:center">
+            <button class="botao" onclick="verificarPI('par')">É PAR</button>
+            <button class="botao vermelho" onclick="verificarPI('impar')">É ÍMPAR</button>
+        </div>
+        <button class="botao roxo" onclick="novoPI()" style="display:block;margin:10px auto">🔁 Novo número</button>
+        <p id="feedbackPI" class="feedback"></p>
+    </div>
+
+    <div class="jogo">
+        <h3>🧮 Jogo 7: Decomposição (desmontar o número!)</h3>
+        <p>Exemplo: <b>247</b> = 200 + 40 + 7 (duas centenas, quatro dezenas, sete unidades)</p>
+        <p id="decompNum" style="font-size:2rem;text-align:center;font-weight:bold;color:#B8860B;margin:10px 0"></p>
+        <p>Centenas: <input type="number" id="decompC" min="0" max="9" style="width:60px"> +
+           Dezenas: <input type="number" id="decompD" min="0" max="9" style="width:60px"> +
+           Unidades: <input type="number" id="decompU" min="0" max="9" style="width:60px"></p>
+        <button class="botao" onclick="verificarDecomp()">✅ Verificar</button>
+        <button class="botao roxo" onclick="novoDecomp()">🔁 Novo número</button>
+        <p id="feedbackDecomp" class="feedback"></p>
+    </div>
+</section>
+
+<!-- ============ TRILHA 0–1000 ============ -->
+<section class="cartao" id="trilha" style="--borda:#B8860B">
+    <h2>🛤️ 6. A Grande Trilha de 0 até 1000</h2>
+    <p>Alguns números fugiram! 😱 Escreve nos quadradinhos <b>?</b> o número que falta.
+       Os números <b style="color:#E53935">vermelhos</b> são as centenas (100, 200, 300…) para te orientar.</p>
+
+    <div class="progresso"><div class="progresso-barra" id="progBarra" style="width:0%">0%</div></div>
+
+    <div class="trilha" id="trilhaZona"></div>
+    <button class="botao" onclick="verificarTrilha()">✅ Verificar lacunas</button>
+    <button class="botao azul" onclick="gerarTrilha()">🔁 Novas lacunas</button>
+    <button class="botao roxo" onclick="revelarTrilha()">👀 Revelar tudo</button>
+    <br>
+    <span style="margin-top:10px;display:inline-block">🔎 Procurar número:
+        <input type="number" id="buscaNum" min="0" max="1000" style="width:80px">
+        <button class="botao amarelo" onclick="buscarNum()">Achar!</button></span>
+    <p id="feedbackTrilha" class="feedback"></p>
+</section>
+
+<!-- ============ RIMA ============ -->
+<section class="cartao" id="rima" style="--borda:#E53935">
+    <h2>🎵 7. Rima dos Números (canta comigo!)</h2>
+    <div class="rima">
+Um, dois, três — vou contar!
+Quatro, cinco, seis — sem parar!
+Sete, oito, nove, dez —
+Contar é bom outra vez! 🎉
+
+Onze, doze, treze, catorze —
+Quinze, dezasseis, sem tropeçar!
+Dezassete, dezoito, dezanove, vinte —
+Até vinte eu já sei contar! 🙌
+
+Primeiro eu pulo, segundo eu rodo,
+Terceiro eu danço de todo o modo!
+Quarto eu bato palmas, quinto eu sorrio,
+Com os ordinais eu divirto-me, eu rio! 😄
+
+Cem, duzentos, trezentos — até mil vou chegar!
+Quinhentos, seiscentos, setecentos — ninguém me vai parar!
+Oitocentos, novecentos e MIL no fim —
+A trilha do mil é mesmo assim! 🏁
+    </div>
+</section>
+
+<!-- ============ CURIOSIDADES ============ -->
+<section class="cartao" id="curiosidades" style="--borda:#FFB300">
+    <h2>🧠 8. Curiosidades de Angola e do mundo</h2>
+    <ul class="curios">
+        <li>🇦🇴 Angola tem <b>18 províncias</b>! 18 é um número cardinal.</li>
+        <li>🦌 A <b>Palanca Negra Gigante</b> é o animal nacional de Angola — e é o <b>1º</b> símbolo do país!</li>
+        <li>🔢 O número <b>1000</b> escreve-se apenas “mil” (e não “um mil”).</li>
+        <li>🏅 O ordinal de 1000 é <b>1000º = milésimo</b>: “o milésimo cliente!”</li>
+        <li>📅 “Dia <b>1º</b> de janeiro” usa ordinal; os outros dias usam cardinais.</li>
+        <li>👑 Reis usam ordinais: Rainha Ginga foi uma rainha muito importante!</li>
+        <li>⏳ Mil anos formam um <b>milénio</b> — vivemos no 3º milénio!</li>
+        <li>💾 Esta aula funciona <b>offline</b>! Guarda-a e usa sem internet.</li>
+        <li>🌍 A moeda de Angola é o <b>Kwanza</b> — e existem notas de 200, 500, 1000, 2000, 5000 kwanzas!</li>
+    </ul>
+</section>
+
+<!-- ============ MEDALHAS ============ -->
+<section class="cartao" id="medalhas" style="--borda:#6BCB77">
+    <h2>🏆 9. As tuas medalhas</h2>
+    <p>Conquista todas as 10 medalhas para seres um Mestre dos Números! 🎓</p>
+    <div class="medalhas" id="listaMedalhas"></div>
+    <p id="textoMedalhas" class="dica"></p>
+</section>
+
+<!-- ============ EXERCÍCIOS ============ -->
+<section class="cartao" id="exercicios" style="--borda:#9B5DE5">
+    <h2>✏️ 10. Exercícios (pensa primeiro!)</h2>
+    <div class="ex">1. Conta os peixes: 🐟🐟🐟 — cardinal?
+        <button class="botao amarelo pequeno" onclick="mostrar('r1')">Ver</button><span class="resposta" id="r1">3 (três)</span></div>
+    <div class="ex">2. Conta os balões: 🎈🎈🎈🎈🎈 — cardinal?
+        <button class="botao amarelo pequeno" onclick="mostrar('r2')">Ver</button><span class="resposta" id="r2">5 (cinco)</span></div>
+    <div class="ex">3. Na corrida 🦌 🦓 — em que lugar está a zebra 🦓?
+        <button class="botao amarelo pequeno" onclick="mostrar('r3')">Ver</button><span class="resposta" id="r3">2º (segundo)</span></div>
+    <div class="ex">4. Qual ordinal vem depois do 5º?
+        <button class="botao amarelo pequeno" onclick="mostrar('r4')">Ver</button><span class="resposta" id="r4">6º (sexto)</span></div>
+    <div class="ex">5. A medalha 🥈 é de qual lugar?
+        <button class="botao amarelo pequeno" onclick="mostrar('r5')">Ver</button><span class="resposta" id="r5">2º (segundo)</span></div>
+    <div class="ex">6. Escreve por palavras o ordinal 9º.
+        <button class="botao amarelo pequeno" onclick="mostrar('r6')">Ver</button><span class="resposta" id="r6">nono</span></div>
+    <div class="ex">7. Escreve por palavras o cardinal 300.
+        <button class="botao amarelo pequeno" onclick="mostrar('r7')">Ver</button><span class="resposta" id="r7">trezentos</span></div>
+    <div class="ex">8. Escreve por palavras o ordinal 20º.
+        <button class="botao amarelo pequeno" onclick="mostrar('r8')">Ver</button><span class="resposta" id="r8">vigésimo</span></div>
+    <div class="ex">9. 14 é par ou ímpar?
+        <button class="botao amarelo pequeno" onclick="mostrar('r9')">Ver</button><span class="resposta" id="r9">PAR (termina em 4)</span></div>
+    <div class="ex">10. Decompõe o número 365: ___ centenas + ___ dezenas + ___ unidades.
+        <button class="botao amarelo pequeno" onclick="mostrar('r10')">Ver</button><span class="resposta" id="r10">3 centenas + 6 dezenas + 5 unidades</span></div>
+</section>
+
+<!-- ============ CONCLUSÃO ============ -->
+<section class="cartao" id="conclusao" style="--borda:#FFB300">
+    <h2>🏁 11. Parabéns, viajante dos números!</h2>
+    <p>Aprendeste que os <b>cardinais</b> contam <i>quantos</i> (até 1000!) e os <b>ordinais</b> mostram <i>em que lugar</i> (até milésimo!). Agora conta, ordena e completa trilhas como um verdadeiro mestre! 🎓</p>
+    <button class="botao amarelo" onclick="comemorar()">🎉 COMEMORAR!</button>
+</section>
+
+</main>
+
+<footer>
+    <p>Autor: <b>Nando Kissanga</b> | Email: nandokissanga@gmail.com | WhatsApp: 957511281</p>
+    <p>Apoio com donativo — IBAN: AO06 0055 0000 6101 3844 1012 4</p>
+    <p>Feito com <span class="coracao">❤</span> para todas as crianças curiosas — 100% offline! 🇦🇴</p>
+</footer>
+
+<script>
+/* ================= PONTOS E MEDALHAS (guardados offline) ================= */
+let pontos = 0;
+let medalhas = {};
+const LISTA_MEDALHAS = [
+    {id:"quiz",nome:"Quiz",icone:"🧠",desc:"Acerta 3 perguntas no quiz"},
+    {id:"conta",nome:"Contador",icone:"🔢",desc:"Acerta 3 contagens"},
+    {id:"corrida",nome:"Veloz",icone:"🏁",desc:"Acerta 3 corridas"},
+    {id:"ditado",nome:"Ouvinte",icone:"🎧",desc:"Acerta 3 ditados"},
+    {id:"mm",nome:"Comparador",icone:"⚖️",desc:"Acerta 3 comparações"},
+    {id:"pi",nome:"Par/Ímpar",icone:"🎲",desc:"Acerta 3 pares/ímpares"},
+    {id:"decomp",nome:"Desmontador",icone:"🧮",desc:"Decompõe 3 números"},
+    {id:"trilha",nome:"Explorador",icone:"🗺️",desc:"Preenche 30 lacunas na trilha"},
+    {id:"pontos100",nome:"Centenário",icone:"💯",desc:"Alcança 100 pontos"},
+    {id:"mestre",nome:"Mestre",icone:"👑",desc:"Conquista todas as outras medalhas"}
+];
+let conquistas = {quiz:0,conta:0,corrida:0,ditado:0,mm:0,pi:0,decomp:0,trilha:0};
+
+try{
+    pontos = parseInt(localStorage.getItem("turmaPontosAO")||"0",10)||0;
+    const m = localStorage.getItem("turmaMedalhasAO");
+    if(m) medalhas = JSON.parse(m);
+}catch(e){}
+
+function atualizarPontos(){
+    document.getElementById("placar").textContent = "⭐ Pontos: " + pontos;
+    try{ localStorage.setItem("turmaPontosAO", pontos); }catch(e){}
+    if(pontos >= 100) darMedalha("pontos100");
+    verificarMestre();
+}
+
+function darMedalha(id){
+    if(medalhas[id]) return;
+    medalhas[id] = true;
+    try{ localStorage.setItem("turmaMedalhasAO", JSON.stringify(medalhas)); }catch(e){}
+    desenharMedalhas();
+    const m = LISTA_MEDALHAS.find(x=>x.id===id);
+    mostrarMensagem("🏆 Medalha conquistada: " + m.icone + " " + m.nome + "!");
+    bip(880,.1); setTimeout(()=>bip(1175,.2),100);
+}
+
+function mostrarMensagem(txt){
+    const div = document.createElement("div");
+    div.textContent = txt;
+    div.style.cssText = "position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#FFB300;color:#333;" +
+        "padding:14px 24px;border-radius:30px;font-weight:bold;z-index:100;box-shadow:0 8px 20px rgba(0,0,0,.3);font-size:1.05rem";
+    document.body.appendChild(div);
+    setTimeout(()=>div.remove(), 3000);
+}
+
+function verificarMestre(){
+    const todas = LISTA_MEDALHAS.filter(m=>m.id!=="mestre").every(m=>medalhas[m.id]);
+    if(todas) darMedalha("mestre");
+}
+
+function desenharMedalhas(){
+    const lista = document.getElementById("listaMedalhas");
+    lista.innerHTML = "";
+    let conquistadas = 0;
+    LISTA_MEDALHAS.forEach(function(m){
+        const div = document.createElement("div");
+        const tem = medalhas[m.id];
+        if(tem) conquistadas++;
+        div.className = "medalha" + (tem?" conquistada":"");
+        div.innerHTML = "<span>" + m.icone + "</span><span class='nome'>" + m.nome + "</span>";
+        div.title = m.desc + (tem?" ✅":" ❌");
+        lista.appendChild(div);
+    });
+    document.getElementById("textoMedalhas").innerHTML =
+        "Conquistaste <b>" + conquistadas + " de " + LISTA_MEDALHAS.length + "</b> medalhas! " +
+        (conquistadas===LISTA_MEDALHAS.length?"ÉS UM MESTRE DOS NÚMEROS! 👑":"Continua a jogar para as conquistar todas!");
+}
+
+function reiniciarPontos(){
+    if(!confirm("Queres mesmo recomeçar? Vais perder todos os pontos e medalhas.")) return;
+    pontos = 0; medalhas = {}; conquistas = {quiz:0,conta:0,corrida:0,ditado:0,mm:0,pi:0,decomp:0,trilha:0};
+    try{
+        localStorage.removeItem("turmaPontosAO");
+        localStorage.removeItem("turmaMedalhasAO");
+    }catch(e){}
+    atualizarPontos(); desenharMedalhas();
+    mostrarMensagem("Recomeçaste! Boa sorte! 🌟");
+}
+
+/* ================= SONS ================= */
+let somOn = true, ctxSom = null;
+function bip(freq,dur){
+    if(!somOn) return;
+    try{
+        ctxSom = ctxSom || new (window.AudioContext||window.webkitAudioContext)();
+        const o = ctxSom.createOscillator(), g = ctxSom.createGain();
+        o.type="sine"; o.frequency.value=freq; g.gain.value=.15;
+        o.connect(g); g.connect(ctxSom.destination); o.start();
+        g.gain.exponentialRampToValueAtTime(.0001, ctxSom.currentTime+dur);
+        o.stop(ctxSom.currentTime+dur);
+    }catch(e){}
+}
+function somAcerto(){ bip(660,.15); setTimeout(()=>bip(880,.2),120); }
+function somErro(){ bip(200,.25); }
+function alternarSom(){
+    somOn = !somOn;
+    document.getElementById("btnSom").textContent = somOn ? "🔊" : "🔇";
+}
+
+/* ================= TEMA ================= */
+let escuro = false;
+function alternarTema(){
+    escuro = !escuro;
+    document.body.classList.toggle("escuro", escuro);
+    document.getElementById("btnTema").textContent = escuro ? "☀️" : "🌙";
+    try{ localStorage.setItem("temaAO", escuro?"escuro":"claro"); }catch(e){}
+}
+try{ if(localStorage.getItem("temaAO")==="escuro"){ escuro=true; document.body.classList.add("escuro"); document.getElementById("btnTema").textContent="☀️"; } }catch(e){}
+
+/* ================= CARTÕES ================= */
+const CARD = [
+ [0,"zero","⭕"],[1,"um","☀️"],[2,"dois","🍎🍎"],[3,"três","🐱🐱🐱"],[4,"quatro","🎈🎈🎈🎈"],
+ [5,"cinco","⭐⭐⭐⭐⭐"],[6,"seis","🐟🐟🐟🐟🐟🐟"],[7,"sete","🍌🍌🍌🍌🍌🍌🍌"],[8,"oito","🐢🐢🐢🐢🐢🐢🐢🐢"],
+ [9,"nove","🎁×9"],[10,"dez","🔟"],[11,"onze","🔟+1"],[12,"doze","🔟+2"],[13,"treze","🔟+3"],
+ [14,"catorze","🔟+4"],[15,"quinze","🔟+5"],[16,"dezasseis","🔟+6"],[17,"dezassete","🔟+7"],
+ [18,"dezoito","🔟+8"],[19,"dezanove","🔟+9"],[20,"vinte","🔟+🔟"]
+];
+const DEZ = [[10,"dez","🔟"],[20,"vinte","🔟🔟"],[30,"trinta","🔟×3"],[40,"quarenta","🔟×4"],[50,"cinquenta","🔟×5"],
+ [60,"sessenta","🔟×6"],[70,"setenta","🔟×7"],[80,"oitenta","🔟×8"],[90,"noventa","🔟×9"],[100,"cem","💯"]];
+const CEM = [[100,"cem","💯"],[200,"duzentos","💯💯"],[300,"trezentos","💯×3"],[400,"quatrocentos","💯×4"],
+ [500,"quinhentos","💯×5"],[600,"seiscentos","💯×6"],[700,"setecentos","💯×7"],[800,"oitocentos","💯×8"],
+ [900,"novecentos","💯×9"],[1000,"mil","💯×10"]];
+const ORD = [[1,"primeiro","🥇"],[2,"segundo","🥈"],[3,"terceiro","🥉"],[4,"quarto","🚗"],[5,"quinto","🖐️"],
+ [6,"sexto","🎲"],[7,"sétimo","🌈"],[8,"oitavo","🐙"],[9,"nono","🎈"],[10,"décimo","🔟"],
+ [11,"11.º","🎗️"],[12,"12.º","🎗️"],[13,"13.º","🎗️"],[14,"14.º","🎗️"],[15,"15.º","🎗️"],
+ [16,"16.º","🎗️"],[17,"17.º","🎗️"],[18,"18.º","🎗️"],[19,"19.º","🎗️"],[20,"vigésimo","🏆"]];
+const ORDESP = [[30,"trigésimo","🚀"],[40,"quadragésimo","🚀"],[50,"quinquagésimo","🚀"],
+ [60,"sexagésimo","🚀"],[70,"septuagésimo","🚀"],[80,"octogésimo","🚀"],[90,"nonagésimo","🚀"],
+ [100,"centésimo","💯"],[500,"quingentésimo","🌟"],[1000,"milésimo","👑"]];
+
+function pintar(id, lista, classe){
+    let h = "";
+    lista.forEach(function(n){
+        h += "<div class='"+classe+"'><span class='grande'>"+n[0]+(classe==="ord-card"?"º":"")+"</span>"+
+             "<span class='palavra'>"+n[1]+"</span><span class='emojis'>"+(n[2]||"")+"</span></div>";
+    });
+    document.getElementById(id).innerHTML = h;
+}
+pintar("gradeCard",CARD,"num-card"); pintar("gradeDez",DEZ,"num-card"); pintar("gradeCem",CEM,"num-card");
+pintar("gradeOrd",ORD,"ord-card"); pintar("gradeOrdEsp",ORDESP,"ord-card");
+
+/* ================= QUIZ ================= */
+const quiz = [
+ {p:"Tens 5 balões 🎈 na mão. O número 5 é…", o:["Ordinal","Cardinal"], c:1, e:"O 5 diz QUANTOS balões existem!"},
+ {p:"O cão 🐶 chegou em 1º lugar. O número 1º é…", o:["Ordinal","Cardinal"], c:0, e:"O 1º mostra a POSIÇÃO!"},
+ {p:"Como se escreve o ordinal do número 3?", o:["3","3º"], c:1, e:"O ordinal tem o símbolozinho º!"},
+ {p:"A semana tem 7 dias 📅. O número 7 é…", o:["Cardinal","Ordinal"], c:0, e:"O 7 conta QUANTOS dias existem!"},
+ {p:"“Moro no 2º andar.” O 2º é…", o:["Ordinal","Cardinal"], c:0, e:"O 2º mostra a POSIÇÃO do andar!"},
+ {p:"Qual ordinal vem depois de 4º?", o:["6º","5º"], c:1, e:"Depois do 4º vem o 5º!"},
+ {p:"O cardinal 1000 escreve-se…", o:["mil","um mil"], c:0, e:"1000 = apenas 'mil'!"},
+ {p:"O ordinal 1000º lê-se…", o:["milésimo","centésimo"], c:0, e:"1000º = milésimo!"},
+ {p:"Angola tem 18 províncias. 18 é…", o:["Cardinal","Ordinal"], c:0, e:"Conta QUANTAS províncias!"},
+ {p:"Fui o 10º da fila. O 10º é…", o:["Ordinal","Cardinal"], c:0, e:"Mostra a posição na fila!"}
+];
+function montarQuiz(){
+    const caixa = document.getElementById("quiz");
+    quiz.forEach(function(q,i){
+        const div = document.createElement("div");
+        div.className = "pergunta";
+        div.innerHTML = "<p><strong>"+(i+1)+".</strong> "+q.p+"</p>";
+        q.o.forEach(function(op,j){
+            const b = document.createElement("button");
+            b.className = "opcao"; b.textContent = op;
+            b.onclick = function(){ responder(i,j,b,div); };
+            div.appendChild(b);
+        });
+        const f = document.createElement("p"); f.className = "feedback"; f.id = "fq"+i;
+        div.appendChild(f);
+        caixa.appendChild(div);
+    });
+}
+function responder(i,j,btn,div){
+    if(div.dataset.feita) return;
+    const q = quiz[i], f = document.getElementById("fq"+i);
+    if(j === q.c){
+        btn.classList.add("certa"); div.dataset.feita = "1";
+        f.textContent = "🎉 " + q.e + " (+10 pontos)"; f.className = "feedback bom";
+        pontos += 10; conquistas.quiz++; atualizarPontos(); somAcerto();
+        if(conquistas.quiz >= 3) darMedalha("quiz");
+    } else {
+        btn.classList.add("errada"); btn.disabled = true;
+        f.textContent = "🤔 Hmm… tenta outra vez!"; f.className = "feedback mau"; somErro();
+    }
+}
+
+/* ================= JOGO DA CONTAGEM ================= */
+const emojisConta = ["🐟","⭐","🎈","🐱","","🍎","🦌"];
+let alvoConta = 0;
+function novaContagem(){
+    alvoConta = 5 + Math.floor(Math.random()*16);
+    const em = emojisConta[Math.floor(Math.random()*emojisConta.length)];
+    let html = "";
+    for(let i=0;i<alvoConta;i++){ html += "<span class='obj'>"+em+"</span>"; }
+    document.getElementById("zonaContagem").innerHTML = html;
+    document.getElementById("respostaContagem").value = "";
+    document.getElementById("feedbackContagem").textContent = "";
+}
+function verificarContagem(){
+    const v = parseInt(document.getElementById("respostaContagem").value,10);
+    const f = document.getElementById("feedbackContagem");
+    if(v === alvoConta){
+        f.textContent = "🎉 Acertou! Há " + alvoConta + " objetos. (+10 pontos)";
+        f.className = "feedback bom"; pontos += 10; conquistas.conta++; atualizarPontos(); somAcerto();
+        if(conquistas.conta >= 3) darMedalha("conta");
+    } else {
+        f.textContent = "😊 Quase! Aponta com o dedo e conta um a um…";
+        f.className = "feedback mau"; somErro();
+    }
+}
+
+/* ================= CORRIDA ================= */
+const animais = ["🦌","🐘","🦓","🦒","🦏"];
+const nomesOrd = ["primeiro","segundo","terceiro","quarto","quinto"];
+let alvoOrd = 0;
+function novaCorrida(){
+    const ordem = animais.slice().sort(function(){return Math.random()-0.5;});
+    alvoOrd = 1 + Math.floor(Math.random()*5);
+    document.getElementById("perguntaCorrida").innerHTML =
+        "Clica no animal que está em <strong>" + alvoOrd + "º (" + nomesOrd[alvoOrd-1] + ")</strong> lugar!";
+    const zona = document.getElementById("zonaCorrida");
+    zona.innerHTML = "";
+    ordem.forEach(function(a,i){
+        const b = document.createElement("button");
+        b.className = "animal";
+        b.innerHTML = a + "<span class='pos'>" + (i+1) + "º</span>";
+        b.onclick = function(){ verificarCorrida(i+1,a); };
+        zona.appendChild(b);
+    });
+    document.getElementById("feedbackCorrida").textContent = "";
+}
+function verificarCorrida(pos,emoji){
+    const f = document.getElementById("feedbackCorrida");
+    if(pos === alvoOrd){
+        f.textContent = "🎉 Muito bem! O " + emoji + " estava em " + alvoOrd + "º lugar! (+10 pontos)";
+        f.className = "feedback bom"; pontos += 10; conquistas.corrida++; atualizarPontos(); somAcerto();
+        if(conquistas.corrida >= 3) darMedalha("corrida");
+    } else {
+        f.textContent = "😅 Esse está em " + pos + "º lugar. Tenta outra vez!";
+        f.className = "feedback mau"; somErro();
+    }
+}
+
+/* ================= DITADO ================= */
+const DITADO = [
+ [0,"zero"],[1,"um"],[2,"dois"],[3,"três"],[4,"quatro"],[5,"cinco"],[6,"seis"],[7,"sete"],
+ [8,"oito"],[9,"nove"],[10,"dez"],[11,"onze"],[12,"doze"],[13,"treze"],[14,"catorze"],
+ [15,"quinze"],[16,"dezasseis"],[17,"dezassete"],[18,"dezoito"],[19,"dezanove"],[20,"vinte"],
+ [30,"trinta"],[40,"quarenta"],[50,"cinquenta"],[60,"sessenta"],[70,"setenta"],
+ [80,"oitenta"],[90,"noventa"],[100,"cem"],[200,"duzentos"],[300,"trezentos"],
+ [400,"quatrocentos"],[500,"quinhentos"],[600,"seiscentos"],[700,"setecentos"],
+ [800,"oitocentos"],[900,"novecentos"],[1000,"mil"],[23,"vinte e três"],[47,"quarenta e sete"],
+ [99,"noventa e nove"],[125,"cento e vinte e cinco"],[250,"duzentos e cinquenta"],
+ [365,"trezentos e sessenta e cinco"],[500,"quinhentos"]
+];
+let alvoDitado = 0;
+function novoDitado(){
+    const p = DITADO[Math.floor(Math.random()*DITADO.length)];
+    alvoDitado = p[0];
+    const palavra = p[1];
+    document.getElementById("palavraDitada").textContent = "➡️ " + palavra.toUpperCase() + " ⬅️";
+    document.getElementById("respostaDitado").value = "";
+    document.getElementById("feedbackDitado").textContent = "";
+    // Fala em português
+    if("speechSynthesis" in window){
+        const u = new SpeechSynthesisUtterance(palavra);
+        u.lang = "pt-PT"; u.rate = .9; u.pitch = 1.2;
+        speechSynthesis.cancel(); speechSynthesis.speak(u);
+    }
+}
+function verificarDitado(){
+    const v = parseInt(document.getElementById("respostaDitado").value,10);
+    const f = document.getElementById("feedbackDitado");
+    if(v === alvoDitado){
+        f.textContent = "🎉 Perfeito! " + alvoDitado + " é a resposta! (+10 pontos)";
+        f.className = "feedback bom"; pontos += 10; conquistas.ditado++; atualizarPontos(); somAcerto();
+        if(conquistas.ditado >= 3) darMedalha("ditado");
+    } else {
+        f.textContent = "🤔 A resposta certa era " + alvoDitado + ". Tenta de novo!";
+        f.className = "feedback mau"; somErro();
+    }
+}
+
+/* ================= MAIOR/MENOR ================= */
+let mmA=0, mmB=0, mmResp="";
+function novoMM(){
+    mmA = Math.floor(Math.random()*1000);
+    mmB = Math.floor(Math.random()*1000);
+    mmResp = mmA>mmB?">":(mmA<mmB?"<":"=");
+    document.getElementById("zonaMaiorMenor").innerHTML = mmA + " ？ " + mmB;
+    document.getElementById("feedbackMM").textContent = "";
+}
+function verificarMM(op){
+    const f = document.getElementById("feedbackMM");
+    if(op === mmResp){
+        f.textContent = "🎉 Correto! " + mmA + " " + mmResp + " " + mmB + " (+10 pontos)";
+        f.className = "feedback bom"; pontos += 10; conquistas.mm++; atualizarPontos(); somAcerto();
+        if(conquistas.mm >= 3) darMedalha("mm");
+    } else {
+        f.textContent = "❌ Não é isso. O certo era " + mmResp + ".";
+        f.className = "feedback mau"; somErro();
+    }
+}
+
+/* ================= PAR/ÍMPAR ================= */
+let alvoPI = 0;
+function novoPI(){
+    alvoPI = Math.floor(Math.random()*1000);
+    document.getElementById("parImparNum").textContent = alvoPI;
+    document.getElementById("feedbackPI").textContent = "";
+}
+function verificarPI(op){
+    const ehPar = alvoPI % 2 === 0;
+    const f = document.getElementById("feedbackPI");
+    if((op==="par" && ehPar) || (op==="impar" && !ehPar)){
+        f.textContent = "🎉 Correto! " + alvoPI + " é " + (ehPar?"PAR":"ÍMPAR") + "! (+10 pontos)";
+        f.className = "feedback bom"; pontos += 10; conquistas.pi++; atualizarPontos(); somAcerto();
+        if(conquistas.pi >= 3) darMedalha("pi");
+    } else {
+        f.textContent = "❌ Não! " + alvoPI + " é " + (ehPar?"PAR":"ÍMPAR") + ".";
+        f.className = "feedback mau"; somErro();
+    }
+}
+
+/* ================= DECOMPOSIÇÃO ================= */
+let alvoDec = 0;
+function novoDecomp(){
+    alvoDec = 100 + Math.floor(Math.random()*900);
+    document.getElementById("decompNum").textContent = alvoDec;
+    document.getElementById("decompC").value = "";
+    document.getElementById("decompD").value = "";
+    document.getElementById("decompU").value = "";
+    document.getElementById("feedbackDecomp").textContent = "";
+}
+function verificarDecomp(){
+    const c = parseInt(document.getElementById("decompC").value,10) || 0;
+    const d = parseInt(document.getElementById("decompD").value,10) || 0;
+    const u = parseInt(document.getElementById("decompU").value,10) || 0;
+    const certo = Math.floor(alvoDec/100);
+    const dCerto = Math.floor((alvoDec%100)/10);
+    const uCerto = alvoDec%10;
+    const f = document.getElementById("feedbackDecomp");
+    if(c===certo && d===dCerto && u===uCerto){
+        f.textContent = "🎉 Excelente! " + alvoDec + " = " + c + "00 + " + d + "0 + " + u + " (+15 pontos)";
+        f.className = "feedback bom"; pontos += 15; conquistas.decomp++; atualizarPontos(); somAcerto();
+        if(conquistas.decomp >= 3) darMedalha("decomp");
+    } else {
+        f.textContent = "🤔 Tenta outra vez! Lembra-te: " + alvoDec + " = centenas + dezenas + unidades.";
+        f.className = "feedback mau"; somErro();
+    }
+}
+
+/* ================= TRILHA 0–1000 ================= */
+function gerarTrilha(){
+    const zona = document.getElementById("trilhaZona");
+    const lacunas = {};
+    let qtd = 70;
+    while(qtd > 0){
+        const n = Math.floor(Math.random()*1001);
+        if(n !== 0 && n !== 1000 && !lacunas[n]){ lacunas[n] = true; qtd--; }
+    }
+    let h = "";
+    for(let n=0;n<=1000;n++){
+        if(lacunas[n]){
+            h += "<input class='lacuna' data-n='"+n+"' inputmode='numeric' maxlength='4' placeholder='?' aria-label='lacuna "+n+"'>";
+        } else {
+            h += "<span class='num"+(n%100===0?" cem":"")+"'>"+n+"</span>";
+        }
+    }
+    zona.innerHTML = h;
+    document.getElementById("feedbackTrilha").textContent = "✏️ Preenche as lacunas e clica em Verificar!";
+    document.getElementById("feedbackTrilha").className = "feedback";
+    atualizarProgresso();
+}
+function verificarTrilha(){
+    const ins = document.querySelectorAll("#trilhaZona .lacuna");
+    let certas = 0;
+    ins.forEach(function(i){
+        if(i.classList.contains("ok")) return;
+        const v = parseInt(i.value,10);
+        if(v === parseInt(i.dataset.n,10)){
+            i.classList.add("ok"); i.classList.remove("erro"); i.disabled = true; certas++;
+        } else if(i.value !== ""){
+            i.classList.add("erro");
+        }
+    });
+    const restantes = document.querySelectorAll("#trilhaZona .lacuna:not(.ok)").length;
+    const f = document.getElementById("feedbackTrilha");
+    if(certas > 0){
+        pontos += certas*2; conquistas.trilha += certas;
+        atualizarPontos(); somAcerto();
+        if(conquistas.trilha >= 30) darMedalha("trilha");
+    }
+    atualizarProgresso();
+    if(restantes === 0){
+        f.textContent = "🏆 INCRÍVEL! Completaste a trilha de 0 a 1000!";
+        f.className = "feedback bom"; comemorar();
+    } else {
+        f.textContent = certas > 0
+            ? "✅ Acertaste " + certas + " lacuna(s)! Faltam " + restantes + ". (+" + (certas*2) + " pontos)"
+            : "😊 Continua! Ainda faltam " + restantes + " números.";
+        f.className = "feedback " + (certas > 0 ? "bom" : "mau");
+        if(certas === 0) somErro();
+    }
+}
+function atualizarProgresso(){
+    const total = document.querySelectorAll("#trilhaZona .lacuna").length;
+    const feitas = document.querySelectorAll("#trilhaZona .lacuna.ok").length;
+    const pct = total>0 ? Math.round((feitas/total)*100) : 0;
+    const barra = document.getElementById("progBarra");
+    barra.style.width = pct + "%";
+    barra.textContent = pct + "% (" + feitas + "/" + total + ")";
+}
+function revelarTrilha(){
+    document.querySelectorAll("#trilhaZona .lacuna:not(.ok)").forEach(function(i){
+        i.value = i.dataset.n; i.classList.add("ok"); i.disabled = true;
+    });
+    atualizarProgresso();
+    const f = document.getElementById("feedbackTrilha");
+    f.textContent = "👀 Solução revelada! Tenta 'Novas lacunas' para praticar!";
+    f.className = "feedback";
+}
+function buscarNum(){
+    const n = document.getElementById("buscaNum").value.trim();
+    if(n === "") return;
+    document.querySelectorAll("#trilhaZona .destaque").forEach(function(e){ e.classList.remove("destaque"); });
+    let el = null;
+    document.querySelectorAll("#trilhaZona .num").forEach(function(e){ if(e.textContent === n) el = e; });
+    if(!el) el = document.querySelector("#trilhaZona .lacuna[data-n='"+n+"']");
+    if(el){ el.classList.add("destaque"); el.scrollIntoView({block:"center",behavior:"smooth"}); }
+}
+
+/* ================= EXTRAS ================= */
+function mostrar(id){ document.getElementById(id).classList.toggle("visivel"); }
+
+function salvarPagina(){
+    const blob = new Blob(["<!DOCTYPE html>\n" + document.documentElement.outerHTML], {type:"text/html"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "viagem-numeros-angola.html";
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+    mostrarMensagem("💾 Ficheiro guardado! Abre-o offline quando quiseres.");
+}
+
+function comemorar(){
+    const emos = ["🎉","🎊","⭐","🎈","🥳","🏆","🇦🇴"];
+    for(let i=0;i<45;i++){
+        const s = document.createElement("span");
+        s.textContent = emos[Math.floor(Math.random()*emos.length)];
+        s.style.cssText = "position:fixed;top:-50px;left:" + (Math.random()*100) + "vw;font-size:" +
+            (18+Math.random()*24) + "px;z-index:99;pointer-events:none;transition:top " +
+            (2+Math.random()*2) + "s linear, transform 3s linear;";
+        document.body.appendChild(s);
+        requestAnimationFrame(function(){ s.style.top = "110vh"; s.style.transform = "rotate(" + (Math.random()*720) + "deg)"; });
+        setTimeout(function(){ s.remove(); }, 5000);
+    }
+    somAcerto();
+}
+
+/* Iniciar tudo */
+montarQuiz(); novaContagem(); novaCorrida(); novoDitado(); novoMM(); novoPI(); novoDecomp(); gerarTrilha();
+atualizarPontos(); desenharMedalhas();
+</script>
+</body>
+</html>
